@@ -418,6 +418,7 @@ public class TestExecuter
 
 			Debug.println(
 					"\n\n======================================== Executing Mutants ========================================");
+			
 			ExecutorService executor = Executors.newFixedThreadPool(32); //new TimeoutThreadPoolExecutor(1, TIMEOUT, TimeUnit.MILLISECONDS);//Executors.newFixedThreadPool(1); 
 			for (int i = 0; i < tr.mutants.size(); i++)
 			{
@@ -433,7 +434,7 @@ public class TestExecuter
 					Debug.println("We are loading " + testSet);
 					Object mutant_obj = mutant_executer.newInstance();
 					Debug.print("  " + mutant_name);
-					System.out.println("TestExecutor executing mutant " + mutant_name);
+					Debug.println("TestExecutor executing mutant " + mutant_name);
 					// Mutants are runned using Thread to detect infinite loop caused by mutation
 					Callable<List<Failure>> c = new Callable<List<Failure>>()
 					{
