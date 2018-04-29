@@ -34,6 +34,8 @@ public class compileTestcase
    {
       Debug.setDebugLevel(3);
       File f = new File(MutationSystem.TESTSET_PATH);
+      
+      System.out.println(MutationSystem.TESTSET_PATH);
       String[] s = f.list(new ExtensionFilter("java"));
       String[] pars = new String[2+s.length];
       pars[0] = "-classpath";

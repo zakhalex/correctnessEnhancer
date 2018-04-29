@@ -1,0 +1,7 @@
+MuJava_HOME=J:\phd\VM-SHARED\Chart
+config_mode=true
+MuJava_src=J:\phd\VM-SHARED\Chart\source
+MuJava_class=J:\phd\VM-SHARED\Chart\build
+MuJava_mutants=J:\phd\VM-SHARED\Chart\mutants
+MuJava_tests=J:\phd\VM-SHARED\Chart\build-tests
+filter_tests=Y

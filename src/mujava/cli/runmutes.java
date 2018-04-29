@@ -634,12 +634,7 @@ public class runmutes {
 	}
 
 	private static void setJMutationStructureAndSession(String sessionName) {
-		muJavaHomePath = muJavaHomePath + "/" + sessionName;
-		MutationSystem.SYSTEM_HOME = muJavaHomePath;
-		MutationSystem.SRC_PATH = muJavaHomePath + "/src";
-		MutationSystem.CLASS_PATH = muJavaHomePath + "/classes";
-		MutationSystem.MUTANT_HOME = muJavaHomePath + "/result";
-		MutationSystem.TESTSET_PATH = muJavaHomePath + "/testset";
+		MutationSystem.setJMutationStructure(muJavaHomePath, sessionName);
 	}
 
 	// save csv file

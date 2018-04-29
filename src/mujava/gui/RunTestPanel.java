@@ -28,13 +28,17 @@ import javax.swing.border.*;
 import mujava.gui.util.*;
 
 import java.io.*;
+import java.nio.file.Files;
 
 import mujava.MutationSystem;
 import mujava.TestExecuter;
 import mujava.util.*;
 import mujava.test.*;
 
+import java.util.ArrayList;
+import java.util.Scanner;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * <p>Panel for running mutant against a given test suite</p>
@@ -83,6 +87,8 @@ public class RunTestPanel extends JPanel implements ActionListener
    JRadioButton bothButton = new JRadioButton("Execute all mutants");
 
    JComboBox testCB;
+   
+   JComboBox<Integer> numberOfThreads;
    RoundedButton runB = new RoundedButton("RUN");
 
    JPanel tResultPanel = new JPanel();
@@ -244,6 +250,17 @@ public class RunTestPanel extends JPanel implements ActionListener
       testCB = new JComboBox(eraseExtension(t_list, "class"));
       testCB.setPreferredSize(new Dimension(320, 28));
       testCB.setMaximumSize(new Dimension(320, 28));
+      
+      
+      Integer[] numbers =new Integer[64];
+      for(int i=0;i<64;i++)
+      {
+    	  numbers[i]=i+1;
+      }
+      numberOfThreads = new JComboBox<Integer>(numbers);
+      numberOfThreads.setPreferredSize(new Dimension(320, 28));
+      numberOfThreads.setMaximumSize(new Dimension(320, 28));
+      
       selectConstraints.gridx = 1;
       selectConstraints.gridy = 2;
       selectPanel.add(testCB, selectConstraints);
@@ -270,7 +287,6 @@ public class RunTestPanel extends JPanel implements ActionListener
       label_time.setPreferredSize(new Dimension(100, 28));
       label_time.setMaximumSize(new Dimension(100, 28));
       selectPanel.add(label_time, selectConstraints);
-  
       String[] time_list = {"3 seconds", "5 seconds", "10 seconds", "Other"};
 	  timeCB = new JComboBox(time_list);
       timeCB.addActionListener(new java.awt.event.ActionListener()
@@ -306,6 +322,16 @@ public class RunTestPanel extends JPanel implements ActionListener
       selectConstraints.gridy = 3;
       selectPanel.add(new JLabel("s"), selectConstraints);
       
+      JLabel label_threads = new JLabel("Parallel Threads : ", JLabel.RIGHT);
+//      label_threads.setPreferredSize(new Dimension(100, 28));
+//      label_threads.setMaximumSize(new Dimension(100, 28));      
+      selectConstraints.gridx = 0;
+      selectConstraints.gridy = 4;
+      selectPanel.add(label_threads, selectConstraints);
+      
+      selectConstraints.gridx = 1;
+      selectConstraints.gridy = 4;
+      selectPanel.add(numberOfThreads, selectConstraints);
       c.gridx = 1;
       c.gridy = 0;
       this.add(selectPanel, c);
@@ -397,65 +423,157 @@ public class RunTestPanel extends JPanel implements ActionListener
 
    String[] getTestSetNames()
    {
-      Vector v = new Vector();
+      ArrayList<String> v = new ArrayList<String>();
       getTestSetNames(new File(MutationSystem.TESTSET_PATH), v);
-      String[] result = new String[v.size()];  
+//      String[] result = new String[v.size()];
+      System.out.println("We have identified " + v.size() + " classes as test classes");
+      ArrayList<String> result = new ArrayList<String>();
       for (int i=0; i<v.size(); i++)
       {
-         result[i] = v.get(i).toString();
+    	  String localResult = v.get(i).toString();
+//    	  if (localResult.toLowerCase().contains("test."))
+    	  {
+    		  result.add(localResult);
+    	  }
+//         result[i] = localResult;
       }
-      return result;
+      return result.toArray(new String[result.size()]);
    }
 
+
+   public int indexOf(byte[] data, byte[] pattern) {
+       int[] failure = computeFailure(pattern);
+
+       int j = 0;
+       if (data.length == 0) return -1;
+
+       for (int i = 0; i < data.length; i++) {
+           while (j > 0 && pattern[j] != data[i]) {
+               j = failure[j - 1];
+           }
+           if (pattern[j] == data[i]) { j++; }
+           if (j == pattern.length) {
+               return i - pattern.length + 1;
+           }
+       }
+       return -1;
+   }
+
+   /**
+    * Computes the failure function using a boot-strapping process,
+    * where the pattern is matched against itself.
+    */
+   private int[] computeFailure(byte[] pattern) {
+       int[] failure = new int[pattern.length];
+
+       int j = 0;
+       for (int i = 1; i < pattern.length; i++) {
+           while (j > 0 && pattern[j] != pattern[i]) {
+               j = failure[j - 1];
+           }
+           if (pattern[j] == pattern[i]) {
+               j++;
+           }
+           failure[i] = j;
+       }
+
+       return failure;
+   }
+   
    //    File testF = new File(MutationSystem.TESTSET_PATH);
-   void getTestSetNames(File testDir, Vector v)
-   {
-      String[] t_list = testDir.list(new ExtensionFilter("class"));
-      int start_index = MutationSystem.TESTSET_PATH.length();
-      int end_index = testDir.getAbsolutePath().length();
-      if (start_index < end_index) 
-    	 start_index ++;
-      String suffix = testDir.getAbsolutePath().substring(start_index, end_index);
-      if (suffix == null || suffix.equals(""))
-      {
-         suffix = "";
-      } 
-      else
-      {
-         String temp = "";
-         for (int k=0; k<suffix.length(); k++)
-         {
-            char ch = suffix.charAt(k);
-            if( (ch=='/') || (ch=='\\') )
-            {
-               temp = temp + ".";
-            }
-            else
-            { 
-               temp = temp + ch;
-            }
-         }
-         suffix = temp + ".";
-      }
+	void getTestSetNames(File testDir, ArrayList<String> v)
+	{
+  
+		  
+		String[] t_list;
+		if(MutationSystem.getDictionary().getProperty("filter_tests","N").equalsIgnoreCase("Y"))
+		{
+			ArrayList<String> testFiles=new ArrayList<String>();
+			for(File file:testDir.listFiles(new ExtensionFilter("class")))
+			{				
+				try
+				{
+					byte[] data = Files.readAllBytes(file.toPath());
+					byte[] pattern="junit".getBytes();
+					if(indexOf(data,pattern)!=-1)
+					{
+						testFiles.add(file.getName());						
+					}
+					else
+					{
+						System.out.println("Not considered a test: "+file.getAbsolutePath());
+					}
+				}
+				catch (IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			t_list=testFiles.toArray(new String[testFiles.size()]);
+			/*
+			 * ConcurrentLinkedQueue<File> stack = new ConcurrentLinkedQueue<File>();
+			 * stack.add(testDir);
+			 * while(!stack.isEmpty()) {
+			 * File child = stack.poll();
+			 * if (child.isDirectory()) {
+			 * for(File f : child.listFiles()) stack.add(f);
+			 * } else if (child.isFile()) {
+			 * System.out.println(child.getPath());
+			 * }
+			 * }
+			 */
+		}
+		else
+		{
+			t_list = testDir.list(new ExtensionFilter("class"));
+		}
+		
+		
+		if (t_list == null)
+		{
+			System.out.println(" [Error] No test suite is detected. ");
+			return;
+		}
+		int start_index = MutationSystem.TESTSET_PATH.length();
+		int end_index = testDir.getAbsolutePath().length();
+		if (start_index < end_index)
+			start_index++;
+		String suffix = testDir.getAbsolutePath().substring(start_index, end_index);
+		if (suffix == null || suffix.equals(""))
+		{
+			suffix = "";
+		}
+		else
+		{
+			String temp = "";
+			for (int k = 0; k < suffix.length(); k++)
+			{
+				char ch = suffix.charAt(k);
+				if (ch == File.separatorChar)
+				{
+					temp = temp + ".";
+				}
+				else
+				{
+					temp = temp + ch;
+				}
+			}
+			suffix = temp + ".";
+		}
 
-      if (t_list == null)
-      {
-         System.out.println(" [Error] No test suite is detected. ");
-      } 
-      else
-      {
-         for (int i=0; i<t_list.length; i++)
-         {
-            v.add(suffix+t_list[i]);
-         }
+		for (int i = 0; i < t_list.length; i++)
+		{
+			v.add(suffix + t_list[i]);
+		}
 
-         File[] subDir = testDir.listFiles(new DirFileFilter());
-         for (int i=0; i<subDir.length; i++)
-         {
-            getTestSetNames(subDir[i], v);
-         }
-      }
-   }
+		File[] subDir = testDir.listFiles(new DirFileFilter());
+		for (int i = 0; i < subDir.length; i++)
+		{
+			getTestSetNames(subDir[i], v);
+		}
+
+	}
 
    void testRunB_mouseClicked(MouseEvent e)
    {
@@ -493,7 +611,7 @@ public class RunTestPanel extends JPanel implements ActionListener
 
          TestExecuter test_engine = new TestExecuter(targetClassName);
          test_engine.setTimeOut(timeout_secs);
-
+         test_engine.setNumberOfThreads(Integer.parseInt(numberOfThreads.getSelectedItem().toString()));
          // First, read (load) test suite class.
          test_engine.readTestSet(testSetName);
 

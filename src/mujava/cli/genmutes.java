@@ -268,21 +268,13 @@ public class genmutes {
 
 	private static void setJMutationStructureAndSession(String sessionName) {
 
-		// MutationSystem.SYSTEM_HOME
-
-		muJavaHomePath = muJavaHomePath + "/" + sessionName;
-		MutationSystem.SYSTEM_HOME = muJavaHomePath;
-		MutationSystem.SRC_PATH = muJavaHomePath + "/src";
-		MutationSystem.CLASS_PATH = muJavaHomePath + "/classes";
-		MutationSystem.MUTANT_HOME = muJavaHomePath + "/result";
-		MutationSystem.TESTSET_PATH = muJavaHomePath + "/testset";
-
+		MutationSystem.setJMutationStructure(muJavaHomePath, sessionName);
 	}
 
 
 	
 	public static void generateMutants(File[] file_list, HashMap<String, List<String>> traditional_ops) {
-
+		
 		for (int i = 0; i < file_list.length; i++) {
 			// file_name = ABSTRACT_PATH - MutationSystem.SRC_PATH
 			// For example: org/apache/bcel/Class.java

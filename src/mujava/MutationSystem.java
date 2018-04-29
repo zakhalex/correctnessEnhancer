@@ -27,7 +27,11 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Collection;
+import java.util.HashMap;
 import java.util.Vector;
+
+import com.sun.tools.javac.util.Pair;
 
 /**
  * <p>Description: Control an entire MuJava system -- 
@@ -53,6 +57,9 @@ import java.util.Vector;
 
 public class MutationSystem extends OJSystem
 {
+	private static final PropertiesDictionary dictionary=new PropertiesDictionary();
+	
+	
    public static final int INTERFACE = 0;
    public static final int ABSTRACT = 1;
    public static final int GUI = 2;
@@ -73,13 +80,13 @@ public class MutationSystem extends OJSystem
    public static String SYSTEM_HOME = System.getProperty("user.dir");
 
    /** path of Java source files which mutation is applied to  */
-   public static String SRC_PATH = SYSTEM_HOME + "/src";
+   public static String SRC_PATH = SYSTEM_HOME + File.separatorChar + "src";
 
    /** path of classes of Java source files at SRC_PATH directory */
-   public static String CLASS_PATH = SYSTEM_HOME + "/classes";
+   public static String CLASS_PATH = SYSTEM_HOME + File.separatorChar + "classes";
 
    /** home path which mutants are put into */
-   public static String MUTANT_HOME = SYSTEM_HOME + "/result";
+   public static String MUTANT_HOME = SYSTEM_HOME + File.separatorChar + "result";
 
    /** path which class mutants are put into */
    public static String CLASS_MUTANT_PATH = "";
@@ -97,7 +104,7 @@ public class MutationSystem extends OJSystem
    public static String ORIGINAL_PATH = "";
 
    /** absolute path where test cases are located */
-   public static String TESTSET_PATH = SYSTEM_HOME + "/testset";
+   public static String TESTSET_PATH = SYSTEM_HOME + File.separatorChar + "testset";
 
    /** class name without package name that mutation is applied into */
    public static String CLASS_NAME;
@@ -246,7 +253,10 @@ public class MutationSystem extends OJSystem
       return false;
    }
 
-   
+   public static PropertiesDictionary getDictionary()
+   {
+	   return dictionary;
+   }
    /** Clear arranged original file made before*/
    private static void clearPreviousOriginalFiles()
    {
@@ -512,7 +522,8 @@ public class MutationSystem extends OJSystem
             // Sometimes error occurred. However, I can't solve..
             // To muJava users: try do your best to solve it. ^^;
             System.out.println ("[ERROR] for class " + classes[i] + " => "+ er.getMessage() );
-			bad[i] = true; 
+			er.printStackTrace();
+            bad[i] = true; 
 			classInfo[i] = new InheritanceINFO(classes[i], "");
          }
       }
@@ -580,7 +591,49 @@ public class MutationSystem extends OJSystem
                                 + "/" + whole_class_name + "/" + MutationSystem.EM_DIR_NAME;
 
    }
+   
+	private static HashMap<String, String> readPropertiesFromFile(String file) throws IOException
+	{
+		HashMap<String,String> properties=new HashMap<>();
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		String line;
+		while((line=br.readLine())!=null)
+		{
+			Pair<String, String>localPair=parseProperty(line);
+			if(localPair!=null)
+			{
+				properties.put(localPair.fst, localPair.snd);
+			}
+		}
+		br.close();
+		return properties;
 
+	}
+   
+   private static Pair<String,String> parseProperty(String property)
+   {
+	   int dividerPosition=property.indexOf('=');
+		   if(dividerPosition>0)//if the property starts from = - we ignore it
+		   {
+			   return new Pair<String, String>(property.substring(0, dividerPosition),property.substring(dividerPosition+1, property.length()));
+		   }
+	   
+	   return null;
+   }
+   
+   private static HashMap<String,String> parseProperties(Collection<String> lines)
+   {
+	   HashMap<String,String> properties=new HashMap<>();
+	   for(String property:lines)
+	   {
+		   int dividerPosition=property.indexOf('=');
+		   if(dividerPosition>0)//if the property starts from = - we ignore it
+		   {
+			   properties.put(property.substring(0, dividerPosition),property.substring(dividerPosition+1, property.length()));
+		   }
+	   }
+	   return properties;
+   }
   /** <b> Default mujava system structure setting function </b>
    * <p> Recognize file structure for mutation system based on "mujava.config". </p>
    *  <p> ** CAUTION : this function or `setJMutationStructure(String home_path)' should be called before generating and running mutants. */
@@ -588,17 +641,25 @@ public class MutationSystem extends OJSystem
    {
       try 
       {
-         File f = new File (MutationSystem.SYSTEM_HOME + "/mujava.config");
-         FileReader r = new FileReader(f);
-         BufferedReader reader = new BufferedReader(r);
-         String str = reader.readLine();
-         String home_path = str.substring("MuJava_HOME=".length(), str.length());
-         SYSTEM_HOME = home_path;
-         SRC_PATH = home_path + "/src";
-         CLASS_PATH = home_path + "/classes";
-         MUTANT_HOME = home_path + "/result";
-         TESTSET_PATH = home_path + "/testset";
-      } catch (FileNotFoundException e1)
+    	  //Starting from properties
+//    	  HashMap<String,String> properties=readPropertiesFromFile(MutationSystem.SYSTEM_HOME + "/mujava.config");
+
+//    	  dictionary.readPropertiesFromFile(MutationSystem.SYSTEM_HOME + "/mujava.config");
+    	  dictionary.readPropertiesFromFile("mujava.config");
+//         File f = new File (MutationSystem.SYSTEM_HOME + "/mujava.config");
+//         FileReader r = new FileReader(f);
+//         BufferedReader reader = new BufferedReader(r);
+//         String str = reader.readLine();
+//         String home_path = str.substring("MuJava_HOME=".length(), str.length());
+//         SYSTEM_HOME = home_path;
+			SYSTEM_HOME = dictionary.getProperty("MuJava_Home");
+			SRC_PATH = dictionary.getProperty("MuJava_src", SYSTEM_HOME + File.separator + "src");
+			CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
+			MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
+			TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
+
+		}
+		catch (FileNotFoundException e1)
       {
          System.err.println("[ERROR] Can't find mujava.config file");
          e1.printStackTrace();
@@ -612,11 +673,21 @@ public class MutationSystem extends OJSystem
    public static void setJMutationStructure(String home_path)
    {
       SYSTEM_HOME = home_path;
-      SRC_PATH = home_path + "/src";
-      CLASS_PATH = home_path + "/classes";
-      MUTANT_HOME = home_path + "/result";
-      TESTSET_PATH = home_path + "/testset";
-   }
+      SRC_PATH = dictionary.getProperty("MuJava_src",SYSTEM_HOME + File.separator + "src");
+      CLASS_PATH = dictionary.getProperty("MuJava_class",SYSTEM_HOME + File.separator + "classes");
+      MUTANT_HOME = dictionary.getProperty("MuJava_mutants",SYSTEM_HOME + File.separator + "result");
+      TESTSET_PATH = dictionary.getProperty("MuJava_tests",SYSTEM_HOME + File.separator + "testset");
+  }
+   
+   /** <p> Recognize file structure for mutation system from not "mujava.config" but from user directly - with session </p>*/
+   public static void setJMutationStructure(String home_path, String sessionName)
+   {
+      SYSTEM_HOME = home_path+File.separator+sessionName;
+      SRC_PATH = dictionary.getProperty("MuJava_src",SYSTEM_HOME + File.separator + "src");
+      CLASS_PATH = dictionary.getProperty("MuJava_class",SYSTEM_HOME + File.separator + "classes");
+      MUTANT_HOME = dictionary.getProperty("MuJava_mutants",SYSTEM_HOME + File.separator + "result");
+      TESTSET_PATH = dictionary.getProperty("MuJava_tests",SYSTEM_HOME + File.separator + "testset");
+  }
    
    /*
     * Lin add for setting sessions
@@ -626,17 +697,12 @@ public class MutationSystem extends OJSystem
    {
       try 
       {
-         File f = new File (MutationSystem.SYSTEM_HOME + "/mujava.config");
-         FileReader r = new FileReader(f);
-         BufferedReader reader = new BufferedReader(r);
-         String str = reader.readLine();
-         String home_path = str.substring("MuJava_HOME=".length(), str.length());
-         home_path = home_path+ "/" + sessionName;
-         SYSTEM_HOME = home_path;
-         SRC_PATH = home_path + "/src";
-         CLASS_PATH = home_path + "/classes";
-         MUTANT_HOME = home_path + "/result";
-         TESTSET_PATH = home_path + "/testset";
+    	  dictionary.readPropertiesFromFile("mujava.config");
+    	 SYSTEM_HOME = dictionary.getProperty("MuJava_Home")+File.separator+sessionName;
+         SRC_PATH = dictionary.getProperty("MuJava_src",SYSTEM_HOME + File.separator+"src");
+         CLASS_PATH = dictionary.getProperty("MuJava_class",SYSTEM_HOME + File.separator+"classes");
+         MUTANT_HOME = dictionary.getProperty("MuJava_mutants",SYSTEM_HOME + File.separator+"result");
+         TESTSET_PATH = dictionary.getProperty("MuJava_tests",SYSTEM_HOME + File.separator+"testset");
       } catch (FileNotFoundException e1)
       {
          System.err.println("[ERROR] Can't find mujava.config file");

@@ -55,8 +55,20 @@ public class TimeoutThreadPoolExecutor extends ThreadPoolExecutor
 	@Override
 	public void shutdown()
 	{
-		timeoutExecutor.shutdown();
 		super.shutdown();
+		try
+		{
+			super.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+		}
+		catch (InterruptedException e)
+		{
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		System.out.println("Shutting down");
+		timeoutExecutor.shutdown();
+		System.out.println("TimeoutShutdown");
+		
 	}
 
 	@Override
@@ -71,9 +83,9 @@ public class TimeoutThreadPoolExecutor extends ThreadPoolExecutor
 	{
 		if (timeout > 0)
 		{
-			final ScheduledFuture<?> scheduled = timeoutExecutor.schedule(new TimeoutTask(t), timeout, timeoutUnit);
-			runningTasks.put(r, scheduled);
+			runningTasks.put(r, timeoutExecutor.schedule(new TimeoutTask(t), timeout, timeoutUnit));
 		}
+		super.beforeExecute(t,r);
 	}
 
 	@Override
@@ -84,6 +96,7 @@ public class TimeoutThreadPoolExecutor extends ThreadPoolExecutor
 		{
 			timeoutTask.cancel(false);
 		}
+		super.afterExecute(r, t);
 	}
 
 	class TimeoutTask implements Runnable

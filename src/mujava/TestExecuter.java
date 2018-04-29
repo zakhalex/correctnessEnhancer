@@ -62,6 +62,7 @@ public class TestExecuter
 	LinkedHashMap<String, Future<List<Failure>>> resultMap=new LinkedHashMap<>();
 	// int TIMEOUT = 3000;
 	int TIMEOUT;
+	private int NUMBER_OF_THREADS=1;
 	final int MAX_TRY = 100;
 
 	Class original_executer;
@@ -129,7 +130,7 @@ public class TestExecuter
 			testSet = testSetName;
 			// Class loader for the original class
 			OriginalLoader myLoader = new OriginalLoader();
-			System.out.println(testSet);
+//			System.out.println(testSet);
 
 			original_executer = myLoader.loadTestClass(testSet);
 			System.out.println("Class received");
@@ -419,7 +420,7 @@ public class TestExecuter
 			Debug.println(
 					"\n\n======================================== Executing Mutants ========================================");
 			
-			ExecutorService executor = Executors.newFixedThreadPool(32); //new TimeoutThreadPoolExecutor(1, TIMEOUT, TimeUnit.MILLISECONDS);//Executors.newFixedThreadPool(1); 
+			ExecutorService executor = new TimeoutThreadPoolExecutor(NUMBER_OF_THREADS, TIMEOUT, TimeUnit.MILLISECONDS);//Executors.newFixedThreadPool(NUMBER_OF_THREADS);//Executors.newFixedThreadPool(32); 
 			for (int i = 0; i < tr.mutants.size(); i++)
 			{
 				try
@@ -705,5 +706,10 @@ public class TestExecuter
 		{
 			flag = mutant_dir.delete();
 		}
+	}
+
+	public void setNumberOfThreads(int parseInt)
+	{
+		NUMBER_OF_THREADS=parseInt;		
 	}
 }
