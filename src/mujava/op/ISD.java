@@ -52,7 +52,7 @@ public class ISD extends mujava.op.util.Mutator
    {
       this.evaluateDown( p );
 
-      if (p.getName().equals(MutationSystem.CLASS_NAME))
+      if (p.getName().equals(MutationSystem.getClassName()))
       {
          nesting = 1;
       } 
@@ -581,7 +581,7 @@ public class ISD extends mujava.op.util.Mutator
 
 	  // return file name
 	  String name;
-	  name = dir_name + "/" +  MutationSystem.CLASS_NAME+".java";
+	  name = dir_name + "/" +  MutationSystem.getClassName()+".java";
       return name;
    }
 

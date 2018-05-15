@@ -81,7 +81,7 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
     * Verify if the target Java source and class files exist, 
     * generate traditional mutants
     */
-   void genMutants()
+   void genMutants(String mutantPath)
    {
       if (comp_unit == null)
       {
@@ -98,11 +98,9 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
 	     Debug.println("* Generating traditional mutants");
          MutationSystem.clearPreviousTraditionalMutants();
 
-         MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH;
+         CodeChangeLog.openLogFile(mutantPath);
 
-         CodeChangeLog.openLogFile();
-
-         genTraditionalMutants(cdecls);
+         genTraditionalMutants(cdecls, mutantPath);
 
          CodeChangeLog.closeLogFile();
       }
@@ -111,27 +109,26 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
    /**
     * Compile traditional mutants into bytecode 
     */
-   public void compileMutants()
+   public void compileMutants(String traditionalMutantPath)
    {
       if (traditionalOp != null && traditionalOp.length > 0)
       {
          try
          {
             Debug.println("* Compiling traditional mutants into bytecode");
-            String original_tm_path = MutationSystem.TRADITIONAL_MUTANT_PATH;
-            File f = new File(original_tm_path, "method_list");
+            File f = new File(traditionalMutantPath, "method_list");
             FileReader r = new FileReader(f);
             BufferedReader reader = new BufferedReader(r);
             String str = reader.readLine();
             
             while (str != null)
             {
-               MutationSystem.MUTANT_PATH = original_tm_path + "/" + str;
-               super.compileMutants();
+//               MutationSystem.MUTANT_PATH = traditionalMutantPath + "/" + str;
+               super.compileMutants(traditionalMutantPath + "/" + str);
                str = reader.readLine();
             }
             reader.close();
-            MutationSystem.MUTANT_PATH = original_tm_path;
+//            MutationSystem.MUTANT_PATH = traditionalMutantPath;
          } catch (Exception e)
          {
         	e.printStackTrace();
@@ -146,7 +143,7 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
     *      SOR, LOR, LOI, LOD, ASRS, SID, SWD, SFD, SSD 
     * @param cdecls
     */
-   void genTraditionalMutants(ClassDeclarationList cdecls)
+   void genTraditionalMutants(ClassDeclarationList cdecls, String mutantPath)
    {
 
       for (int j=0; j<cdecls.size(); ++j)
@@ -157,7 +154,7 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
          if(tempName.indexOf("<") != -1 && tempName.indexOf(">")!= -1)
         	 tempName = tempName.substring(0, tempName.indexOf("<")) + tempName.substring(tempName.lastIndexOf(">") + 1, tempName.length());
 
-         if (tempName.equals(MutationSystem.CLASS_NAME))
+         if (tempName.equals(MutationSystem.getClassName()))
          {
             try
             {
@@ -168,7 +165,7 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
                {
                   //generate a list of methods from the original java class
             	  //System.out.println("MutationSystem.MUTANT_PATH: " + MutationSystem.MUTANT_PATH);
-                  File f = new File(MutationSystem.MUTANT_PATH, "method_list");
+                  File f = new File(mutantPath, "method_list");
                   FileOutputStream fout = new FileOutputStream(f);
                   PrintWriter out = new PrintWriter(fout);
 
@@ -334,7 +331,7 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
             } catch (ParseTreeException e)
             {
                System.err.println( "Exception, during generating traditional mutants for the class "
-                              + MutationSystem.CLASS_NAME);
+                              + MutationSystem.getClassName());
                e.printStackTrace();
             }
          }

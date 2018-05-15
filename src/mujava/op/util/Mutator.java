@@ -180,7 +180,7 @@ public class Mutator extends mujava.openjava.extension.VariableBinder
 
   	  // return file name
 	  String name;
-	  name = dir_name + "/" +  MutationSystem.CLASS_NAME + ".java";
+	  name = dir_name + "/" +  MutationSystem.getClassName() + ".java";
       return name;
    }
 
@@ -198,7 +198,7 @@ public class Mutator extends mujava.openjava.extension.VariableBinder
 
   	  // return file name
 	  String name;
-	  name = dir_name + "/" +  MutationSystem.CLASS_NAME + ".java";
+	  name = dir_name + "/" +  MutationSystem.getClassName() + ".java";
       return name;
    }
 

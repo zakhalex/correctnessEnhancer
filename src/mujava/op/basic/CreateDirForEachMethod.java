@@ -36,21 +36,21 @@ public class CreateDirForEachMethod extends MethodLevelMutator
       this.out = out;
    }
 
-   void createDirectory(String dir_name)
+   void createDirectory(String dir_name, String mutantPath)
    { 
       out.println(dir_name);
-      String absolute_dir_path = MutationSystem.MUTANT_PATH + "/" + dir_name;
+      String absolute_dir_path = mutantPath + "/" + dir_name;
       File dirF = new File(absolute_dir_path);
       dirF.mkdir();
    }
 
-   public void visit(ConstructorDeclaration p) throws ParseTreeException 
+   public void visit(ConstructorDeclaration p, String mutantPath) throws ParseTreeException 
    {
-      createDirectory(getConstructorSignature(p));
+      createDirectory(getConstructorSignature(p), mutantPath);
    }
 
-   public void visit(MethodDeclaration p) throws ParseTreeException
+   public void visit(MethodDeclaration p, String mutantPath) throws ParseTreeException
    {
-      createDirectory(getMethodSignature(p));
+      createDirectory(getMethodSignature(p), mutantPath);
    }
 }

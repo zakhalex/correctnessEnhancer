@@ -43,7 +43,7 @@ public class JSD extends mujava.op.util.Mutator
 
    public void visit( ClassDeclaration p ) throws ParseTreeException 
    {
-      if (p.getName().equals(MutationSystem.CLASS_NAME))
+      if (p.getName().equals(MutationSystem.getClassName()))
       {
          super.visit(p);
          for (int i=0; i<staticFields.size(); i++)

@@ -314,8 +314,8 @@ public class TraditionalMutantsViewerPanel  extends MutantsViewerPanel
          int line_num = 0;
          int caret_pos = 0;
          String strLine;
-         File myFile = new File(MutationSystem.MUTANT_PATH + "/" + method_signature + "/" + dir_name,
-                    MutationSystem.CLASS_NAME + ".java");
+         File myFile = new File(MutationSystem.TRADITIONAL_MUTANT_PATH + "/" + method_signature + "/" + dir_name,
+        		 MutationSystem.getClassName() + ".java");
 
          String blank_str;
          LineNumberReader lReader = new LineNumberReader(new FileReader(myFile));
@@ -362,11 +362,6 @@ public class TraditionalMutantsViewerPanel  extends MutantsViewerPanel
       }
    }
 
-   void setMutationType()
-   {
-      MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH;
-   }
-
    void initSummaryTable()
    {
       TMSummaryTableModel tmodel = new TMSummaryTableModel();
@@ -377,11 +372,6 @@ public class TraditionalMutantsViewerPanel  extends MutantsViewerPanel
    int getMutantType()
    {
       return MutationSystem.TM;
-   }
-
-   void setMutantPath()
-   {
-      MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH;
    }
 
    String getMutantPath()

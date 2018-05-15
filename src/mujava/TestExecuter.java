@@ -97,14 +97,14 @@ public class TestExecuter
 		int index = targetClassName.lastIndexOf(".");
 		if (index < 0)
 		{
-			MutationSystem.CLASS_NAME = targetClassName;
+			MutationSystem.setClassName(targetClassName);
 		}
 		else
 		{
-			MutationSystem.CLASS_NAME = targetClassName.substring(index + 1, targetClassName.length());
+			MutationSystem.setClassName(targetClassName.substring(index + 1, targetClassName.length()));
 		}
 
-		MutationSystem.DIR_NAME = targetClassName;
+		MutationSystem.setDirectory(targetClassName);
 		MutationSystem.CLASS_MUTANT_PATH = MutationSystem.MUTANT_HOME + "/" + targetClassName + "/"
 				+ MutationSystem.CM_DIR_NAME;
 		MutationSystem.TRADITIONAL_MUTANT_PATH = MutationSystem.MUTANT_HOME + "/" + targetClassName + "/"
@@ -165,27 +165,23 @@ public class TestExecuter
 		return true;
 	}
 
-	public TestResult runClassMutants() throws NoMutantException, NoMutantDirException
+	public TestResult runClassMutants(String mutantPath) throws NoMutantException, NoMutantDirException
 	{
-		MutationSystem.MUTANT_PATH = MutationSystem.CLASS_MUTANT_PATH;
 		TestResult test_result = new TestResult();
-		runMutants(test_result, "");
+		runMutants(test_result, mutantPath, "");
+		test_result.setMode(1);
 		return test_result;
 	}
 
-	public TestResult runExceptionMutants() throws NoMutantException, NoMutantDirException
+	public TestResult runExceptionMutants(String mutantPath) throws NoMutantException, NoMutantDirException
 	{
-		MutationSystem.MUTANT_PATH = MutationSystem.EXCEPTION_MUTANT_PATH;
 		TestResult test_result = new TestResult();
-		runMutants(test_result, "");
+		runMutants(test_result, mutantPath, "");
 		return test_result;
 	}
 
-	public TestResult runTraditionalMutants(String methodSignature) throws NoMutantException, NoMutantDirException
+	public TestResult runTraditionalMutants(String methodSignature, String mutantPath) throws NoMutantException, NoMutantDirException
 	{
-
-		MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH;
-		String original_mutant_path = MutationSystem.MUTANT_PATH;
 
 		TestResult test_result = new TestResult();
 
@@ -195,17 +191,15 @@ public class TestExecuter
 			{
 				// setMutantPath();
 				// computeOriginalTestResults();
-				File f = new File(MutationSystem.TRADITIONAL_MUTANT_PATH, "method_list");
+				File f = new File(mutantPath, "method_list");
 				FileReader r = new FileReader(f);
 				BufferedReader reader = new BufferedReader(r);
 				String readSignature = reader.readLine();
 				while (readSignature != null)
 				{
-
-					MutationSystem.MUTANT_PATH = original_mutant_path + "/" + readSignature;
 					try
 					{
-						runMutants(test_result, readSignature);
+						runMutants(test_result, mutantPath, readSignature);
 					}
 					catch (NoMutantException e)
 					{
@@ -223,9 +217,9 @@ public class TestExecuter
 		}
 		else
 		{
-			MutationSystem.MUTANT_PATH = original_mutant_path + "/" + methodSignature;
-			runMutants(test_result, methodSignature);
+			runMutants(test_result, mutantPath, methodSignature);
 		}
+		test_result.setMode(2);
 		return test_result;
 	}
 
@@ -272,17 +266,16 @@ public class TestExecuter
 	 * @throws NoMutantDirException
 	 * @throws NoMutantException
 	 */
-	private String[] getMutants(String methodSignature) throws NoMutantDirException, NoMutantException
+	private String[] getMutants(String methodSignature, String mutantPath) throws NoMutantDirException, NoMutantException
 	{
 
 		// Read mutants
-		System.out.println("mutant_path: " + MutationSystem.MUTANT_PATH);
-		File f = new File(MutationSystem.MUTANT_PATH);
+		File f = new File(mutantPath);
 
 		if (!f.exists())
 		{
-			System.err.println(" There is no directory for the mutants of " + MutationSystem.CLASS_NAME);
-			System.err.println(" Please generate mutants for " + MutationSystem.CLASS_NAME);
+			System.err.println(" There is no directory for the mutants of " + MutationSystem.getClassName());
+			System.err.println(" Please generate mutants for " + MutationSystem.getClassName());
 			throw new NoMutantDirException();
 		}
 
@@ -293,9 +286,9 @@ public class TestExecuter
 		{
 			if (!methodSignature.equals(""))
 				System.err.println(" No mutants have been generated for the method " + methodSignature + " of the class"
-						+ MutationSystem.CLASS_NAME);
+						+ MutationSystem.getClassName());
 			else
-				System.err.println(" No mutants have been generated for the class " + MutationSystem.CLASS_NAME);
+				System.err.println(" No mutants have been generated for the class " + MutationSystem.getClassName());
 			// System.err.println(" Please check if zero mutant is correct.");
 			// throw new NoMutantException();
 		}
@@ -397,15 +390,17 @@ public class TestExecuter
 		}
 	}
 
-	private TestResult runMutants(TestResult tr, String methodSignature) throws NoMutantException, NoMutantDirException
+	private TestResult runMutants(TestResult tr, String methodSignature, String mutantPath) throws NoMutantException, NoMutantDirException
 	{
 		try
 		{
 
-			String[] mutantDirectories = getMutants(methodSignature);
+			String[] mutantDirectories = getMutants(methodSignature, mutantPath);
 
 			int mutant_num = mutantDirectories.length;
 			tr.setMutants();
+			tr.setTestSetName(testSet);
+			tr.setTargetMutant(whole_class_name);
 			for (int i = 0; i < mutant_num; i++)
 			{
 				// set live mutnats
@@ -678,19 +673,19 @@ public class TestExecuter
 		return tr;
 	}
 
-	void erase_killed_mutants(Vector v)
+	void erase_killed_mutants(Vector v, String mutantPath)
 	{
 		System.out.println("Deleting directories of killed mutants");
 		for (int i = 0; i < v.size(); i++)
 		{
 			System.out.print(v.get(i).toString() + " ");
-			erase_directory(v.get(i).toString());
+			erase_directory(v.get(i).toString(), mutantPath);
 		}
 	}
 
-	void erase_directory(String mutant_name)
+	void erase_directory(String mutant_name, String mutantPath)
 	{
-		File mutant_dir = new File(MutationSystem.MUTANT_PATH + "/" + mutant_name);
+		File mutant_dir = new File(mutantPath + "/" + mutant_name);
 		File[] f = mutant_dir.listFiles();
 		boolean flag = false;
 		for (int i = 0; i < f.length; i++)

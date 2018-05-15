@@ -52,7 +52,7 @@ public class ExceptionMutantsGenerator  extends MutantsGenerator
       exceptionOp = eOP;
    }
 
-   void genMutants()
+   void genMutants(String mutantPath)
    {
       if (comp_unit == null)
       {
@@ -66,8 +66,7 @@ public class ExceptionMutantsGenerator  extends MutantsGenerator
       if (exceptionOp != null && exceptionOp.length > 0)
       {
          MutationSystem.clearPreviousMutants();
-         MutationSystem.MUTANT_PATH = MutationSystem.EXCEPTION_MUTANT_PATH;
-         CodeChangeLog.openLogFile();
+         CodeChangeLog.openLogFile(mutantPath);
          genExceptionMutants(cdecls);
          CodeChangeLog.closeLogFile();
       }
@@ -76,13 +75,12 @@ public class ExceptionMutantsGenerator  extends MutantsGenerator
    /**
     * Compile exception-related mutants into bytecode
     */
-   public void compileMutants()
+   public void compileMutants(String exceptionMutantPath)
    {
       if (exceptionOp != null && exceptionOp.length > 0)
       {
 	     Debug.println("* Compiling exception-related mutants into bytecode");
-         MutationSystem.MUTANT_PATH = MutationSystem.EXCEPTION_MUTANT_PATH;
-         super.compileMutants();
+         super.compileMutants(exceptionMutantPath);
       }
    }
 
@@ -92,7 +90,7 @@ public class ExceptionMutantsGenerator  extends MutantsGenerator
       {
          ClassDeclaration cdecl = cdecls.get(j);
 
-         if (cdecl.getName().equals(MutationSystem.CLASS_NAME))
+         if (cdecl.getName().equals(MutationSystem.getClassName()))
          {
             try
             {
@@ -141,7 +139,7 @@ public class ExceptionMutantsGenerator  extends MutantsGenerator
             } catch (ParseTreeException e)
             {
                System.err.println( "Exception, during generating traditional mutants for the class "
-                               + MutationSystem.CLASS_NAME);
+                               + MutationSystem.getClassName());
                e.printStackTrace();
             }
          }

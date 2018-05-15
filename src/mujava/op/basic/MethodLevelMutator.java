@@ -106,7 +106,7 @@ public class MethodLevelMutator  extends mujava.op.util.Mutator
 
 	  // return file name
 	  String name;
-	  name = dir_name + "/" +  MutationSystem.CLASS_NAME + ".java";
+	  name = dir_name + "/" +  MutationSystem.getClassName() + ".java";
       return name;
    }
 
@@ -122,7 +122,7 @@ public class MethodLevelMutator  extends mujava.op.util.Mutator
 
 	  // return file name
 	  String name;
-	  name = dir_name + "/" +  MutationSystem.CLASS_NAME + ".java";
+	  name = dir_name + "/" +  MutationSystem.getClassName() + ".java";
       return name;
    }
 

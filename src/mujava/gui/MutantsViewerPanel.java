@@ -267,12 +267,10 @@ public abstract class MutantsViewerPanel  extends JPanel
       this.repaint();
    }
 
-   abstract void setMutantPath();
    abstract String getMutantPath();
 
    void updateContents()
    {
-      setMutantPath();
       File mutant_dir = new File(getMutantPath());
       String[] mutants = mutant_dir.list(new MutantDirFilter());
       showGeneratedMutantsNum(mutants);
@@ -325,8 +323,6 @@ public abstract class MutantsViewerPanel  extends JPanel
       this.repaint();
    }
 
-   abstract void setMutationType();
-
    public void clearSourceContents()
    {
       try
@@ -347,16 +343,15 @@ public abstract class MutantsViewerPanel  extends JPanel
 
    void mList_mouseClicked(MouseEvent e)
    {
-      setMutationType();
       Object selected_obj = mList.getSelectedValue();
       if (selected_obj != null)
       {
          String mutant_name = selected_obj.toString();
-         String mutant_log = getMutantLog(mutant_name);
+         String mutant_log = getMutantLog(mutant_name,mutantPath);
          if (mutant_log != null) 
          {
         	System.out.println("MutantsViewerPanel.mList_mouseClicked - mutant_log != null");
-            showMutant(mutant_name,mutant_log);
+            showMutant(mutant_name,mutantPath,mutant_log);
          }
       }
    }
@@ -367,7 +362,7 @@ public abstract class MutantsViewerPanel  extends JPanel
       try
       {
          String strLine;
-         File myFile = new File(MutationSystem.ORIGINAL_PATH,MutationSystem.CLASS_NAME+".java");
+         File myFile = new File(MutationSystem.ORIGINAL_PATH,MutationSystem.getClassName()+".java");
          String blank_str;
          LineNumberReader lReader = new LineNumberReader(new FileReader(myFile));
 
@@ -395,7 +390,7 @@ public abstract class MutantsViewerPanel  extends JPanel
   /** Show source code of the selected mutant. Changed part is colored in red
    *  @param dir_name the name of class (including package name)
    *  @param changed_line line number of mutated code against original program*/
-   public void showMutant(String dir_name,int changed_line)
+   public void showMutant(String dir_name, String mutantPath, int changed_line)
    {
       System.out.println("MutantsViewerPanel.showMutant - with changed_line");
       try
@@ -406,8 +401,8 @@ public abstract class MutantsViewerPanel  extends JPanel
          int line_num = 0;
          int caret_pos = 0;
          String strLine;
-         File myFile = new File(MutationSystem.MUTANT_PATH + 
-        		  "/" + dir_name, MutationSystem.CLASS_NAME + ".java");
+         File myFile = new File(mutantPath + 
+        		  "/" + dir_name, MutationSystem.getClassName() + ".java");
 
          String blank_str;
 
@@ -420,7 +415,7 @@ public abstract class MutantsViewerPanel  extends JPanel
   /** Show source code of the selected mutant. Changed part is colored in red
    *  @param dir_name the name of class (including package name)
    *  @param changed_line line number of mutated code against original program*/
-   public void showMutant(String dir_name,String mutant_log)
+   public void showMutant(String dir_name, String mutantPath, String mutant_log)
    {
 	  System.out.println("MutantsViewerPanel.showMutant (with mutant_log)");
       try
@@ -436,8 +431,8 @@ public abstract class MutantsViewerPanel  extends JPanel
          int line_num=0;
          int caret_pos=0;
          String strLine;
-         File myFile = new File(MutationSystem.MUTANT_PATH + 
-        		  "/" + dir_name, MutationSystem.CLASS_NAME + ".java");
+         File myFile = new File(mutantPath + 
+        		  "/" + dir_name, MutationSystem.getClassName() + ".java");
          System.out.println("showMutant: myFile =" + myFile.getAbsolutePath());
 
          String blank_str;
@@ -476,11 +471,11 @@ public abstract class MutantsViewerPanel  extends JPanel
   
   /** Return log for the mutant <i> mutant_name </i> from the log file "mutation_log" <br>
    *  @return log for the mutant (if no log found, NULL is returned.)*/
-   String getMutantLog(String mutant_name)
+   String getMutantLog(String mutant_name, String mutantPath)
    {
       try
       {
-         File myFile = new File(MutationSystem.MUTANT_PATH, "mutation_log");
+         File myFile = new File(mutantPath, "mutation_log");
          String strLine;
          LineNumberReader lReader = new LineNumberReader(new FileReader(myFile));
          while ((strLine=lReader.readLine()) != null)
@@ -503,11 +498,11 @@ public abstract class MutantsViewerPanel  extends JPanel
   /**
    * @param name name of the mutant
    * @return mutated line for the mutant <i>name</i> */
-   public int getMutatedLine(String name)
+   public int getMutatedLine(String name, String mutantPath)
    {
       try 
       {
-         File myFile = new File(MutationSystem.MUTANT_PATH, "mutation_log");
+         File myFile = new File(mutantPath, "mutation_log");
          String strLine;
          LineNumberReader lReader = new LineNumberReader(new FileReader(myFile));
 

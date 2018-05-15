@@ -64,7 +64,7 @@ public class AllMutantsGenerator extends MutantsGenerator
       traditionalOp = tOP;
    }
 
-   void genMutants()
+   void genMutants(String mutantPath)
    {
       if (comp_unit == null)
       {
@@ -78,8 +78,7 @@ public class AllMutantsGenerator extends MutantsGenerator
       {
          Debug.println("* Generating traditional mutants"); 
          MutationSystem.clearPreviousTraditionalMutants();
-         MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH;
-         CodeChangeLog.openLogFile();
+         CodeChangeLog.openLogFile(mutantPath);
          genTraditionalMutants(cdecls);
          CodeChangeLog.closeLogFile();
       }
@@ -88,8 +87,7 @@ public class AllMutantsGenerator extends MutantsGenerator
       {
 	     Debug.println("* Generating class mutants");
          MutationSystem.clearPreviousClassMutants();
-         MutationSystem.MUTANT_PATH = MutationSystem.CLASS_MUTANT_PATH;
-         CodeChangeLog.openLogFile();
+         CodeChangeLog.openLogFile(mutantPath);
          genClassMutants(cdecls);
          CodeChangeLog.closeLogFile();
       }
@@ -107,7 +105,7 @@ public class AllMutantsGenerator extends MutantsGenerator
       for (int j=0; j<cdecls.size(); ++j)
       {
     	 ClassDeclaration cdecl = cdecls.get(j);
-         if (cdecl.getName().equals(MutationSystem.CLASS_NAME))
+         if (cdecl.getName().equals(MutationSystem.getClassName()))
          {
     	    DeclAnalyzer mutant_op;
 
@@ -166,7 +164,7 @@ public class AllMutantsGenerator extends MutantsGenerator
       for (int j=0; j<cdecls.size(); ++j)
       {
          ClassDeclaration cdecl = cdecls.get(j);
-         if (cdecl.getName().equals(MutationSystem.CLASS_NAME))
+         if (cdecl.getName().equals(MutationSystem.getClassName()))
          {
             String qname = file_env.toQualifiedName(cdecl.getName());
             try 
@@ -380,20 +378,20 @@ public class AllMutantsGenerator extends MutantsGenerator
    /**
     * Compile mutants into bytecode
     */
-   public void compileMutants()
+   public void compileMutants(String traditionalMutantPath, String classMutantPath)
    {
       if (traditionalOp != null && traditionalOp.length > 0)
       {
 	     Debug.println("* Compiling traditional mutants into bytecode");
-         MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH;
-         super.compileMutants(); 
+//         MutationSystem.MUTANT_PATH = MutationSystem.TRADITIONAL_MUTANT_PATH;
+         super.compileMutants(traditionalMutantPath); 
       }
 
       if (classOp != null && classOp.length > 0)
       {
 	     Debug.println("* Compiling class mutants into bytecode");
-         MutationSystem.MUTANT_PATH = MutationSystem.CLASS_MUTANT_PATH;
-         super.compileMutants();
+//         MutationSystem.MUTANT_PATH = MutationSystem.CLASS_MUTANT_PATH;
+         super.compileMutants(classMutantPath);
       }
    }
 
@@ -403,7 +401,7 @@ public class AllMutantsGenerator extends MutantsGenerator
       {
          ClassDeclaration cdecl = cdecls.get(j);
 
-         if (cdecl.getName().equals(MutationSystem.CLASS_NAME))
+         if (cdecl.getName().equals(MutationSystem.getClassName()))
          {
             try
             {
@@ -544,7 +542,7 @@ public class AllMutantsGenerator extends MutantsGenerator
             } catch (ParseTreeException e)
             {
                System.err.println( "Exception, during generating traditional mutants for the class "
-                              + MutationSystem.CLASS_NAME);
+                              + MutationSystem.getClassName());
                e.printStackTrace();
             }
          } 

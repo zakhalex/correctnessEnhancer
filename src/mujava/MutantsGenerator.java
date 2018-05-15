@@ -85,7 +85,7 @@ public abstract class MutantsGenerator
     * @return
     * @throws OpenJavaException
     */
-   public boolean makeMutants() throws OpenJavaException
+   public boolean makeMutants(String originalPath, String mutantPath, String className) throws OpenJavaException
    {
       Debug.print("-------------------------------------------------------\n");
       Debug.print("* Generating parse tree. \n" );
@@ -98,19 +98,19 @@ public abstract class MutantsGenerator
       Debug.print("..done. \n" );
       //System.out.println("1");
       Debug.print("* Generating Mutants \n" );
-      genMutants();
+      genMutants(mutantPath);
       Debug.print("..done.\n" );
       //System.out.println("2");
       Debug.print("* Arranging original soure code. \n" );
-      arrangeOriginal();
+      arrangeOriginal(originalPath, className);
       //System.out.println("3");
-      compileOriginal();
+      compileOriginal(originalPath, className);
       Debug.print("..done. \n" );
       Debug.flush();
       return true;
    }
 
-   abstract void genMutants();
+   abstract void genMutants(String mutantPath);
 
   /*void generateMutant(OJClass mutant_op){
 	    try {
@@ -140,7 +140,7 @@ public abstract class MutantsGenerator
    /**
     * Arrange the original source file into an appropriate directory
     */
-   private void arrangeOriginal()
+   private void arrangeOriginal(String originalPath, String className)
    {
       if (comp_unit == null)
       {
@@ -154,7 +154,7 @@ public abstract class MutantsGenerator
          File outfile = null;
          try 
          {
-            outfile = new File(MutationSystem.ORIGINAL_PATH, MutationSystem.CLASS_NAME + ".java");
+            outfile = new File(originalPath, className + ".java");
             FileWriter fout = new FileWriter( outfile ); 
             PrintWriter out = new PrintWriter( fout );
             MutantCodeWriter writer = new MutantCodeWriter( out );
@@ -285,7 +285,7 @@ public abstract class MutantsGenerator
          {
             ClassDeclaration class_decl = typedecls.get(j);
 
-            if ( class_decl.getName().equals(MutationSystem.CLASS_NAME) )
+            if ( class_decl.getName().equals(MutationSystem.getClassName()) )
             {
                if ( class_decl.isInterface() ||
             		class_decl.getModifiers().contains(ModifierList.ABSTRACT) )
@@ -411,28 +411,28 @@ public abstract class MutantsGenerator
    /**
     * Compile mutants 
     */
-   public void compileMutants()
+   public void compileMutants(String mutantpath)
    {
        // Lin add a counter 12/12/13
        int counter = 0;
        String fileName = new String();
 	   
-      File f = new File(MutationSystem.MUTANT_PATH);
+      File f = new File(mutantpath);
       
       String[] s = f.list(new MutantDirFilter());
 
       for (int i=0; i<s.length; i++)
       {
-         File target_dir = new File(MutationSystem.MUTANT_PATH + "/" + s[i]);
+         File target_dir = new File(mutantpath + "/" + s[i]);
          String[] target_file = target_dir.list(new ExtensionFilter("java"));
          fileName = target_file[0];
 
          
          
-         Vector v = new Vector();
+         Vector<String> v = new Vector<String>();
          for (int j=0; j<target_file.length; j++)
          {
-            v.add(MutationSystem.MUTANT_PATH + "/" + s[i] + "/" + target_file[j]);
+            v.add(mutantpath+ "/" + s[i] + "/" + target_file[j]);
          }
 
          String[] pars = new String[v.size()+2];
@@ -478,7 +478,7 @@ public abstract class MutantsGenerator
             {
                Debug.print("-" + s[i] + "   ");
              // delete directory
-               File dir_name = new File(MutationSystem.MUTANT_PATH + "/" + s[i]);
+               File dir_name = new File(mutantpath + "/" + s[i]);
                File[] mutants = dir_name.listFiles();
                boolean tr = false;
                
@@ -516,11 +516,11 @@ public abstract class MutantsGenerator
    /**
     * Compile original java source file
     */
-   private void compileOriginal()
+   private void compileOriginal(String originalPath, String className)
    {
       String[] pars= { "-classpath",
                       MutationSystem.CLASS_PATH,
-                      MutationSystem.ORIGINAL_PATH + "/" + MutationSystem.CLASS_NAME + ".java"};
+                      originalPath + "/" + className + ".java"};
       try
       {
       // result = 0 : SUCCESS,   result = 1 : FALSE

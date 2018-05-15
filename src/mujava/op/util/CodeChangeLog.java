@@ -29,9 +29,9 @@ public class CodeChangeLog {
   static final String logFile_name = "mutation_log";
   static PrintWriter log_writer;
 
-  public static void openLogFile(){
+  public static void openLogFile(String location){
     try{
-      File f = new File(MutationSystem.MUTANT_PATH,logFile_name);
+      File f = new File(location,logFile_name);
       FileWriter fout = new FileWriter(f);
       log_writer = new PrintWriter(fout);
     }catch(IOException e){

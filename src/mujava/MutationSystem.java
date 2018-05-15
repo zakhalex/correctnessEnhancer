@@ -27,6 +27,8 @@ import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.nio.file.Files;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Vector;
@@ -98,7 +100,7 @@ public class MutationSystem extends OJSystem
    public static String EXCEPTION_MUTANT_PATH = "";
 
    /** ??? absolute path for ???*/
-   public static String MUTANT_PATH = "";
+   private static String MUTANT_PATH = "";
 
    /** ??? absolute path for the original Java source*/
    public static String ORIGINAL_PATH = "";
@@ -107,13 +109,198 @@ public class MutationSystem extends OJSystem
    public static String TESTSET_PATH = SYSTEM_HOME + File.separatorChar + "testset";
 
    /** class name without package name that mutation is applied into */
-   public static String CLASS_NAME;
+   private static String CLASS_NAME;
+   public static String getClassName()
+   {
+	   return CLASS_NAME;
+   }
+   public static void setClassName(String className)
+   {
+	   CLASS_NAME=className;
+   }
+   public static String[] getTestSetNames()
+	{
+		ArrayList<String> v = new ArrayList<String>();
+		getTestSetNames(new File(MutationSystem.TESTSET_PATH), v);
+		// String[] result = new String[v.size()];
+		System.out.println("We have identified " + v.size() + " classes as test classes");
+		ArrayList<String> result = new ArrayList<String>();
+		for (int i = 0; i < v.size(); i++)
+		{
+			String localResult = v.get(i).toString();
+			// if (localResult.toLowerCase().contains("test."))
+			{
+				result.add(localResult);
+			}
+			// result[i] = localResult;
+		}
+		return result.toArray(new String[result.size()]);
+	}
+   
+   public static void getTestSetNames(File testDir, ArrayList<String> v)
+	{
 
-   public static String WHOLE_CLASS_NAME;
+		String[] t_list;
+		if (MutationSystem.getDictionary().getProperty("filter_tests", "N").equalsIgnoreCase("Y"))
+		{
+			ArrayList<String> testFiles = new ArrayList<String>();
+			for (File file : testDir.listFiles(new ExtensionFilter("class")))
+			{
+				try
+				{
+					byte[] data = Files.readAllBytes(file.toPath());
+					byte[] pattern = "junit".getBytes();
+					if (indexOf(data, pattern) != -1)
+					{
+						testFiles.add(file.getName());
+					}
+					else
+					{
+						System.out.println("Not considered a test: " + file.getAbsolutePath());
+					}
+				}
+				catch (IOException e)
+				{
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			t_list = testFiles.toArray(new String[testFiles.size()]);
+			/*
+			 * ConcurrentLinkedQueue<File> stack = new ConcurrentLinkedQueue<File>();
+			 * stack.add(testDir);
+			 * while(!stack.isEmpty()) {
+			 * File child = stack.poll();
+			 * if (child.isDirectory()) {
+			 * for(File f : child.listFiles()) stack.add(f);
+			 * } else if (child.isFile()) {
+			 * System.out.println(child.getPath());
+			 * }
+			 * }
+			 */
+		}
+		else
+		{
+			t_list = testDir.list(new ExtensionFilter("class"));
+		}
 
+		if (t_list == null)
+		{
+			System.out.println(" [Error] No test suite is detected. ");
+			return;
+		}
+		int start_index = MutationSystem.TESTSET_PATH.length();
+		int end_index = testDir.getAbsolutePath().length();
+		if (start_index < end_index)
+			start_index++;
+		String suffix = testDir.getAbsolutePath().substring(start_index, end_index);
+		if (suffix == null || suffix.equals(""))
+		{
+			suffix = "";
+		}
+		else
+		{
+			String temp = "";
+			for (int k = 0; k < suffix.length(); k++)
+			{
+				char ch = suffix.charAt(k);
+				if (ch == File.separatorChar)
+				{
+					temp = temp + ".";
+				}
+				else
+				{
+					temp = temp + ch;
+				}
+			}
+			suffix = temp + ".";
+		}
+
+		for (int i = 0; i < t_list.length; i++)
+		{
+			v.add(suffix + t_list[i]);
+		}
+
+		File[] subDir = testDir.listFiles(new DirFileFilter());
+		for (int i = 0; i < subDir.length; i++)
+		{
+			getTestSetNames(subDir[i], v);
+		}
+
+	}
+
+	public static int indexOf(byte[] data, byte[] pattern)
+	{
+		int[] failure = computeFailure(pattern);
+
+		int j = 0;
+		if (data.length == 0)
+			return -1;
+
+		for (int i = 0; i < data.length; i++)
+		{
+			while (j > 0 && pattern[j] != data[i])
+			{
+				j = failure[j - 1];
+			}
+			if (pattern[j] == data[i])
+			{
+				j++;
+			}
+			if (j == pattern.length)
+			{
+				return i - pattern.length + 1;
+			}
+		}
+		return -1;
+	}
+
+	/**
+	 * Computes the failure function using a boot-strapping process,
+	 * where the pattern is matched against itself.
+	 */
+	private static int[] computeFailure(byte[] pattern)
+	{
+		int[] failure = new int[pattern.length];
+
+		int j = 0;
+		for (int i = 1; i < pattern.length; i++)
+		{
+			while (j > 0 && pattern[j] != pattern[i])
+			{
+				j = failure[j - 1];
+			}
+			if (pattern[j] == pattern[i])
+			{
+				j++;
+			}
+			failure[i] = j;
+		}
+
+		return failure;
+	}
+	
+	public static String[] eraseExtension(String[] list, String extension)
+	{
+		String[] result = new String[list.length];
+		for (int i = 0; i < list.length; i++)
+		{
+			result[i] = list[i].substring(0, list[i].length() - extension.length() - 1);
+		}
+		return result;
+	}
    /** path for */
-   public static String DIR_NAME;
-
+   private static String DIR_NAME;
+   
+   public static String getDirectory()
+   {
+	   return DIR_NAME;
+   }
+   public static void setDirectory(String directory)
+   {
+	   DIR_NAME=directory;
+   }
+   
    /** directory name for class mutants */
    public static String CM_DIR_NAME = "class_mutants";
 
@@ -353,14 +540,14 @@ public class MutationSystem extends OJSystem
    }
 
    /* Set up target files (stored in src folder) to be tested */
-   public static Vector getNewTragetFiles()
+   public static Vector<String> getNewTragetFiles()
    {
-      Vector targetFiles = new Vector();
+      Vector<String> targetFiles = new Vector<String>();
       getJavacArgForDir (MutationSystem.SRC_PATH, "", targetFiles);
       return targetFiles;
    }
 
-   protected static String getJavacArgForDir (String dir, String str, Vector targetFiles)
+   protected static String getJavacArgForDir (String dir, String str, Vector<String> targetFiles)
    {
       String result = str;
       String temp = "";

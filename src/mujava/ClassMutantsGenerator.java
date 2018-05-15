@@ -93,7 +93,7 @@ public class ClassMutantsGenerator  extends MutantsGenerator
     * Verify if the target Java source and class files exist, 
     * generate class mutants
     */
-   void genMutants()
+   void genMutants(String mutantPath)
    {
       if (comp_unit == null)
       {
@@ -108,8 +108,7 @@ public class ClassMutantsGenerator  extends MutantsGenerator
       {
          Debug.println("* Generating class mutants");
          MutationSystem.clearPreviousClassMutants();
-         MutationSystem.MUTANT_PATH = MutationSystem.CLASS_MUTANT_PATH;
-         CodeChangeLog.openLogFile();
+         CodeChangeLog.openLogFile(mutantPath);
          genClassMutants(cdecls);
          CodeChangeLog.closeLogFile();
       }
@@ -134,7 +133,7 @@ public class ClassMutantsGenerator  extends MutantsGenerator
       for (int j=0; j<cdecls.size(); ++j)
       {
          ClassDeclaration cdecl = cdecls.get(j);
-         if (cdecl.getName().equals(MutationSystem.CLASS_NAME))
+         if (cdecl.getName().equals(MutationSystem.getClassName()))
          {
     	    DeclAnalyzer mutant_op;
 
@@ -199,7 +198,7 @@ public class ClassMutantsGenerator  extends MutantsGenerator
       {
          ClassDeclaration cdecl = cdecls.get(j);
          
-         if (cdecl.getName().equals(MutationSystem.CLASS_NAME))
+         if (cdecl.getName().equals(MutationSystem.getClassName()))
          {
             String qname = file_env.toQualifiedName(cdecl.getName());
             try 
@@ -417,13 +416,13 @@ public class ClassMutantsGenerator  extends MutantsGenerator
    /**
     * Compile class mutants into bytecode 
     */
-   public void compileMutants()
+   public void compileMutants(String classMutantPath)
    {
       if (classOp != null && classOp.length > 0)
       {
 	     Debug.println("* Compiling class mutants into bytecode");
-         MutationSystem.MUTANT_PATH = MutationSystem.CLASS_MUTANT_PATH;
-         super.compileMutants();
+//         MutationSystem.MUTANT_PATH = MutationSystem.CLASS_MUTANT_PATH;
+         super.compileMutants(classMutantPath);
       }
    }
 }
