@@ -31,9 +31,9 @@ import java.io.*;
 
 public class AORU extends MethodLevelMutator
 {
-   public AORU(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public AORU(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    /**
@@ -78,7 +78,7 @@ public class AORU extends MethodLevelMutator
       
       String f_name;
       num++;
-      f_name = getSourceName("AORU");
+      f_name = getSourceName("AORU", className, getMutantType("AORU"));
       String mutant_dir = getMuantID("AORU");
 
       try 

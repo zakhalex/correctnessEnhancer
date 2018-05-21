@@ -53,6 +53,7 @@ public abstract class MutantsViewerPanel  extends JPanel
    JTextPane originalTP = new JTextPane();
    JTextPane mutantTP = new JTextPane();
    JList mList = new JList();
+   public String mutantType;
 
    SimpleAttributeSet red_attr = new SimpleAttributeSet();
    SimpleAttributeSet blue_attr = new SimpleAttributeSet();
@@ -271,6 +272,8 @@ public abstract class MutantsViewerPanel  extends JPanel
 
    void updateContents()
    {
+	   mutantType="traditional_mutants";
+
       File mutant_dir = new File(getMutantPath());
       String[] mutants = mutant_dir.list(new MutantDirFilter());
       showGeneratedMutantsNum(mutants);
@@ -301,6 +304,8 @@ public abstract class MutantsViewerPanel  extends JPanel
 
    public void refreshEnv()
    {
+	   mutantType="traditional_mutants";
+
       File f = new File(MutationSystem.MUTANT_HOME);
       String[] c_list = f.list(new DirFileFilter());
       try
@@ -343,10 +348,12 @@ public abstract class MutantsViewerPanel  extends JPanel
 
    void mList_mouseClicked(MouseEvent e)
    {
+	   
       Object selected_obj = mList.getSelectedValue();
       if (selected_obj != null)
       {
          String mutant_name = selected_obj.toString();
+         String mutantPath=MutationSystem.MUTANT_HOME+File.separator+mutant_name+File.separator+mutantType;
          String mutant_log = getMutantLog(mutant_name,mutantPath);
          if (mutant_log != null) 
          {
@@ -362,7 +369,10 @@ public abstract class MutantsViewerPanel  extends JPanel
       try
       {
          String strLine;
-         File myFile = new File(MutationSystem.ORIGINAL_PATH,MutationSystem.getClassName()+".java");
+         int deQualifier=target_dir.lastIndexOf('.')+1;
+         
+         File myFile = new File(MutationSystem.MUTANT_HOME
+                 + "/" + target_dir + "/" + MutationSystem.ORIGINAL_DIR_NAME,target_dir.substring(deQualifier,target_dir.length())+".java");
          String blank_str;
          LineNumberReader lReader = new LineNumberReader(new FileReader(myFile));
 
@@ -383,7 +393,7 @@ public abstract class MutantsViewerPanel  extends JPanel
 
       } catch (Exception  e)
       {
-         System.err.println(" [error] " + e);
+         System.err.println(" [error] MutantsViewer showOriginal " + e);
       }
    }
 
@@ -401,14 +411,15 @@ public abstract class MutantsViewerPanel  extends JPanel
          int line_num = 0;
          int caret_pos = 0;
          String strLine;
+         int deQualifier=target_dir.lastIndexOf('.')+1;
          File myFile = new File(mutantPath + 
-        		  "/" + dir_name, MutationSystem.getClassName() + ".java");
+        		  "/" + dir_name, target_dir.substring(deQualifier,target_dir.length())+".java");
 
          String blank_str;
 
       } catch(Exception  e)
       {
-         System.err.println(" [error] " + e);
+         System.err.println(" [error] MutantsViewer showMutant " + e);
       }
    }
 
@@ -431,8 +442,9 @@ public abstract class MutantsViewerPanel  extends JPanel
          int line_num=0;
          int caret_pos=0;
          String strLine;
+         int deQualifier=target_dir.lastIndexOf('.')+1;
          File myFile = new File(mutantPath + 
-        		  "/" + dir_name, MutationSystem.getClassName() + ".java");
+        		  "/" + dir_name, target_dir.substring(deQualifier,target_dir.length())+ ".java");
          System.out.println("showMutant: myFile =" + myFile.getAbsolutePath());
 
          String blank_str;
@@ -465,7 +477,7 @@ public abstract class MutantsViewerPanel  extends JPanel
 
       } catch(Exception  e)
       {
-         System.err.println(" [error] " + e);
+         System.err.println(" [error] MutantsViewer " + e);
       }
    }
   

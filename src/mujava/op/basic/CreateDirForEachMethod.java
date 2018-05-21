@@ -29,11 +29,13 @@ import mujava.MutationSystem;
 public class CreateDirForEachMethod extends MethodLevelMutator
 {
    PrintWriter out = null;
+   String mutantPath;
    public CreateDirForEachMethod(FileEnvironment file_env, ClassDeclaration cdecl,
-                                 CompilationUnit comp_unit, PrintWriter out)
+                                 CompilationUnit comp_unit, PrintWriter out, String className, String mutantPath)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
       this.out = out;
+      this.mutantPath=mutantPath;
    }
 
    void createDirectory(String dir_name, String mutantPath)
@@ -44,12 +46,12 @@ public class CreateDirForEachMethod extends MethodLevelMutator
       dirF.mkdir();
    }
 
-   public void visit(ConstructorDeclaration p, String mutantPath) throws ParseTreeException 
+   public void visit(ConstructorDeclaration p) throws ParseTreeException 
    {
       createDirectory(getConstructorSignature(p), mutantPath);
    }
 
-   public void visit(MethodDeclaration p, String mutantPath) throws ParseTreeException
+   public void visit(MethodDeclaration p) throws ParseTreeException
    {
       createDirectory(getMethodSignature(p), mutantPath);
    }

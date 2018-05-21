@@ -28,9 +28,9 @@ import openjava.ptree.*;
 public class ETD extends mujava.op.util.Mutator
 {
   public ETD(FileEnvironment file_env,ClassDeclaration cdecl,
-    CompilationUnit comp_unit)
+    CompilationUnit comp_unit, String className)
   {
-	super( file_env, comp_unit );
+	super( file_env, comp_unit, className );
   }
 
   public void visit( ThrowStatement p ) throws ParseTreeException
@@ -43,7 +43,7 @@ public class ETD extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("ETD"));
       String mutant_dir = getMuantID();
 
       try {

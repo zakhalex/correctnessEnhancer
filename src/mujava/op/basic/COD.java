@@ -31,9 +31,9 @@ import java.io.*;
 
 public class COD extends MethodLevelMutator
 {
-   public COD(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public COD(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    public void visit( UnaryExpression p ) throws ParseTreeException
@@ -56,7 +56,7 @@ public class COD extends MethodLevelMutator
       
       String f_name;
       num++;
-      f_name = getSourceName("COD");
+      f_name = getSourceName("COD", className, getMutantType("COD"));
       String mutant_dir = getMuantID("COD");
 
       try 

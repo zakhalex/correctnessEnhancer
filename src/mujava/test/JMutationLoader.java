@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 
 import mujava.MutationSystem;
+import mujava.op.util.Mutator;
 import mujava.util.Debug;
 
 /**
@@ -36,7 +37,8 @@ import mujava.util.Debug;
 public class JMutationLoader extends ClassLoader
 {
 
-	String mutant_name;
+	private String mutant_name;
+	private String mutantPath;
 	boolean tt = false;
 
 	public JMutationLoader()
@@ -49,16 +51,18 @@ public class JMutationLoader extends ClassLoader
 		super(parentClassLoader);
 	}
 
-	public JMutationLoader(String dir)
+	public JMutationLoader(String mutantPath, String dir)
 	{
 		super(null);
 		mutant_name = dir;
+		this.mutantPath=mutantPath;
 	}
 
-	public JMutationLoader(ClassLoader parentClassLoader, String dir)
+	public JMutationLoader(ClassLoader parentClassLoader, String mutantPath, String dir)
 	{
 		super(parentClassLoader);
 		mutant_name = dir;
+		this.mutantPath=mutantPath;
 	}
 
 	public synchronized Class loadTestClass(String name) throws ClassNotFoundException
@@ -113,11 +117,11 @@ public class JMutationLoader extends ClassLoader
 					if (start_index >= 0)
 					{
 						String nameWithNoPackage = name.substring(start_index + 1, name.length());
-						data = getClassData(nameWithNoPackage, MutationSystem.MUTANT_PATH + "/" + mutant_name);
+						data = getClassData(nameWithNoPackage, mutantPath+File.separator+mutant_name);
 					}
 					else
 					{
-						data = getClassData(name, MutationSystem.MUTANT_PATH + "/" + mutant_name);
+						data = getClassData(name, mutantPath +File.separator+ mutant_name);
 					}
 
 				}

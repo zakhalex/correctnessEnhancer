@@ -31,9 +31,9 @@ import openjava.ptree.*;
 public class IPC extends mujava.op.util.Mutator
 {
    // ClassDeclaration my_class;
-   public IPC(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public IPC(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env, comp_unit );
+	  super( file_env, comp_unit, className );
 	  //my_class = cdecl;
    }
 
@@ -59,7 +59,7 @@ public class IPC extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("IPC"));
       String mutant_dir = getMuantID();
 
       try 

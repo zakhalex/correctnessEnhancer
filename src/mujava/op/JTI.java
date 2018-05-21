@@ -34,9 +34,9 @@ public class JTI extends mujava.op.util.Mutator
    Vector localVar = new Vector();
    boolean isJTITarget = false;
 
-   public JTI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public JTI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env, comp_unit );
+	  super( file_env, comp_unit, className );
    }
 
    boolean isTarget( Parameter p ) throws ParseTreeException 
@@ -144,7 +144,7 @@ public class JTI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("JTI"));
       String mutant_dir = getMuantID();
 
       try 

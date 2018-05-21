@@ -40,9 +40,9 @@ public class PPD extends mujava.op.util.PolymorphicMutator
 {
    MethodDeclaration currentMethod = null;
 
-   public PPD(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public PPD(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env, comp_unit );
+	  super( file_env, comp_unit, className );
    }
 
    public void visit(MethodDeclaration p) throws ParseTreeException 
@@ -144,7 +144,7 @@ public class PPD extends mujava.op.util.PolymorphicMutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("PPD"));
       String mutant_dir = getMuantID();
 
       try 

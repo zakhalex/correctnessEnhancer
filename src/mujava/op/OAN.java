@@ -35,9 +35,9 @@ public class OAN extends mujava.op.util.Mutator
    OverloadingHelper oM_helper = new OverloadingHelper();
    MethodCall method_call= null;
 
-   public OAN(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public OAN(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env, comp_unit );
+	  super( file_env, comp_unit, className );
 	  this.env = getEnvironment();
    }
 
@@ -288,7 +288,7 @@ public class OAN extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("OAN"));
 	  String mutant_dir = getMuantID();
 
       try 

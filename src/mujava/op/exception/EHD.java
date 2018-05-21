@@ -28,9 +28,9 @@ import openjava.ptree.*;
 public class EHD extends mujava.op.util.Mutator
 {
   public EHD(FileEnvironment file_env,ClassDeclaration cdecl,
-    CompilationUnit comp_unit)
+    CompilationUnit comp_unit, String className)
   {
-	super( file_env, comp_unit );
+	super( file_env, comp_unit, className );
   }
 
   public void visit( TryStatement p ) throws ParseTreeException
@@ -56,7 +56,7 @@ public class EHD extends mujava.op.util.Mutator
       if (comp_unit==null) return;
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("EHD"));
       String mutant_dir = getMuantID();
 
       try {

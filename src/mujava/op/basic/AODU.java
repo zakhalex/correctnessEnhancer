@@ -36,9 +36,9 @@ public class AODU extends Arithmetic_OP
 {
 //   boolean aor_flag = false;
 
-   public AODU(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public AODU(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    /**
@@ -104,7 +104,7 @@ public class AODU extends Arithmetic_OP
       
       String f_name;
       num++;
-      f_name = getSourceName("AODU");
+      f_name = getSourceName("AODU", className, getMutantType("AODU"));
       String mutant_dir = getMuantID("AODU");
 
       try 

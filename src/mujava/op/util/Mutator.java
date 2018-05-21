@@ -27,19 +27,21 @@ import openjava.ptree.*;
  * @version 1.0
   */
 
-public class Mutator extends mujava.openjava.extension.VariableBinder
+public abstract class Mutator extends mujava.openjava.extension.VariableBinder
 {
    public int num = 0;
    public CompilationUnit comp_unit = null;
    //-------------------------------------
    public FileEnvironment file_env = null;
-
-   public Mutator( Environment env, CompilationUnit comp_unit ) 
+   public final String className;
+   
+   public Mutator( Environment env, CompilationUnit comp_unit, String className) 
    {
       super( env );
       this.comp_unit = comp_unit;
+      this.className=className;
    }
-
+   
    //--------------
    protected OJClass getType( Expression p ) throws ParseTreeException 
    {
@@ -166,21 +168,52 @@ public class Mutator extends mujava.openjava.extension.VariableBinder
 	  return str;
    }
 
+   protected String getMutantType(String mutantType)
+   {
+	   for(String s:MutationSystem.cm_operators)
+	   {
+		   if(s.equalsIgnoreCase(mutantType))
+		   {
+			   return "class_mutants";
+		   }
+	   }
+	   for(String s:MutationSystem.tm_operators)
+	   {
+		   if(s.equalsIgnoreCase(mutantType))
+		   {
+			   return "traditional_mutants";
+		   }
+	   }
+	   for(String s:MutationSystem.em_operators)
+	   {
+		   if(s.equalsIgnoreCase(mutantType))
+		   {
+			   return "exception_mutants";
+		   }
+	   }
+	   return "unclassified_mutants";
+   }
+   
    /**
     * Return the source's file name
     * @param op_name
+ * @param className TODO
+ * @param mutantType TODO
     * @return
     */
-   public String getSourceName(String op_name)
+   public String getSourceName(String op_name, String className, String mutantType)
    {
 	  // make directory for the mutant
-	  String dir_name = MutationSystem.MUTANT_PATH + "/" + op_name + "_" + this.num;
+	   String mutantPath=MutationSystem.MUTANT_HOME+File.separator+className+File.separator+mutantType;
+	  String dir_name = mutantPath + "/" + op_name + "_" + this.num;
 	  File f = new File(dir_name);
 	  f.mkdir();
 
   	  // return file name
+	  int unQualifier=className.lastIndexOf('.')+1;
+	  
 	  String name;
-	  name = dir_name + "/" +  MutationSystem.getClassName() + ".java";
+	  name = dir_name + "/" +  className.substring(unQualifier, className.length()) + ".java";
       return name;
    }
 
@@ -189,16 +222,18 @@ public class Mutator extends mujava.openjava.extension.VariableBinder
     * @param clazz
     * @return
     */
-   public String getSourceName(Mutator clazz)
+   public String getSourceName(Mutator clazz, String className, String mutantType)
    {
       // make directory for the mutant
-	  String dir_name = MutationSystem.MUTANT_PATH + "/" + getClassName() + "_" + this.num;
+	   String mutantPath=MutationSystem.MUTANT_HOME+File.separator+className+File.separator+mutantType;
+	  String dir_name = mutantPath + "/" + getClassName() + "_" + this.num;
 	  File f = new File(dir_name);
   	  f.mkdir();
 
   	  // return file name
 	  String name;
-	  name = dir_name + "/" +  MutationSystem.getClassName() + ".java";
+	  int unQualifier=className.lastIndexOf('.')+1;
+	  name = dir_name + "/" +  className.substring(unQualifier, className.length()) + ".java";
       return name;
    }
 

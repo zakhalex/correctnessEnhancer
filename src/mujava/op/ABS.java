@@ -35,8 +35,8 @@ import openjava.ptree.*;
 
 public class ABS extends mujava.op.util.Mutator
 {
-   public ABS(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public ABS(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 }

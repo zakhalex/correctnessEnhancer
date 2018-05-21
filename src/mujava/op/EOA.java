@@ -36,9 +36,9 @@ import openjava.ptree.*;
 
 public class EOA extends mujava.op.util.Mutator
 {
-   public EOA(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public EOA(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env, comp_unit );
+	  super( file_env, comp_unit, className );
    }
 
    public void visit( ExpressionStatement p ) throws ParseTreeException 
@@ -90,7 +90,7 @@ public class EOA extends mujava.op.util.Mutator
     
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("EOA"));
       String mutant_dir = getMuantID();
 
       try 
@@ -171,7 +171,7 @@ public class EOA extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("EOA"));;
 	  String mutant_dir = getMuantID();
 
       try 
@@ -202,7 +202,7 @@ public class EOA extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("EOA"));;
 	  String mutant_dir = getMuantID();
 
       try 

@@ -29,9 +29,9 @@ import java.io.*;
 
 public class VDL extends Arithmetic_OP
 {
-   public VDL(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public VDL(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
  
    public void visit( BinaryExpression p ) throws ParseTreeException 
@@ -149,7 +149,7 @@ private void aorMutantGen(BinaryExpression exp)
 
       String f_name;
       num++;
-      f_name = getSourceName("VDL");
+      f_name = getSourceName("VDL", className, getMutantType("VDL"));
       String mutant_dir = getMuantID("VDL");
 
       try 
@@ -177,7 +177,7 @@ private void aorMutantGen(BinaryExpression exp)
 
 	       String f_name;
 	       num++;
-	       f_name = getSourceName("VDL");
+	       f_name = getSourceName("VDL", className, getMutantType("VDL"));
 	       String mutant_dir = getMuantID("VDL");
 
 	       try 
@@ -204,7 +204,7 @@ private void aor_outputToFile(UnaryExpression original, Expression mutant) {
 
 	       String f_name;
 	       num++;
-	       f_name = getSourceName("VDL");
+	       f_name = getSourceName("VDL", className, getMutantType("VDL"));
 	       String mutant_dir = getMuantID("VDL");
 
 	       try 

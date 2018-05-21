@@ -77,15 +77,19 @@ public class TestExecutor
 					{
 						case 0:
 						{
-							test_result.add(test_engine.runClassMutants(MutationSystem.CLASS_MUTANT_PATH));
-							test_result.add(test_engine.runTraditionalMutants(methodSignature.toString(), MutationSystem.TRADITIONAL_MUTANT_PATH));
+							test_result.add(test_engine.runClassMutants(MutationSystem.MUTANT_HOME
+	                                + "/" + targetClassName + "/" + MutationSystem.CM_DIR_NAME));
+							test_result.add(test_engine.runTraditionalMutants(methodSignature.toString(), MutationSystem.MUTANT_HOME
+	                                + "/" + targetClassName + "/" + MutationSystem.TM_DIR_NAME));
 							break;
 						}
 						case 1:
-							test_result.add(test_engine.runClassMutants(MutationSystem.CLASS_MUTANT_PATH));
+							test_result.add(test_engine.runClassMutants(MutationSystem.MUTANT_HOME
+	                                + "/" + targetClassName + "/" + MutationSystem.CM_DIR_NAME));
 							break;
 						case 2:
-							test_result.add(test_engine.runTraditionalMutants(methodSignature.toString(), MutationSystem.TRADITIONAL_MUTANT_PATH));
+							test_result.add(test_engine.runTraditionalMutants(methodSignature.toString(), MutationSystem.MUTANT_HOME
+	                                + "/" + targetClassName + "/" + MutationSystem.TM_DIR_NAME));
 							break;
 						default:
 							break;

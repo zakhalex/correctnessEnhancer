@@ -202,7 +202,7 @@ public class MutationControl
 					try
 					{
 						cmGenEngine = new ClassMutantsGenerator(original_file, class_ops);
-						cmGenEngine.makeMutants(allPaths.get("originalpath"),allPaths.get("classmutantpath"),allPaths.get("classname"));
+						cmGenEngine.makeMutants(allPaths.get("originalpath"),allPaths.get("classmutantpath"),allPaths.get("qualifiedName"));
 						cmGenEngine.compileMutants(allPaths.get("classmutantpath"));
 					}
 					catch (OpenJavaException oje)
@@ -222,7 +222,7 @@ public class MutationControl
 					catch (Error er)
 					{
 						failure = true;
-						output.add("[Error] " + file_name + " " + er.toString());
+						output.add("[Error] MutationControl " + file_name + " " + er.toString());
 						output.add("MutantsGenPanel: " + er.getMessage());
 						er.printStackTrace();
 
@@ -240,7 +240,7 @@ public class MutationControl
 						// System.out.println("original_file: " + original_file);
 						// System.out.println("traditional_ops: " + traditional_ops);
 						tmGenEngine = new TraditionalMutantsGenerator(original_file, traditional_ops);
-						tmGenEngine.makeMutants(allPaths.get("originalpath"),allPaths.get("traditionalmutantpath"),allPaths.get("classname"));
+						tmGenEngine.makeMutants(allPaths.get("originalpath"),allPaths.get("traditionalmutantpath"),allPaths.get("qualifiedName"));
 						tmGenEngine.compileMutants(allPaths.get("traditionalmutantpath"));
 					}
 					catch (OpenJavaException oje)
@@ -260,7 +260,7 @@ public class MutationControl
 					catch (Error er)
 					{
 						failure = true;
-						output.add("[Error] " + file_name + " " + er.toString());
+						output.add("[Error] MutationControl " + file_name + " " + er.toString());
 						output.add("MutantsGenPanel: " + er.getMessage());
 						er.printStackTrace();
 
@@ -330,19 +330,19 @@ public class MutationControl
 				allPaths.put("classname", temp);
 			}
 
-			String mutant_dir_path = MutationSystem.MUTANT_HOME + "/" + temp;
+			String mutant_dir_path = MutationSystem.MUTANT_HOME + File.separator + temp;
 			File mutant_path = new File(mutant_dir_path);
 			mutant_path.mkdir();
 
-			String class_mutant_dir_path = mutant_dir_path + "/" + MutationSystem.CM_DIR_NAME;
+			String class_mutant_dir_path = mutant_dir_path + File.separator + MutationSystem.CM_DIR_NAME;
 			File class_mutant_path = new File(class_mutant_dir_path);
 			class_mutant_path.mkdir();
 
-			String traditional_mutant_dir_path = mutant_dir_path + "/" + MutationSystem.TM_DIR_NAME;
+			String traditional_mutant_dir_path = mutant_dir_path + File.separator + MutationSystem.TM_DIR_NAME;
 			File traditional_mutant_path = new File(traditional_mutant_dir_path);
 			traditional_mutant_path.mkdir();
 
-			String original_dir_path = mutant_dir_path + "/" + MutationSystem.ORIGINAL_DIR_NAME;
+			String original_dir_path = mutant_dir_path + File.separator + MutationSystem.ORIGINAL_DIR_NAME;
 			File original_path = new File(original_dir_path);
 			original_path.mkdir();
 
@@ -351,10 +351,11 @@ public class MutationControl
 //			MutationSystem.ORIGINAL_PATH = original_dir_path;
 //			MutationSystem.setDirectory(temp);
 			
-			allPaths.put("classmutantpath", temp.substring(separator_index + 1, temp.length()));
-			allPaths.put("traditionalmutantpath", temp.substring(separator_index + 1, temp.length()));
-			allPaths.put("originalpath", temp.substring(separator_index + 1, temp.length()));
-			allPaths.put("dirname", temp);
+			allPaths.put("classmutantpath", class_mutant_dir_path);
+			allPaths.put("traditionalmutantpath", traditional_mutant_dir_path);
+			allPaths.put("originalpath", original_dir_path);
+			allPaths.put("qualifiedName", temp);
+			allPaths.put("unqualifiedName", temp.substring(separator_index + 1, temp.length()));
 		}
 		catch (Exception e)
 		{

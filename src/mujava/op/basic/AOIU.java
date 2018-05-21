@@ -40,8 +40,8 @@ import java.io.*;
 public class AOIU extends Arithmetic_OP {
 	// boolean aor_flag = false;
 
-	public AOIU(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit) {
-		super(file_env, comp_unit);
+	public AOIU(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className) {
+		super(file_env, comp_unit, className);
 	}
 
 	/**
@@ -149,7 +149,7 @@ public class AOIU extends Arithmetic_OP {
 
 		String f_name;
 		num++;
-		f_name = getSourceName("AOIU");
+		f_name = getSourceName("AOIU", className, getMutantType("AOIU"));
 		String mutant_dir = getMuantID("AOIU");
 
 		try {
@@ -179,7 +179,7 @@ public class AOIU extends Arithmetic_OP {
 
 		String f_name;
 		num++;
-		f_name = getSourceName("AOIU");
+		f_name = getSourceName("AOIU", className, getMutantType("AOIU"));
 		String mutant_dir = getMuantID("AOIU");
 
 		try {

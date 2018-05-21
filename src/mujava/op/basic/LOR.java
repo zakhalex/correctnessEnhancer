@@ -31,9 +31,9 @@ import java.io.*;
 
 public class LOR extends MethodLevelMutator
 {
-   public LOR(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public LOR(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    public void visit( BinaryExpression p ) throws ParseTreeException 
@@ -94,7 +94,7 @@ public class LOR extends MethodLevelMutator
 
       String f_name;
       num++;
-      f_name = getSourceName("LOR");
+      f_name = getSourceName("LOR", className, getMutantType("LOR"));
       String mutant_dir = getMuantID("LOR");
 
       try 

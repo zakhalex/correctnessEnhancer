@@ -35,9 +35,9 @@ import openjava.ptree.*;
 
 public class EOC extends mujava.op.util.Mutator
 {
-   public EOC(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public EOC(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env,comp_unit );
+	  super( file_env,comp_unit, className );
    }
 
    public void visit( MethodCall p ) throws ParseTreeException
@@ -118,7 +118,7 @@ public class EOC extends mujava.op.util.Mutator
       
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("EOC"));
       String mutant_dir = getMuantID();
 
       try 
@@ -149,7 +149,7 @@ public class EOC extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("EOC"));
       String mutant_dir = getMuantID();
 
       try 

@@ -33,9 +33,9 @@ import org.hamcrest.core.IsInstanceOf;
 
 public class ODL extends Arithmetic_OP
 {
-   public ODL(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public ODL(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
  
    // visit Binary Exp
@@ -92,7 +92,7 @@ private void aor_outputToFile(AssignmentExpression original, AssignmentExpressio
 
      String f_name;
      num++;
-     f_name = getSourceName("ODL");
+     f_name = getSourceName("ODL", className, getMutantType("ODL"));
      String mutant_dir = getMuantID("ODL");
 
      try 
@@ -156,7 +156,7 @@ private void aorMutantGen(BinaryExpression exp)
 
       String f_name;
       num++;
-      f_name = getSourceName("ODL");
+      f_name = getSourceName("ODL", className, getMutantType("ODL"));
       String mutant_dir = getMuantID("ODL");
 
       try 
@@ -184,7 +184,7 @@ private void aorMutantGen(BinaryExpression exp)
 
 	       String f_name;
 	       num++;
-	       f_name = getSourceName("ODL");
+	       f_name = getSourceName("ODL", className, getMutantType("ODL"));
 	       String mutant_dir = getMuantID("ODL");
 
 	       try 
@@ -211,7 +211,7 @@ private void aor_outputToFile(UnaryExpression original, Expression mutant) {
 
 	       String f_name;
 	       num++;
-	       f_name = getSourceName("ODL");
+	       f_name = getSourceName("ODL", className, getMutantType("ODL"));
 	       String mutant_dir = getMuantID("ODL");
 
 	       try 

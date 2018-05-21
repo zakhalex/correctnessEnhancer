@@ -30,9 +30,9 @@ import java.io.*;
 
 public class LOI extends Arithmetic_OP
 {
-   public LOI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public LOI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    public void visit( Variable p) throws ParseTreeException
@@ -79,7 +79,7 @@ public class LOI extends Arithmetic_OP
       
       String f_name;
       num++;
-      f_name = getSourceName("LOI");
+      f_name = getSourceName("LOI", className, getMutantType("LOI"));
       String mutant_dir = getMuantID("LOI");
 
       try 
@@ -110,7 +110,7 @@ public class LOI extends Arithmetic_OP
       
       String f_name;
       num++;
-      f_name = getSourceName("LOI");
+      f_name = getSourceName("LOI", className, getMutantType("LOI"));
       String mutant_dir = getMuantID("LOI");
 
       try 

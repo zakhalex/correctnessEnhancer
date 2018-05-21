@@ -35,9 +35,9 @@ import mujava.util.InheritanceINFO;
 
 public class PMD extends mujava.op.util.PolymorphicMutator
 {
-   public PMD(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public PMD(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env, comp_unit );
+	  super( file_env, comp_unit, className );
    } 
 
    public void visit(VariableDeclaration p) throws ParseTreeException
@@ -192,7 +192,7 @@ public class PMD extends mujava.op.util.PolymorphicMutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("PMD"));
       String mutant_dir = getMuantID();
 
       try 
@@ -223,7 +223,7 @@ public class PMD extends mujava.op.util.PolymorphicMutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("PMD"));
       String mutant_dir = getMuantID();
 
       try 

@@ -31,9 +31,9 @@ import org.hamcrest.core.IsInstanceOf;
 
 public class CDL extends Arithmetic_OP
 {
-   public CDL(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public CDL(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
  
    public void visit( BinaryExpression p ) throws ParseTreeException 
@@ -162,7 +162,7 @@ private void aorMutantGen(BinaryExpression exp)
 
       String f_name;
       num++;
-      f_name = getSourceName("CDL");
+      f_name = getSourceName("CDL", className, getMutantType("CDL"));
       String mutant_dir = getMuantID("CDL");
 
       try 
@@ -190,7 +190,7 @@ private void aorMutantGen(BinaryExpression exp)
 
 	       String f_name;
 	       num++;
-	       f_name = getSourceName("CDL");
+	       f_name = getSourceName("CDL", className, getMutantType("CDL"));
 	       String mutant_dir = getMuantID("CDL");
 
 	       try 
@@ -217,7 +217,7 @@ private void aor_outputToFile(UnaryExpression original, Expression mutant) {
 
 	       String f_name;
 	       num++;
-	       f_name = getSourceName("CDL");
+	       f_name = getSourceName("CDL", className, getMutantType("CDL"));
 	       String mutant_dir = getMuantID("CDL");
 
 	       try 
@@ -245,7 +245,7 @@ private void aor_outputToFile(AssignmentExpression original, AssignmentExpressio
 
      String f_name;
      num++;
-     f_name = getSourceName("CDL");
+     f_name = getSourceName("CDL", className, getMutantType("CDL"));
      String mutant_dir = getMuantID("CDL");
 
      try 

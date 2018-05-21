@@ -29,10 +29,11 @@ import mujava.MutationSystem;
 public class MethodLevelMutator  extends mujava.op.util.Mutator
 {
    String currentMethodSignature = null;
+   private String dir_name;
 
-   public MethodLevelMutator(FileEnvironment file_env, CompilationUnit comp_unit)
+   public MethodLevelMutator(FileEnvironment file_env, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    String getMethodSignature(MethodDeclaration p)
@@ -96,33 +97,35 @@ public class MethodLevelMutator  extends mujava.op.util.Mutator
    /**
     * Retrieve the source's file name
     */
-   public String getSourceName(mujava.op.util.Mutator clazz)
+   public String getSourceName(mujava.op.util.Mutator clazz, String className, String mutantType)
    {
 	  // make directory for the mutant
-	  String dir_name = MutationSystem.MUTANT_PATH + "/" + currentMethodSignature + "/"
+	  String dir_name = MutationSystem.MUTANT_HOME+File.separator+className+File.separator+mutantType + File.separator + currentMethodSignature + "/"
                         + getClassName() + "_" + this.num;
 	  File f = new File(dir_name);
 	  f.mkdir();
 
 	  // return file name
 	  String name;
-	  name = dir_name + "/" +  MutationSystem.getClassName() + ".java";
+	  int unQualifier=className.lastIndexOf('.')+1;
+	  name = dir_name + "/" +  className.substring(unQualifier, className.length()) + ".java";
       return name;
    }
 
    /**
     * Retrieve the source's file name
     */
-   public String getSourceName(String op_name)
+   public String getSourceName(String op_name, String className, String mutantType)
    {
  	  // make directory for the mutant
-	  String dir_name = MutationSystem.MUTANT_PATH + "/" + currentMethodSignature + "/" + op_name + "_" + this.num;
+	  String dir_name = MutationSystem.MUTANT_HOME+File.separator+className+File.separator+mutantType + File.separator + currentMethodSignature + "/" + op_name + "_" + this.num;
 	  File f = new File(dir_name);
 	  f.mkdir();
 
 	  // return file name
 	  String name;
-	  name = dir_name + "/" +  MutationSystem.getClassName() + ".java";
+	  int unQualifier=className.lastIndexOf('.')+1;
+	  name = dir_name + "/" +  className.substring(unQualifier, className.length()) + ".java";
       return name;
    }
 

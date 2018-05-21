@@ -28,9 +28,9 @@ import openjava.ptree.*;
 public class EFD extends mujava.op.util.Mutator
 {
   public EFD(FileEnvironment file_env,ClassDeclaration cdecl,
-    CompilationUnit comp_unit)
+    CompilationUnit comp_unit, String className)
   {
-	super( file_env, comp_unit );
+	super( file_env, comp_unit, className );
   }
 
     public void visit( TryStatement p )
@@ -48,7 +48,7 @@ public class EFD extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("EFD"));
       String mutant_dir = getMuantID();
 
       try {

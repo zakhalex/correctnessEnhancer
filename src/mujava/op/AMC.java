@@ -35,9 +35,9 @@ import openjava.ptree.*;
 
 public class AMC extends mujava.op.util.Mutator
 {
-   public AMC(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public AMC(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-  	  super( file_env, comp_unit );
+  	  super( file_env, comp_unit, className );
    }
 
    private void changeModifier(ModifierList original, int del_mod, int insert_mod)
@@ -119,7 +119,7 @@ public class AMC extends mujava.op.util.Mutator
     
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("AMC"));
       String mutant_dir = getMuantID();
 
       try 

@@ -31,9 +31,9 @@ import java.io.*;
 
 public class COR extends MethodLevelMutator
 {
-   public COR(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public COR(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    /**
@@ -99,7 +99,7 @@ public class COR extends MethodLevelMutator
 
       String f_name;
       num++;
-      f_name = getSourceName("COR");
+      f_name = getSourceName("COR", className, getMutantType("COR"));
       String mutant_dir = getMuantID("COR");
 
       try 

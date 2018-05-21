@@ -30,9 +30,9 @@ import java.io.*;
 
 public class SOR extends MethodLevelMutator
 {
-   public SOR(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public SOR(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    public void visit( BinaryExpression p ) throws ParseTreeException 
@@ -89,7 +89,7 @@ public class SOR extends MethodLevelMutator
 
       String f_name;
       num++;
-      f_name = getSourceName("SOR");
+      f_name = getSourceName("SOR", className, getMutantType("SOR"));
       String mutant_dir = getMuantID("SOR");
 
       try 

@@ -54,9 +54,9 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
    boolean rorFlag = true;
    boolean uoiFlag = true;
 
-   public ABS_AOR_LCR_ROR_UOI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public ABS_AOR_LCR_ROR_UOI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    /**
@@ -499,7 +499,7 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName("UOI");
+      f_name = getSourceName("UOI", className, getMutantType("UOI"));;
       String mutant_dir = getMuantID("UOI");
 
       try 
@@ -530,7 +530,7 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName("UOI");
+      f_name = getSourceName("UOI", className, getMutantType("UOI"));;
       String mutant_dir = getMuantID("UOI");
 
       try 
@@ -555,7 +555,7 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName("AOR");
+      f_name = getSourceName("AOR", className, getMutantType("AOR"));
       String mutant_dir = getMuantID("AOR");
 
       try 
@@ -585,7 +585,7 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName("LCR");
+      f_name = getSourceName("LCR", className, getMutantType("LCR"));
       String mutant_dir = getMuantID("LCR");
 
       try 
@@ -615,7 +615,7 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName("LCR");
+      f_name = getSourceName("LCR", className, getMutantType("LCR"));;
       String mutant_dir = getMuantID("LCR");
 
       try 
@@ -645,7 +645,7 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName("ABS");
+      f_name = getSourceName("ABS", className, getMutantType("ABS"));
       String mutant_dir = getMuantID("ABS");
 
       try 
@@ -675,7 +675,7 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName("ABS");
+      f_name = getSourceName("ABS", className, getMutantType("ABS"));
       String mutant_dir = getMuantID("ABS");
 
       try 
@@ -705,7 +705,7 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName("ABS");
+      f_name = getSourceName("ABS", className, getMutantType("ABS"));
       String mutant_dir = getMuantID("ABS");
 
       try 
@@ -735,7 +735,7 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName("ABS");
+      f_name = getSourceName("ABS", className, getMutantType("ABS"));
       String mutant_dir = getMuantID("ABS");
 
       try 
@@ -765,7 +765,7 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName("ABS");
+      f_name = getSourceName("ABS", className, getMutantType("ABS"));
       String mutant_dir = getMuantID("ABS");
 
       try 
@@ -795,7 +795,7 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName("ABS");
+      f_name = getSourceName("ABS", className, getMutantType("ABS"));
       String mutant_dir = getMuantID("ABS");
 
       try 
@@ -826,7 +826,7 @@ public class ABS_AOR_LCR_ROR_UOI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName("ROR");
+      f_name = getSourceName("ROR", className, getMutantType("ROR"));;
       String mutant_dir = getMuantID("ROR");
 
       try 

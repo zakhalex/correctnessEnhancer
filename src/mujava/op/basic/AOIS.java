@@ -33,9 +33,9 @@ public class AOIS extends Arithmetic_OP
 {
    boolean isPrePostEQ = true;
 
-   public AOIS(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public AOIS(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
    
    public void visit( UnaryExpression p ) throws ParseTreeException
@@ -108,7 +108,7 @@ public class AOIS extends Arithmetic_OP
 
       String f_name;
       num++;
-      f_name = getSourceName("AOIS");
+      f_name = getSourceName("AOIS", className, getMutantType("AOIS"));
       String mutant_dir = getMuantID("AOIS");
 
       try 
@@ -139,7 +139,7 @@ public class AOIS extends Arithmetic_OP
       
       String f_name;
       num++;
-      f_name = getSourceName("AOIS");
+      f_name = getSourceName("AOIS", className, getMutantType("AOIS"));
       String mutant_dir = getMuantID("AOIS");
 
       try 

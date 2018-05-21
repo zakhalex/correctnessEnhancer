@@ -42,7 +42,7 @@ public class IHI_Writer extends MutantCodeWriter
 
    public void visit( ClassDeclaration p ) throws ParseTreeException
    {
-	  if (p.getName().equals(MutationSystem.getClassName()))
+	  if (p.getName().equals(class_name))
  	  {
          writeTab();
 

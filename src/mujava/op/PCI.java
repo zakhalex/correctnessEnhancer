@@ -40,9 +40,9 @@ public class PCI extends mujava.op.util.TypeCastMutator
    String beforeCastType = "";
    boolean isNonEQ = false;
 
-   public PCI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public PCI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env, comp_unit );
+	  super( file_env, comp_unit, className );
    }
 
    void generateUpMutant(Variable p, InheritanceINFO inf)
@@ -230,7 +230,7 @@ public class PCI extends mujava.op.util.TypeCastMutator
      
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("PCI"));
       String mutant_dir = getMuantID();
 
       try 

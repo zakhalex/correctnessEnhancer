@@ -32,6 +32,7 @@ import mujava.op.util.DeclAnalyzer;
 public class IHI extends DeclAnalyzer
 {
    Environment file_env = null;
+private String className;
 
    public void translateDefinition(CompilationUnit comp_unit) throws openjava.mop.MOPException
    {
@@ -83,7 +84,7 @@ public class IHI extends DeclAnalyzer
 
    private boolean isEquivalent(CompilationUnit comp_unit,OJField f)
    {
-      IHD_IHI_EqAnalyzer engine = new IHD_IHI_EqAnalyzer(file_env, comp_unit, f.getName());
+      IHD_IHI_EqAnalyzer engine = new IHD_IHI_EqAnalyzer(file_env, comp_unit, f.getName(), className);
       try
       {
          comp_unit.accept(engine);
@@ -110,7 +111,7 @@ public class IHI extends DeclAnalyzer
       
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, "class_mutants");
       String mutant_dir = getMuantID();
       try 
       {
@@ -131,15 +132,17 @@ public class IHI extends DeclAnalyzer
    }
 
 
-   public IHI( openjava.mop.Environment oj_param0, openjava.mop.OJClass oj_param1, openjava.ptree.ClassDeclaration oj_param2 )
+   public IHI( openjava.mop.Environment oj_param0, openjava.mop.OJClass oj_param1, openjava.ptree.ClassDeclaration oj_param2, String className )
    {
       super( oj_param0, oj_param1, oj_param2 );
       file_env = oj_param0;
+      this.className=className;
    }
 
-   public IHI( java.lang.Class oj_param0, openjava.mop.MetaInfo oj_param1 )
+   public IHI( java.lang.Class oj_param0, openjava.mop.MetaInfo oj_param1, String className )
    {
       super( oj_param0, oj_param1 );
+      this.className=className;
    }
 }
 

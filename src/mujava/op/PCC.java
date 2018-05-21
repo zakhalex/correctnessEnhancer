@@ -38,9 +38,9 @@ public class PCC extends mujava.op.util.TypeCastMutator
    String afterCastType = "";
    String beforeCastType = "";
 
-   public PCC(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public PCC(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env, comp_unit );
+	  super( file_env, comp_unit, className );
    }
 
    void generateUpMutants(CastExpression p, InheritanceINFO info)
@@ -192,7 +192,7 @@ public class PCC extends mujava.op.util.TypeCastMutator
     
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("PCC"));
       String mutant_dir = getMuantID();
 
       try 

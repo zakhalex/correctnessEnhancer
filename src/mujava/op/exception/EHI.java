@@ -27,9 +27,9 @@ import openjava.ptree.*;
 public class EHI extends mujava.op.util.Mutator
 {
   public EHI(FileEnvironment file_env,ClassDeclaration cdecl,
-    CompilationUnit comp_unit)
+    CompilationUnit comp_unit, String className)
   {
-	super( file_env, comp_unit );
+	super( file_env, comp_unit, className );
   }
 
 }

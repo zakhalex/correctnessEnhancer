@@ -31,9 +31,9 @@ import java.io.*;
 
 public class COI extends MethodLevelMutator
 {
-   public COI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public COI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    public void visit(UnaryExpression p)
@@ -81,7 +81,7 @@ public class COI extends MethodLevelMutator
 
       String f_name;
       num++;
-      f_name = getSourceName("COI");
+      f_name = getSourceName("COI", className, getMutantType("COI"));
       String mutant_dir = getMuantID("COI");
 
       try 
@@ -113,7 +113,7 @@ public class COI extends MethodLevelMutator
 
       String f_name;
       num++;
-      f_name = getSourceName("COI");
+      f_name = getSourceName("COI", className, getMutantType("COI"));
       String mutant_dir = getMuantID("COI");
 
       try 
@@ -144,7 +144,7 @@ public class COI extends MethodLevelMutator
 
       String f_name;
       num++;
-      f_name = getSourceName("COI");
+      f_name = getSourceName("COI", className, getMutantType("COI"));
       String mutant_dir = getMuantID("COI");
 
       try 

@@ -26,9 +26,9 @@ import openjava.ptree.*;
 
 public class Arithmetic_OP extends MethodLevelMutator
 {
-   public Arithmetic_OP(FileEnvironment file_env, CompilationUnit comp_unit)
+   public Arithmetic_OP(FileEnvironment file_env, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    /**

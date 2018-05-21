@@ -664,14 +664,16 @@ public class RunTestPanel extends JPanel implements ActionListener
 		{
 			Vector v = new Vector();
 			// setMutantPath();
-			File f = new File(MutationSystem.TRADITIONAL_MUTANT_PATH, "method_list");
+			File f = new File(MutationSystem.MUTANT_HOME
+                    + "/" + target_dir + "/" + MutationSystem.TM_DIR_NAME, "method_list");
 			FileReader r = new FileReader(f);
 			BufferedReader reader = new BufferedReader(r);
 			String methodSignature = reader.readLine();
 
 			while (methodSignature != null)
 			{
-				File mutant_dir = new File(MutationSystem.TRADITIONAL_MUTANT_PATH + "/" + methodSignature);
+				File mutant_dir = new File(MutationSystem.MUTANT_HOME
+                        + "/" + target_dir + "/" + MutationSystem.TM_DIR_NAME + "/" + methodSignature);
 				String[] mutants = mutant_dir.list(new MutantDirFilter());
 				for (int i = 0; i < mutants.length; i++)
 				{
@@ -697,7 +699,8 @@ public class RunTestPanel extends JPanel implements ActionListener
 
 	void showTraditionalMutants(String methodSignature)
 	{
-		File mutant_dir = new File(MutationSystem.TRADITIONAL_MUTANT_PATH + "/" + methodSignature);
+		File mutant_dir = new File(MutationSystem.MUTANT_HOME
+                + "/" + target_dir + "/" + MutationSystem.TM_DIR_NAME + "/" + methodSignature);
 		String[] mutants = mutant_dir.list(new MutantDirFilter());
 		showGeneratedTraditionalMutantsNum(mutants);
 	}
@@ -725,9 +728,9 @@ public class RunTestPanel extends JPanel implements ActionListener
 	private void changeContents()
 	{
 		target_dir = classCB.getSelectedItem().toString();
-		MutationSystem.setJMutationPaths(target_dir);
 
-		File mutant_dir = new File(MutationSystem.CLASS_MUTANT_PATH);
+		File mutant_dir = new File(MutationSystem.MUTANT_HOME
+                + "/" + target_dir + "/" + MutationSystem.CM_DIR_NAME);
 		String[] mutants = mutant_dir.list(new MutantDirFilter());
 		showGeneratedClassMutantsNum(mutants);
 
@@ -737,7 +740,8 @@ public class RunTestPanel extends JPanel implements ActionListener
 		methodCB.addItem("All method");
 		try
 		{
-			File f = new File(MutationSystem.TRADITIONAL_MUTANT_PATH, "method_list");
+			File f = new File(MutationSystem.MUTANT_HOME
+	                + "/" + target_dir + "/" + MutationSystem.TM_DIR_NAME, "method_list");
 			FileReader r = new FileReader(f);
 			BufferedReader reader = new BufferedReader(r);
 			String str = reader.readLine();

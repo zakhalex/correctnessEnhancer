@@ -91,33 +91,33 @@ public class MutationSystem extends OJSystem
    public static String MUTANT_HOME = SYSTEM_HOME + File.separatorChar + "result";
 
    /** path which class mutants are put into */
-   public static String CLASS_MUTANT_PATH = "";
+   private static String CLASS_MUTANT_PATH = "";
 
    /** path which traditional mutants are put into */
-   public static String TRADITIONAL_MUTANT_PATH = "";
+   private static String TRADITIONAL_MUTANT_PATH = "";
 
    /** path which exception-related mutants are put into */
-   public static String EXCEPTION_MUTANT_PATH = "";
+   private static String EXCEPTION_MUTANT_PATH = "";
 
    /** ??? absolute path for ???*/
    private static String MUTANT_PATH = "";
 
    /** ??? absolute path for the original Java source*/
-   public static String ORIGINAL_PATH = "";
+   private static String ORIGINAL_PATH = "";
 
    /** absolute path where test cases are located */
    public static String TESTSET_PATH = SYSTEM_HOME + File.separatorChar + "testset";
 
    /** class name without package name that mutation is applied into */
    private static String CLASS_NAME;
-   public static String getClassName()
-   {
-	   return CLASS_NAME;
-   }
-   public static void setClassName(String className)
-   {
-	   CLASS_NAME=className;
-   }
+//   public static String getClassName()
+//   {
+//	   return CLASS_NAME;
+//   }
+//   public static void setClassName(String className)
+//   {
+//	   CLASS_NAME=className;
+//   }
    public static String[] getTestSetNames()
 	{
 		ArrayList<String> v = new ArrayList<String>();
@@ -291,12 +291,7 @@ public class MutationSystem extends OJSystem
 	}
    /** path for */
    private static String DIR_NAME;
-   
-   public static String getDirectory()
-   {
-	   return DIR_NAME;
-   }
-   public static void setDirectory(String directory)
+   public static synchronized void setDirectory(String directory)
    {
 	   DIR_NAME=directory;
    }

@@ -31,9 +31,9 @@ public class IOR_Equivalent  extends mujava.op.util.Mutator
    ParameterList target_parList = null;
    boolean isEquivalent = true;
 
-   public IOR_Equivalent(FileEnvironment file_env, CompilationUnit comp_unit)
+   public IOR_Equivalent(FileEnvironment file_env, CompilationUnit comp_unit, String className)
    {
-	  super( file_env, comp_unit );
+	  super( file_env, comp_unit, className );
       isEquivalent = true;
    }
 

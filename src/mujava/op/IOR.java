@@ -49,9 +49,9 @@ public class IOR extends mujava.op.util.Mutator
       parent_comp_unit = comp_unit;
    }
 
-   public IOR (FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public IOR (FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env,comp_unit );
+	  super( file_env,comp_unit, className );
       s = new Stack();
    }
 
@@ -80,7 +80,7 @@ public class IOR extends mujava.op.util.Mutator
 
    boolean isIOREquivalent(MethodDeclaration p)
    {
-      IOR_Equivalent obj = new IOR_Equivalent( parent_file_env, parent_comp_unit );
+      IOR_Equivalent obj = new IOR_Equivalent( parent_file_env, parent_comp_unit, className );
       String str = parent_class.getName();
       
       int index = str.lastIndexOf(".");
@@ -182,7 +182,7 @@ public class IOR extends mujava.op.util.Mutator
    String getFileName()
    {
       // make directory for the mutant
-      String dir_name = MutationSystem.MUTANT_PATH + "/" + getClassName() + "_" + this.num;
+      String dir_name = MutationSystem.MUTANT_HOME+File.separator+className+File.separator+getMutantType("IOR") + "/" + getClassName() + "_" + this.num;
       File f = new File(dir_name);
       f.mkdir();
       String file_name = parent_class.getName();

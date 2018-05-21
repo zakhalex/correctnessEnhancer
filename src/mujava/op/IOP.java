@@ -32,9 +32,9 @@ public class IOP extends mujava.op.util.Mutator implements IOP_Helper
 {
    MethodDeclaration containing_method = null;
 
-   public IOP(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public IOP(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env,comp_unit );
+	  super( file_env,comp_unit, className );
    }
 
    public void visit(MethodDeclaration p) throws ParseTreeException 
@@ -129,7 +129,7 @@ public class IOP extends mujava.op.util.Mutator implements IOP_Helper
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("IOP"));
       String mutant_dir = getMuantID();
 
       try 

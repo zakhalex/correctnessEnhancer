@@ -33,9 +33,9 @@ public class JSI extends mujava.op.util.Mutator
    Vector nonStaticFields;
    boolean isField;
 
-   public JSI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public JSI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env,comp_unit );
+	  super( file_env,comp_unit, className );
       nonStaticFields = new Vector();
       isField = false;
    }
@@ -60,7 +60,7 @@ public class JSI extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("JSI"));
       String mutant_dir = getMuantID();
 
       try 

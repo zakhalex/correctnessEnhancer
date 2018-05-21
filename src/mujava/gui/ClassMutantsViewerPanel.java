@@ -59,6 +59,7 @@ public class ClassMutantsViewerPanel extends MutantsViewerPanel
 	void jbInit() throws Exception
 	{
 		this.setLayout(new FlowLayout());
+		mutantType = "traditional_mutants";
 
 		StyleConstants.setForeground(red_attr, Color.red);
 		StyleConstants.setForeground(blue_attr, Color.blue);
@@ -164,7 +165,6 @@ public class ClassMutantsViewerPanel extends MutantsViewerPanel
 
 		if (isProperClass(target_dir))
 		{
-			MutationSystem.setJMutationPaths(target_dir);
 			updateContents();
 		}
 		else
@@ -201,7 +201,8 @@ public class ClassMutantsViewerPanel extends MutantsViewerPanel
 	 */
 	String getMutantPath()
 	{
-		return MutationSystem.CLASS_MUTANT_PATH;
+		return MutationSystem.MUTANT_HOME
+                + "/" + target_dir + "/" + MutationSystem.CM_DIR_NAME;
 	}
 
 	// name: ������ ����Ʈ �̸���

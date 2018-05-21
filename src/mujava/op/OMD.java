@@ -33,6 +33,7 @@ public class OMD extends DeclAnalyzer
    private final String[] primitives = { "char","short","int","long",
                                         "unsigned","unsigned long","float",
                                         "double","lond double"};
+private String className;
 
 
    public void translateDefinition(CompilationUnit comp_unit)
@@ -221,7 +222,7 @@ public class OMD extends DeclAnalyzer
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this,className,"class_mutants");
       String mutant_dir = getMuantID();
 
       try 
@@ -242,14 +243,16 @@ public class OMD extends DeclAnalyzer
       }
    }
 
-   public OMD( openjava.mop.Environment oj_param0, openjava.mop.OJClass oj_param1, openjava.ptree.ClassDeclaration oj_param2 )
+   public OMD( openjava.mop.Environment oj_param0, openjava.mop.OJClass oj_param1, openjava.ptree.ClassDeclaration oj_param2, String className )
    {
       super( oj_param0, oj_param1, oj_param2 );
+      this.className=className;
    }
 
-   public OMD( java.lang.Class oj_param0, openjava.mop.MetaInfo oj_param1 )
+   public OMD( java.lang.Class oj_param0, openjava.mop.MetaInfo oj_param1, String className )
    {
       super( oj_param0, oj_param1 );
+      this.className=className;
    }
 
 }

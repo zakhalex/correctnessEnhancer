@@ -37,9 +37,9 @@ import java.io.*;
 
 public class ASRS extends MethodLevelMutator
 {
-   public ASRS(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public ASRS(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    /**
@@ -176,7 +176,7 @@ public class ASRS extends MethodLevelMutator
       
       String f_name;
       num++;
-      f_name = getSourceName("ASRS");
+      f_name = getSourceName("ASRS", className, getMutantType("ASRS"));
       String mutant_dir = getMuantID("ASRS");
 
       try 

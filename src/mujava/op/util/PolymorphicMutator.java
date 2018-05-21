@@ -90,8 +90,8 @@ public class PolymorphicMutator extends Mutator
       return true;
    }
 
-   public PolymorphicMutator( Environment env , CompilationUnit comp_unit ) 
+   public PolymorphicMutator( Environment env , CompilationUnit comp_unit, String className ) 
    {
-      super( env, comp_unit );
+      super( env, comp_unit, className );
    }
 }

@@ -30,9 +30,9 @@ import java.io.*;
 
 public class AORB extends Arithmetic_OP
 {
-   public AORB(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public AORB(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
  
    /**
@@ -124,7 +124,7 @@ public class AORB extends Arithmetic_OP
 
       String f_name;
       num++;
-      f_name = getSourceName("AORB");
+      f_name = getSourceName("AORB", className, getMutantType("AORB"));
       String mutant_dir = getMuantID("AORB");
 
       try 

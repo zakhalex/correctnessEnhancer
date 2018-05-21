@@ -29,8 +29,8 @@ import openjava.ptree.*;
 
 public class UOI extends mujava.op.util.Mutator
 {
-   public UOI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public UOI(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 }

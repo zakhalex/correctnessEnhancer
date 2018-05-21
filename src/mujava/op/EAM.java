@@ -36,9 +36,9 @@ import openjava.ptree.*;
 
 public class EAM extends mujava.op.util.Mutator
 {
-   public EAM(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public EAM(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env, comp_unit );
+	  super( file_env, comp_unit, className );
    }
 
    public void visit( MethodCall p ) throws ParseTreeException 
@@ -143,7 +143,7 @@ public class EAM extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("EAM"));
       String mutant_dir = getMuantID();
 
       try 

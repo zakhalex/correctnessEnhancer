@@ -35,9 +35,9 @@ public class AORS extends MethodLevelMutator
 {
    boolean isPrePostEQ = true;
 
-   public AORS(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public AORS(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
    }
 
    public void visit( UnaryExpression p ) throws ParseTreeException
@@ -131,7 +131,7 @@ public class AORS extends MethodLevelMutator
       
       String f_name;
       num++;
-      f_name = getSourceName("AORS");
+      f_name = getSourceName("AORS", className, getMutantType("AORS"));
       String mutant_dir = getMuantID("AORS");
 
       try 

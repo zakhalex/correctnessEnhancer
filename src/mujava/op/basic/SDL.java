@@ -38,9 +38,9 @@ public class SDL extends MethodLevelMutator
 	
 	MethodDeclaration md ;
 	
-   public SDL(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public SDL(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-      super( file_env, comp_unit );
+      super( file_env, comp_unit, className );
 
    }
 
@@ -681,7 +681,7 @@ public boolean isWhileStatement(Statement statement)
 			return;
       String f_name;
       num++;
-      f_name = getSourceName("SDL");
+      f_name = getSourceName("SDL", className, getMutantType("SDL"));
       String mutant_dir = getMuantID("SDL");
 
       try 
@@ -709,7 +709,7 @@ public boolean isWhileStatement(Statement statement)
 			return;
       String f_name;
       num++;
-      f_name = getSourceName("SDL");
+      f_name = getSourceName("SDL", className, getMutantType("SDL"));
       String mutant_dir = getMuantID("SDL");
 
       try 
@@ -737,7 +737,7 @@ public boolean isWhileStatement(Statement statement)
 			return;
       String f_name;
       num++;
-      f_name = getSourceName("SDL");
+      f_name = getSourceName("SDL", className, getMutantType("SDL"));
       String mutant_dir = getMuantID("SDL");
 
       try 
@@ -765,7 +765,7 @@ public boolean isWhileStatement(Statement statement)
 				return;
 	       String f_name;
 	       num++;
-	       f_name = getSourceName("SDL");
+	       f_name = getSourceName("SDL", className, getMutantType("SDL"));
 	       String mutant_dir = getMuantID("SDL");
 
 	       try 
@@ -796,7 +796,7 @@ public boolean isWhileStatement(Statement statement)
 				return;
 		       String f_name;
 		       num++;
-		       f_name = getSourceName("SDL");
+		       f_name = getSourceName("SDL", className, getMutantType("SDL"));
 		       String mutant_dir = getMuantID("SDL");
 
 		       try 
@@ -827,7 +827,7 @@ public boolean isWhileStatement(Statement statement)
 				return;
 		       String f_name;
 		       num++;
-		       f_name = getSourceName("SDL");
+		       f_name = getSourceName("SDL", className, getMutantType("SDL"));
 		       String mutant_dir = getMuantID("SDL");
 
 		       try 
@@ -891,7 +891,7 @@ public boolean isWhileStatement(Statement statement)
 			return;
       String f_name;
       num++;
-      f_name = getSourceName("SDL");
+      f_name = getSourceName("SDL", className, getMutantType("SDL"));
       String mutant_dir = getMuantID("SDL");
 
       try 
@@ -921,7 +921,7 @@ public boolean isWhileStatement(Statement statement)
 				return;
 		      String f_name;
 		      num++;
-		      f_name = getSourceName("SDL");
+		      f_name = getSourceName("SDL", className, getMutantType("SDL"));
 		      String mutant_dir = getMuantID("SDL");
 
 		      try 

@@ -40,9 +40,9 @@ public class IHD_IHI_EqAnalyzer extends mujava.op.util.Mutator
 
    boolean eqFlag=true;
 
-   public IHD_IHI_EqAnalyzer(Environment env , CompilationUnit comp_unit, String name ) 
+   public IHD_IHI_EqAnalyzer(Environment env , CompilationUnit comp_unit, String name, String className ) 
    {
-      super( env, comp_unit );
+      super( env, comp_unit, className );
       field_name = name;
    }
 

@@ -33,9 +33,9 @@ import openjava.ptree.*;
 
 public class PCD extends mujava.op.util.TypeCastMutator
 {
-   public PCD(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public PCD(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env, comp_unit );
+	  super( file_env, comp_unit, className );
    } 
 
    public void visit( CastExpression p )  throws ParseTreeException
@@ -107,7 +107,7 @@ public class PCD extends mujava.op.util.TypeCastMutator
       
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("PCD"));
       String mutant_dir = getMuantID();
 
       try 

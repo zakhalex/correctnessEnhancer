@@ -32,9 +32,9 @@ public class TypeCastMutator  extends PolymorphicMutator
 {
    protected MethodCall currentMethodCall = null;
 
-   public TypeCastMutator(FileEnvironment file_env, CompilationUnit comp_unit)
+   public TypeCastMutator(FileEnvironment file_env, CompilationUnit comp_unit, String className)
    {
-  	  super( file_env, comp_unit );
+  	  super( file_env, comp_unit, className );
    }
 
    protected boolean hasHidingVariableOrOverridingMethod(String childClass, String parentClass)

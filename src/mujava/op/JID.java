@@ -29,9 +29,9 @@ import openjava.ptree.*;
 
 public class JID extends mujava.op.util.Mutator
 {
-   public JID(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public JID(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env,comp_unit );
+	  super( file_env,comp_unit, className );
    }
 
    /**
@@ -58,7 +58,7 @@ public class JID extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("JID"));
       String mutant_dir = getMuantID();
 
       try 

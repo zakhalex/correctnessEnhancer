@@ -36,6 +36,7 @@ public class JDC extends DeclAnalyzer
 {
 	// the class_name
    public static String class_name = null;
+	private String className;
    public void translateDefinition(CompilationUnit comp_unit) throws openjava.mop.MOPException
    {
 	  try
@@ -77,7 +78,7 @@ public class JDC extends DeclAnalyzer
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, "class_mutants");
 	  String mutant_dir = getMuantID();
 
       try 
@@ -99,15 +100,17 @@ public class JDC extends DeclAnalyzer
       }
    }
 
-   public JDC( openjava.mop.Environment oj_param0, openjava.mop.OJClass oj_param1, openjava.ptree.ClassDeclaration oj_param2 )
+   public JDC( openjava.mop.Environment oj_param0, openjava.mop.OJClass oj_param1, openjava.ptree.ClassDeclaration oj_param2, String className )
    {
       super( oj_param0, oj_param1, oj_param2 );
       //initialize the class name
       class_name = oj_param2.getName();
+      this.className=className;
    }
 
-   public JDC( java.lang.Class oj_param0, openjava.mop.MetaInfo oj_param1 )
+   public JDC( java.lang.Class oj_param0, openjava.mop.MetaInfo oj_param1, String className )
    {
       super( oj_param0, oj_param1 );
+      this.className=className;
    }
 }

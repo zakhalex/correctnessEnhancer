@@ -32,6 +32,7 @@ import mujava.op.util.DeclAnalyzer;
 public class OMR extends DeclAnalyzer
 {
    OverloadingHelper oM_helper = new OverloadingHelper();
+private String className;
 
    public void translateDefinition(CompilationUnit comp_unit) throws openjava.mop.MOPException
    {
@@ -174,7 +175,7 @@ public class OMR extends DeclAnalyzer
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, "class_mutants");
       String mutant_dir = getMuantID();
 
       try 
@@ -194,13 +195,15 @@ public class OMR extends DeclAnalyzer
       }
    }
 
-   public OMR( openjava.mop.Environment oj_param0, openjava.mop.OJClass oj_param1, openjava.ptree.ClassDeclaration oj_param2 )
+   public OMR( openjava.mop.Environment oj_param0, openjava.mop.OJClass oj_param1, openjava.ptree.ClassDeclaration oj_param2, String className )
    {
       super( oj_param0, oj_param1, oj_param2 );
+      this.className=className;
    }
 
-   public OMR( java.lang.Class oj_param0, openjava.mop.MetaInfo oj_param1 )
+   public OMR( java.lang.Class oj_param0, openjava.mop.MetaInfo oj_param1, String className )
    {
       super( oj_param0, oj_param1 );
+      this.className=className;
    }
 }

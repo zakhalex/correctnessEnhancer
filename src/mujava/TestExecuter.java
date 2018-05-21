@@ -74,7 +74,7 @@ public class TestExecuter
 
 	Method[] testCases;
 	volatile Method testcase;
-
+	private String targetClassName;
 	String whole_class_name;
 	String testSet;
 //	boolean mutantRunning = true;
@@ -97,21 +97,14 @@ public class TestExecuter
 		int index = targetClassName.lastIndexOf(".");
 		if (index < 0)
 		{
-			MutationSystem.setClassName(targetClassName);
+			this.targetClassName=targetClassName;
 		}
 		else
 		{
-			MutationSystem.setClassName(targetClassName.substring(index + 1, targetClassName.length()));
+			this.targetClassName=targetClassName.substring(index + 1, targetClassName.length());
 		}
 
 		MutationSystem.setDirectory(targetClassName);
-		MutationSystem.CLASS_MUTANT_PATH = MutationSystem.MUTANT_HOME + "/" + targetClassName + "/"
-				+ MutationSystem.CM_DIR_NAME;
-		MutationSystem.TRADITIONAL_MUTANT_PATH = MutationSystem.MUTANT_HOME + "/" + targetClassName + "/"
-				+ MutationSystem.TM_DIR_NAME;
-		MutationSystem.EXCEPTION_MUTANT_PATH = MutationSystem.MUTANT_HOME + "/" + targetClassName + "/"
-				+ MutationSystem.EM_DIR_NAME;
-
 		whole_class_name = targetClassName;
 
 	}
@@ -274,8 +267,8 @@ public class TestExecuter
 
 		if (!f.exists())
 		{
-			System.err.println(" There is no directory for the mutants of " + MutationSystem.getClassName());
-			System.err.println(" Please generate mutants for " + MutationSystem.getClassName());
+			System.err.println(" There is no directory for the mutants of " + whole_class_name);
+			System.err.println(" Please generate mutants for " + whole_class_name);
 			throw new NoMutantDirException();
 		}
 
@@ -286,9 +279,9 @@ public class TestExecuter
 		{
 			if (!methodSignature.equals(""))
 				System.err.println(" No mutants have been generated for the method " + methodSignature + " of the class"
-						+ MutationSystem.getClassName());
+						+ whole_class_name);
 			else
-				System.err.println(" No mutants have been generated for the class " + MutationSystem.getClassName());
+				System.err.println(" No mutants have been generated for the class " + whole_class_name);
 			// System.err.println(" Please check if zero mutant is correct.");
 			// throw new NoMutantException();
 		}
@@ -424,7 +417,7 @@ public class TestExecuter
 					String mutant_name = tr.mutants.get(i).toString();
 					finalMutantResults.put(mutant_name, "");
 					ClassLoader parentClassLoader = JMutationLoader.class.getClassLoader();
-					JMutationLoader mutantLoader = new JMutationLoader(parentClassLoader, mutant_name);
+					JMutationLoader mutantLoader = new JMutationLoader(parentClassLoader, mutantPath, mutant_name);
 					// mutantLoader.loadMutant();
 					Class mutant_executer = mutantLoader.loadTestClass(testSet);
 					Debug.println("We are loading " + testSet);

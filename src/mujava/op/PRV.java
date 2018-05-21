@@ -41,9 +41,9 @@ public class PRV extends mujava.op.util.Mutator
    Vector field_list = new Vector();
    Vector var_list = new Vector();
 
-   public PRV(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit)
+   public PRV(FileEnvironment file_env, ClassDeclaration cdecl, CompilationUnit comp_unit, String className)
    {
-	  super( file_env, comp_unit );
+	  super( file_env, comp_unit, className );
    }
 
    /**
@@ -188,7 +188,7 @@ public class PRV extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this);
+      f_name = getSourceName(this, className, getMutantType("PRV"));
 	  String mutant_dir = getMuantID();
 
       try 
