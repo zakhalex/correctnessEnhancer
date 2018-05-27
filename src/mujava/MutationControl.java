@@ -12,8 +12,15 @@ import java.util.concurrent.TimeUnit;
 
 public class MutationControl
 {
-	private static final int numberOfThreads = 1;
-
+	private final int numberOfThreads;
+	public MutationControl()
+	{
+		this.numberOfThreads=1;
+	}
+	public MutationControl(int numberOfThreads)
+	{
+		this.numberOfThreads=numberOfThreads;
+	}
 	public void performMutation(Collection<String> file_list)
 	{
 		ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
@@ -359,7 +366,7 @@ public class MutationControl
 		}
 		catch (Exception e)
 		{
-			System.err.println(e);
+			System.err.println("MutationControl: "+e);
 		}
 		return allPaths;
 	}

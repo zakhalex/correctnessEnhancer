@@ -74,7 +74,7 @@ public class TestExecuter
 
 	Method[] testCases;
 	volatile Method testcase;
-	private String targetClassName;
+	private String targetClassName;//unqualified
 	String whole_class_name;
 	String testSet;
 //	boolean mutantRunning = true;
@@ -177,7 +177,7 @@ public class TestExecuter
 	{
 
 		TestResult test_result = new TestResult();
-
+		
 		if (methodSignature.equals("All method"))
 		{
 			try
@@ -192,7 +192,7 @@ public class TestExecuter
 				{
 					try
 					{
-						runMutants(test_result, mutantPath, readSignature);
+						runMutants(test_result, readSignature, mutantPath);
 					}
 					catch (NoMutantException e)
 					{
@@ -210,7 +210,7 @@ public class TestExecuter
 		}
 		else
 		{
-			runMutants(test_result, mutantPath, methodSignature);
+			runMutants(test_result, methodSignature, mutantPath);
 		}
 		test_result.setMode(2);
 		return test_result;
@@ -263,22 +263,22 @@ public class TestExecuter
 	{
 
 		// Read mutants
-		File f = new File(mutantPath);
+		File f = new File(mutantPath,methodSignature);
 
 		if (!f.exists())
 		{
+			System.err.println(" The directory "+mutantPath+" doesn't exist.");
 			System.err.println(" There is no directory for the mutants of " + whole_class_name);
 			System.err.println(" Please generate mutants for " + whole_class_name);
 			throw new NoMutantDirException();
 		}
-
+		
 		// mutantDirectories match the names of mutants
 		String[] mutantDirectories = f.list(new MutantDirFilter());
-
 		if (mutantDirectories == null || mutantDirectories.length == 0)
 		{
 			if (!methodSignature.equals(""))
-				System.err.println(" No mutants have been generated for the method " + methodSignature + " of the class"
+				System.err.println(" No mutants have been generated for the method " + methodSignature + " of the class "
 						+ whole_class_name);
 			else
 				System.err.println(" No mutants have been generated for the class " + whole_class_name);
@@ -387,7 +387,7 @@ public class TestExecuter
 	{
 		try
 		{
-
+			
 			String[] mutantDirectories = getMutants(methodSignature, mutantPath);
 
 			int mutant_num = mutantDirectories.length;
@@ -417,7 +417,7 @@ public class TestExecuter
 					String mutant_name = tr.mutants.get(i).toString();
 					finalMutantResults.put(mutant_name, "");
 					ClassLoader parentClassLoader = JMutationLoader.class.getClassLoader();
-					JMutationLoader mutantLoader = new JMutationLoader(parentClassLoader, mutantPath, mutant_name);
+					JMutationLoader mutantLoader = new JMutationLoader(parentClassLoader, mutantPath+File.separator+methodSignature, mutant_name);
 					// mutantLoader.loadMutant();
 					Class mutant_executer = mutantLoader.loadTestClass(testSet);
 					Debug.println("We are loading " + testSet);

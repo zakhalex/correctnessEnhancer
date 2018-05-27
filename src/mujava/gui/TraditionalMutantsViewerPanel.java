@@ -311,7 +311,7 @@ public class TraditionalMutantsViewerPanel extends MutantsViewerPanel
 	 * @param changed_line
 	 *            line number of mutated code against original program
 	 */
-	public void showMutant(String dir_name, String mutant_log)
+	public void showMutant(String dir_name, String mutantPath, String mutant_log)
 	{
 		try
 		{
@@ -327,8 +327,9 @@ public class TraditionalMutantsViewerPanel extends MutantsViewerPanel
 			int line_num = 0;
 			int caret_pos = 0;
 			String strLine;
-			File myFile = new File(getMutantPath() + "/" + method_signature + "/" + dir_name,
-					target_dir + ".java");
+			int unQualifier=target_dir.lastIndexOf('.')+1;
+			File myFile = new File(mutantPath + "/" + method_signature + "/" + dir_name,
+					target_dir.substring(unQualifier, target_dir.length()) + ".java");
 
 			String blank_str;
 			LineNumberReader lReader = new LineNumberReader(new FileReader(myFile));

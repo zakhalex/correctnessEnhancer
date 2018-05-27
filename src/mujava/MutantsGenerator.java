@@ -209,7 +209,7 @@ public abstract class MutantsGenerator
 	 * @param parent_comp_unit
 	 * @param parent_file_env
 	 */
-	void initParseTree(CompilationUnit[] parent_comp_unit, FileEnvironment[] parent_file_env)
+	public static void initParseTree(CompilationUnit[] parent_comp_unit, FileEnvironment[] parent_file_env)
 	{
 		try
 		{
@@ -275,7 +275,7 @@ public abstract class MutantsGenerator
 	 * @param file_env
 	 * @return
 	 */
-	boolean generateParseTree(File f, CompilationUnit[] comp_unit, FileEnvironment[] file_env, String className)
+	public static boolean generateParseTree(File f, CompilationUnit[] comp_unit, FileEnvironment[] file_env, String className)
 	{
 		try
 		{
@@ -333,7 +333,7 @@ public abstract class MutantsGenerator
 	}
 
 	/** -> to move to OJClass.forParseTree() **/
-	private OJClass makeOJClass(Environment env, ClassDeclaration cdecl)
+	private static OJClass makeOJClass(Environment env, ClassDeclaration cdecl)
 	{
 		OJClass result;
 		String qname = env.toQualifiedName(cdecl.getName());
@@ -508,7 +508,7 @@ public abstract class MutantsGenerator
 			}
 			catch (Exception e)
 			{
-				System.err.println(e);
+				System.err.println("MutantsGenerator " + e);
 			}
 		}
 		Debug.println();
@@ -546,7 +546,7 @@ public abstract class MutantsGenerator
 		}
 		catch (Exception e)
 		{
-			System.err.println(e);
+			System.err.println("MutantsGenerator "+e);
 		}
 	}
 

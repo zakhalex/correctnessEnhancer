@@ -110,6 +110,9 @@ public class MutationSystem extends OJSystem
 
    /** class name without package name that mutation is applied into */
    private static String CLASS_NAME;
+   
+   public static int numberOfMutationThreads=1;
+   public static int numberOfTestingThreads=1;
 //   public static String getClassName()
 //   {
 //	   return CLASS_NAME;
@@ -839,7 +842,8 @@ public class MutationSystem extends OJSystem
 			CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
 			MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
 			TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
-
+			numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
+			numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
 		}
 		catch (FileNotFoundException e1)
       {

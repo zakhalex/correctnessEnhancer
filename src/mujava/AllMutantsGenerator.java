@@ -120,8 +120,11 @@ public class AllMutantsGenerator extends MutantsGenerator
 				{
 					if (ignore.contains(type))
 					{
-						generateMutant(
-								MutationFactory.getDeclarationMutant(type, file_env, cdecl, comp_unit, className));
+						DeclAnalyzer mutant_op=MutationFactory.getDeclarationMutant(type, file_env, cdecl, comp_unit, className);
+						if(mutant_op!=null)
+						{
+							generateMutant(mutant_op);
+						}
 					}
 				}
 
@@ -196,8 +199,11 @@ public class AllMutantsGenerator extends MutantsGenerator
 						{
 							continue;
 						}
-						comp_unit.accept(
-								MutationFactory.getClassMutant(type, file_env, cdecl, comp_unit, className, qname));
+						Mutator mutant_op=MutationFactory.getClassMutant(type, file_env, cdecl, comp_unit, className, qname);
+						if(mutant_op!=null)
+						{
+							comp_unit.accept(mutant_op);
+						}
 					}
 
 					// if (hasOperator(classOp,"AMC"))
@@ -438,8 +444,11 @@ public class AllMutantsGenerator extends MutantsGenerator
 				{
 					for (String type : traditionalOp)
 					{
-						comp_unit.accept(
-								MutationFactory.getTraditionalMutant(type, file_env, cdecl, comp_unit, className));
+						Mutator mutant_op=MutationFactory.getTraditionalMutant(type, file_env, cdecl, comp_unit, className);
+						if(mutant_op!=null)
+						{
+							comp_unit.accept(mutant_op);
+						}
 					}
 
 					//

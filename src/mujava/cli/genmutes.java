@@ -77,13 +77,14 @@ public class genmutes
 		else
 		{
 			regularProperties.put("mode", "all");
-			regularProperties.put("numberofthreads", "64");
+			regularProperties.put("number_of_mutation_threads", "64");
+			regularProperties.put("number_of_testing_threads", "64");
 		}
 		String mode = regularProperties.get("mode");
 		MutationSystem.setJMutationStructure();
 		if (mode.equalsIgnoreCase("all") || mode.equalsIgnoreCase("mutate"))
 		{
-			MutationControl m = new MutationControl();
+			MutationControl m = new MutationControl(Integer.parseInt(regularProperties.get("number_of_mutation_threads")));
 			Collection<String> file_list = MutationSystem.getNewTragetFiles();
 			if (file_list != null)
 			{
@@ -96,7 +97,7 @@ public class genmutes
 		}
 		if (mode.equalsIgnoreCase("all") || mode.equalsIgnoreCase("test"))// not optimal, should be re-done through loop with list
 		{
-			TestExecutor localExecutor = new TestExecutor(Integer.parseInt(regularProperties.get("numberofthreads")));
+			TestExecutor localExecutor = new TestExecutor(Integer.parseInt(regularProperties.get("number_of_testing_threads")));
 			ArrayList<TestResult> result = localExecutor.executeTests(null, null, null, 10);
 			for (TestResult tr : result)
 			{

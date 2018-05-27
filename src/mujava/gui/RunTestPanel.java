@@ -446,7 +446,7 @@ public class RunTestPanel extends JPanel implements ActionListener
 		Object targetClassObj = classCB.getSelectedItem();
 		// class name whose mutants are executed
 		Object methodSignature = methodCB.getSelectedItem();
-
+		
 		if (methodSignature == null)
 			methodSignature = "All method";
 

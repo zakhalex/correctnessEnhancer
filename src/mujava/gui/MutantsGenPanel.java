@@ -411,7 +411,7 @@ public class MutantsGenPanel extends JPanel
 
 		// disable the button
 		runB.setEnabled(false);
-		MutationControl m=new MutationControl();
+		MutationControl m=new MutationControl(MutationSystem.numberOfMutationThreads);
 		m.performMutation(file_list, class_ops, traditional_ops);
 		runB.setEnabled(true);
 		parent_frame.cvPanel.refreshEnv();

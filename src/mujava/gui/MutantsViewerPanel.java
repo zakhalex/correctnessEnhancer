@@ -353,7 +353,7 @@ public abstract class MutantsViewerPanel  extends JPanel
       if (selected_obj != null)
       {
          String mutant_name = selected_obj.toString();
-         String mutantPath=MutationSystem.MUTANT_HOME+File.separator+mutant_name+File.separator+mutantType;
+         String mutantPath=MutationSystem.MUTANT_HOME+File.separator+target_dir+File.separator+mutantType;
          String mutant_log = getMutantLog(mutant_name,mutantPath);
          if (mutant_log != null) 
          {
@@ -446,7 +446,7 @@ public abstract class MutantsViewerPanel  extends JPanel
          File myFile = new File(mutantPath + 
         		  "/" + dir_name, target_dir.substring(deQualifier,target_dir.length())+ ".java");
          System.out.println("showMutant: myFile =" + myFile.getAbsolutePath());
-
+         
          String blank_str;
          LineNumberReader lReader = new LineNumberReader(new FileReader(myFile));
 
@@ -499,7 +499,7 @@ public abstract class MutantsViewerPanel  extends JPanel
          }
       } catch (FileNotFoundException e1)
       {
-         System.err.println(e1);
+         System.err.println("MutantsViewerPanel "+e1);
       } catch (IOException e2)
       {
          System.err.println(e2);

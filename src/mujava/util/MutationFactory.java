@@ -2,6 +2,7 @@ package mujava.util;
 
 import java.io.File;
 
+import mujava.ClassMutantsGenerator;
 import mujava.MutationSystem;
 import mujava.op.AMC;
 import mujava.op.EAM;
@@ -82,7 +83,7 @@ public class MutationFactory
 	{
 		return getMutant(type, file_env, cdecl, comp_unit, className, null, null);
 	}
-	
+
 	public static DeclAnalyzer getDeclarationMutant(String type, FileEnvironment file_env, ClassDeclaration cdecl,
 			CompilationUnit comp_unit, String className)
 	{
@@ -116,7 +117,7 @@ public class MutationFactory
 				throw new UnsupportedOperationException();
 		}
 	}
-	
+
 	public static Mutator getMutant(String type, FileEnvironment file_env, ClassDeclaration cdecl,
 			CompilationUnit comp_unit, String className, String qualifiedName, String methodName)
 	{
@@ -142,47 +143,49 @@ public class MutationFactory
 			}
 			case "IOR":
 			{
-				return null;
-				// Debug.println(" Applying IOR ... ... ");
-				// try
-				// {
-				// Class parent_class = Class.forName(qname).getSuperclass();
-				// if (!(parent_class.getName().equals("java.lang.Object")))
-				// {
-				// String temp_str = parent_class.getName();
-				// String result_str = "";
-				// for (int k=0; k<temp_str.length(); k++)
-				// {
-				// char c = temp_str.charAt(k);
-				// if (c == '.')
-				// {
-				// result_str = result_str + "/";
-				// }
-				// else
-				// {
-				// result_str = result_str + c;
-				// }
-				// }
-				//
-				// File f = new File(MutationSystem.SRC_PATH, result_str + ".java");
-				// if (f.exists())
-				// {
-				// CompilationUnit[] parent_comp_unit = new CompilationUnit[1];
-				// FileEnvironment[] parent_file_env = new FileEnvironment[1];
-				// this.generateParseTree(f, parent_comp_unit, parent_file_env, className);
-				// this.initParseTree(parent_comp_unit, parent_file_env);
-				// Mutator mutant_op = new IOR(file_env, cdecl, comp_unit);
-				// ((IOR)mutant_op).setParentEnv(parent_file_env[0], parent_comp_unit[0]);
-				// return mutant_op;
-				// }
-				// }
-				// } catch (ClassNotFoundException e)
-				// {
-				// System.out.println(" Exception at generating IOR mutant. File : AllMutantsGenerator.java ");
-				// } catch (NullPointerException e1)
-				// {
-				// System.out.print(" IOP ^^; ");
-				// }
+
+				Debug.println(" Applying IOR ... ... ");
+				try
+				{
+					Class parent_class = Class.forName(qualifiedName).getSuperclass();
+					if (!(parent_class.getName().equals("java.lang.Object")))
+					{
+						String temp_str = parent_class.getName();
+						String result_str = "";
+						for (int k = 0; k < temp_str.length(); k++)
+						{
+							char c = temp_str.charAt(k);
+							if (c == '.')
+							{
+								result_str = result_str + "/";
+							}
+							else
+							{
+								result_str = result_str + c;
+							}
+						}
+
+						File f = new File(MutationSystem.SRC_PATH, result_str + ".java");
+						if (f.exists())
+						{
+							CompilationUnit[] parent_comp_unit = new CompilationUnit[1];
+							FileEnvironment[] parent_file_env = new FileEnvironment[1];
+							ClassMutantsGenerator.generateParseTree(f, parent_comp_unit, parent_file_env, className);
+							ClassMutantsGenerator.initParseTree(parent_comp_unit, parent_file_env);
+							Mutator mutant_op = new IOR(file_env, cdecl, comp_unit, className);
+							((IOR) mutant_op).setParentEnv(parent_file_env[0], parent_comp_unit[0]);
+							return mutant_op;
+						}
+					}
+				}
+				catch (ClassNotFoundException e)
+				{
+					System.out.println(" Exception at generating IOR mutant. File : AllMutantsGenerator.java ");
+				}
+				catch (NullPointerException e1)
+				{
+					System.out.print(" IOP ^^; ");
+				}
 			}
 			case "ISD":
 			{
@@ -366,10 +369,13 @@ public class MutationFactory
 			{
 				return new ODL(file_env, cdecl, comp_unit, className);
 			}
+			case "ISI":
+			{
+				return null;//Should be picked up by ISD
+			}
 			default:
-				throw new UnsupportedOperationException();
+				throw new UnsupportedOperationException(type);
 		}
 	}
 
-	
 }

@@ -89,7 +89,7 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
 	{
 		if (comp_unit == null)
 		{
-			System.err.println(original_file + " is skipped.");
+			System.err.println("TraditionalMutantsGenerator: " + original_file + " is skipped.");
 		}
 
 		ClassDeclarationList cdecls = comp_unit.getClassDeclarations();
@@ -160,7 +160,7 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
 			if (tempName.indexOf("<") != -1 && tempName.indexOf(">") != -1)
 				tempName = tempName.substring(0, tempName.indexOf("<"))
 						+ tempName.substring(tempName.lastIndexOf(">") + 1, tempName.length());
-			int unQualifier=className.lastIndexOf('.')+1;			
+			int unQualifier = className.lastIndexOf('.') + 1;
 			if (tempName.equalsIgnoreCase(className.substring(unQualifier, className.length())))
 			{
 				try
@@ -176,10 +176,11 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
 						FileOutputStream fout = new FileOutputStream(f);
 						PrintWriter out = new PrintWriter(fout);
 
-						Mutator mutant_op = new CreateDirForEachMethod(file_env, cdecl, comp_unit, out, className, mutantPath);
+						Mutator mutant_op = new CreateDirForEachMethod(file_env, cdecl, comp_unit, out, className,
+								mutantPath);
 
 						comp_unit.accept(mutant_op);
-						
+
 						out.flush();
 						out.close();
 					}
@@ -190,8 +191,12 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
 					}
 					for (String type : traditionalOp)
 					{
-						comp_unit.accept(
-								MutationFactory.getTraditionalMutant(type, file_env, cdecl, comp_unit, className));
+						Mutator mutant_op = MutationFactory.getTraditionalMutant(type, file_env, cdecl, comp_unit,
+								className);
+						if (mutant_op != null)
+						{
+							comp_unit.accept(mutant_op);
+						}
 					}
 					// if (hasOperator (traditionalOp, "AORB") )
 					// {

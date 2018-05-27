@@ -40,10 +40,11 @@ public class DeclAnalyzer extends OJClass
 		return str;
 	}
 
-	public String getSourceName(OJClass clazz, String mutantPath, String className)
+	public String getSourceName(OJClass clazz, String className, String mutantType)
 	{
 		// make directory for the mutant
-		String dir_name = mutantPath + "/" + className + "_" + this.num;
+		String mutantPath=MutationSystem.MUTANT_HOME+File.separator+className+File.separator+mutantType;
+		String dir_name = mutantPath + "/" + getClassName() + "_" + this.num;
 		File f = new File(dir_name);
 		f.mkdir();
 

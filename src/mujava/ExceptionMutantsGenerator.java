@@ -17,6 +17,8 @@
 package mujava;
 
 import openjava.ptree.*;
+import openjava.ptree.util.ParseTreeVisitor;
+
 import java.io.*;
 import mujava.op.exception.*;
 import mujava.op.util.*;
@@ -100,8 +102,11 @@ public class ExceptionMutantsGenerator extends MutantsGenerator
 					// mujava.op.util.Mutator mutant_op;
 					for (String type : exceptionOp)
 					{
-						comp_unit.accept(
-								MutationFactory.getExceptionMutant(type, file_env, cdecl, comp_unit, className));
+						ParseTreeVisitor mutant_op=MutationFactory.getExceptionMutant(type, file_env, cdecl, comp_unit, className);
+						if(mutant_op!=null)
+						{
+							comp_unit.accept(mutant_op);
+						}
 					}
 					// if (hasOperator(exceptionOp, "EFD"))
 					// {

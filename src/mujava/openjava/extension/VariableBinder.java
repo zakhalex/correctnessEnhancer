@@ -199,7 +199,7 @@ public class VariableBinder extends ScopeHandler {
 					+ e.toString()
 					+ " : "
 					+ qtypename);
-			System.err.println(env);
+			System.err.println("VariableBinder "+env);
 		}
 	}
 	
@@ -221,7 +221,7 @@ public class VariableBinder extends ScopeHandler {
 					+ e.toString()
 					+ " : "
 					+ qtypename);
-			System.err.println(env);
+			System.err.println("VariableBinder "+env);
 		}
 	}
 
