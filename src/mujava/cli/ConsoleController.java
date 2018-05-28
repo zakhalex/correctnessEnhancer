@@ -57,7 +57,7 @@ import mujava.util.TestExecutor;
 
 import com.beust.jcommander.JCommander;
 
-public class genmutes
+public class ConsoleController
 {
 	private static HashMap<String, ArrayList<String>> listProperties;
 	private static HashMap<String, String> regularProperties = new HashMap<String, String>();
