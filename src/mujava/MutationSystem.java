@@ -28,10 +28,7 @@ import java.lang.reflect.Modifier;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.nio.file.Files;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.Vector;
+import java.util.*;
 
 import com.sun.tools.javac.util.Pair;
 
@@ -113,14 +110,10 @@ public class MutationSystem extends OJSystem
    
    public static int numberOfMutationThreads=1;
    public static int numberOfTestingThreads=1;
-//   public static String getClassName()
-//   {
-//	   return CLASS_NAME;
-//   }
-//   public static void setClassName(String className)
-//   {
-//	   CLASS_NAME=className;
-//   }
+   public static String resultsOutput=null;
+   public static String listTargetMutationFiles =null;
+    public static String listTargetTestFiles =null;
+   public static boolean debugOutputEnabled=false;
    public static String[] getTestSetNames()
 	{
 		ArrayList<String> v = new ArrayList<String>();
@@ -348,7 +341,7 @@ public class MutationSystem extends OJSystem
    
  /**
    * Return type of class.
-   * @param name of class
+   * @param class_name Name of class
    * @return type of class ( types: interface, abstract, GUI, main, normal, applet )
    */
    public static int getClassType (String class_name)
@@ -424,17 +417,22 @@ public class MutationSystem extends OJSystem
 
 
    /** Examine if type is of primitive types (boolean, byte, char, short,
-    * int, long, double, void) */ 
+    * int, long, double, void) */
    public static boolean isPrimitive(OJClass type)
    {
-      if (type.equals(BOOLEAN))  return true;
-      if (type.equals(BYTE))     return true;
-      if (type.equals(CHAR))     return true;
-      if (type.equals(SHORT))    return true;
-      if (type.equals(INT))      return true;
-      if (type.equals(LONG))     return true;
-      if (type.equals(DOUBLE))   return true;
-      if (type.equals(VOID))     return true;
+       OJClass localType=type;
+       while(localType.isArray())
+       {
+        localType=localType.getComponentType();
+       }
+      if (localType.equals(BOOLEAN))  return true;
+      if (localType.equals(BYTE))     return true;
+      if (localType.equals(CHAR))     return true;
+      if (localType.equals(SHORT))    return true;
+      if (localType.equals(INT))      return true;
+      if (localType.equals(LONG))     return true;
+      if (localType.equals(DOUBLE))   return true;
+      if (localType.equals(VOID))     return true;
       return false;
    }
 
@@ -754,7 +752,7 @@ public class MutationSystem extends OJSystem
 		}
 
   /** Re-setting MuJava structure for give class name <br>
-   * @param name of class (including package name) */
+   * @param whole_class_name - Qualified name of class (including package name) */
    public static void setJMutationPaths(String whole_class_name)
    {
       int temp_start = whole_class_name.lastIndexOf(".") + 1;
@@ -844,7 +842,11 @@ public class MutationSystem extends OJSystem
 			TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
 			numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
 			numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
-		}
+			resultsOutput = dictionary.getProperty("Results_output",null);
+          listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
+          listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
+          debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
+      }
 		catch (FileNotFoundException e1)
       {
          System.err.println("[ERROR] Can't find mujava.config file");
@@ -855,51 +857,100 @@ public class MutationSystem extends OJSystem
       }
    }
 
-  /** <p> Recognize file structure for mutation system from not "mujava.config" but from user directly </p>*/
-   public static void setJMutationStructure(String home_path)
-   {
-      SYSTEM_HOME = home_path;
-      SRC_PATH = dictionary.getProperty("MuJava_src",SYSTEM_HOME + File.separator + "src");
-      CLASS_PATH = dictionary.getProperty("MuJava_class",SYSTEM_HOME + File.separator + "classes");
-      MUTANT_HOME = dictionary.getProperty("MuJava_mutants",SYSTEM_HOME + File.separator + "result");
-      TESTSET_PATH = dictionary.getProperty("MuJava_tests",SYSTEM_HOME + File.separator + "testset");
-  }
-   
-   /** <p> Recognize file structure for mutation system from not "mujava.config" but from user directly - with session </p>*/
-   public static void setJMutationStructure(String home_path, String sessionName)
-   {
-      SYSTEM_HOME = home_path+File.separator+sessionName;
-      SRC_PATH = dictionary.getProperty("MuJava_src",SYSTEM_HOME + File.separator + "src");
-      CLASS_PATH = dictionary.getProperty("MuJava_class",SYSTEM_HOME + File.separator + "classes");
-      MUTANT_HOME = dictionary.getProperty("MuJava_mutants",SYSTEM_HOME + File.separator + "result");
-      TESTSET_PATH = dictionary.getProperty("MuJava_tests",SYSTEM_HOME + File.separator + "testset");
-  }
-   
-   /*
-    * Lin add for setting sessions
-    * 
-    */
-   public static void setJMutationStructureAndSession (String sessionName)
-   {
-      try 
-      {
-    	  dictionary.readPropertiesFromFile("mujava.config");
-    	 SYSTEM_HOME = dictionary.getProperty("MuJava_Home")+File.separator+sessionName;
-         SRC_PATH = dictionary.getProperty("MuJava_src",SYSTEM_HOME + File.separator+"src");
-         CLASS_PATH = dictionary.getProperty("MuJava_class",SYSTEM_HOME + File.separator+"classes");
-         MUTANT_HOME = dictionary.getProperty("MuJava_mutants",SYSTEM_HOME + File.separator+"result");
-         TESTSET_PATH = dictionary.getProperty("MuJava_tests",SYSTEM_HOME + File.separator+"testset");
-      } catch (FileNotFoundException e1)
-      {
-         System.err.println("[ERROR] Can't find mujava.config file");
-         e1.printStackTrace();
-      } catch (Exception e)
-      {
-         e.printStackTrace();
-      }
-   }
-   
-   
-   
+    /**
+     * <p> Recognize file structure for mutation system from alternatively located config file</p>
+     */
+    public static void setJMutationStructure(String configFileLocation)
+    {
+        try
+        {
+            //Starting from properties
+//    	  HashMap<String,String> properties=readPropertiesFromFile(MutationSystem.SYSTEM_HOME + "/mujava.config");
+
+            dictionary.readPropertiesFromFile(configFileLocation);
+//           dictionary.readPropertiesFromFile("mujava.config");
+//         File f = new File (MutationSystem.SYSTEM_HOME + "/mujava.config");
+//         FileReader r = new FileReader(f);
+//         BufferedReader reader = new BufferedReader(r);
+//         String str = reader.readLine();
+//         String home_path = str.substring("MuJava_HOME=".length(), str.length());
+//         SYSTEM_HOME = home_path;
+            SYSTEM_HOME = dictionary.getProperty("MuJava_Home");
+            SRC_PATH = dictionary.getProperty("MuJava_src", SYSTEM_HOME + File.separator + "src");
+            CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
+            MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
+            TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
+            numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
+            numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
+            resultsOutput = dictionary.getProperty("Results_output", null);
+            listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
+            listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
+            debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
+
+        }
+        catch (FileNotFoundException e1)
+        {
+            System.err.println("[ERROR] Can't find mujava.config file");
+            e1.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Initializing mutation system from console without config file
+     * @param properties - a collection of properties in the format key=value
+     */
+    public static void setJMutationStructure(Collection<String> properties)
+    {
+        try
+        {
+            dictionary.parseProperties(properties);
+            SYSTEM_HOME = dictionary.getProperty("MuJava_Home");
+            SRC_PATH = dictionary.getProperty("MuJava_src", SYSTEM_HOME + File.separator + "src");
+            CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
+            MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
+            TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
+            numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
+            numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
+            resultsOutput = dictionary.getProperty("Results_output", null);
+            listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
+            listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
+            debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
+    /**
+     * Initializing mutation system from console without config file
+     * @param properties - a collection of properties in the format key=value
+     */
+    public static void setJMutationStructure(Map<String, String> properties)
+    {
+        try
+        {
+            dictionary.parseProperties(properties);
+            SYSTEM_HOME = dictionary.getProperty("MuJava_Home");
+            SRC_PATH = dictionary.getProperty("MuJava_src", SYSTEM_HOME + File.separator + "src");
+            CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
+            MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
+            TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
+            numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
+            numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
+            resultsOutput = dictionary.getProperty("Results_output", null);
+            listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
+            listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
+            debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
+
+        }
+        catch (Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
 }
 

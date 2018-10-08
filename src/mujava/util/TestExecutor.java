@@ -30,9 +30,9 @@ public class TestExecutor
 	/**
 	 * This method runs tests on the original and mutants and compares the results.
 	 * 
-	 * @param targetClassName
+	 * @param targetClassSet
 	 *            - the mutations of which class should be focused on
-	 * @param testSetName
+	 * @param testSet
 	 *            - which tests to run.
 	 * @param methodSignature
 	 *            - the mutants for which method should be tested. If null or blank - all of them

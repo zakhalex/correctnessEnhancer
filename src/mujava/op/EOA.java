@@ -171,7 +171,7 @@ public class EOA extends mujava.op.util.Mutator
 
       String f_name;
       num++;
-      f_name = getSourceName(this, className, getMutantType("EOA"));;
+      f_name = getSourceName(this, className, getMutantType("EOA"));
 	  String mutant_dir = getMuantID();
 
       try 

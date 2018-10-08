@@ -20,8 +20,6 @@ import openjava.ptree.*;
 
 import java.io.*;
 
-import org.hamcrest.core.IsInstanceOf;
-
 /**
  * <p>Generate ODL (Arithmetic Operator Replacement (Binary)) mutants -- 
  *    replace an arithmetic operator by each of the other operators  

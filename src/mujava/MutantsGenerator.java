@@ -160,6 +160,7 @@ public abstract class MutantsGenerator
 			{
 				int unQualifier = className.lastIndexOf('.') + 1;
 				outfile = new File(originalPath, className.substring(unQualifier, className.length()) + ".java");
+				outfile.getParentFile().mkdirs();
 				FileWriter fout = new FileWriter(outfile);
 				PrintWriter out = new PrintWriter(fout);
 				MutantCodeWriter writer = new MutantCodeWriter(out);
@@ -175,6 +176,10 @@ public abstract class MutantsGenerator
 			catch (ParseTreeException e)
 			{
 				System.err.println("MutantGenerator errors during printing " + outfile);
+				e.printStackTrace();
+			}
+			catch (Exception e)
+			{
 				e.printStackTrace();
 			}
 		}

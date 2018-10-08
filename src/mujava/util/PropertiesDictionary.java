@@ -5,6 +5,7 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -121,5 +122,18 @@ public class PropertiesDictionary
 						property.substring(dividerPosition + 1, property.length()));
 			}
 		}
+	}
+
+	public void parseProperties(Map<String, String> lines)
+	{
+		propertiesMap.putAll(lines);
+	}
+
+	/**
+	 * Remove all information from the dictionary
+	 */
+	public void clearDictionary()
+	{
+		propertiesMap.clear();
 	}
 }

@@ -1,0 +1,13 @@
+MuJava_HOME=/research/sp_temporary/az68/Time_1b
+config_mode=true
+filter_tests=Y
+MuJava_src=/research/sp_temporary/az68/Time_1b/src
+MuJava_class=/research/sp_temporary/az68/Time_1b/build/classes
+MuJava_mutants=/research/sp_temporary/az68/Time_1b/mutation/results
+MuJava_tests=/research/sp_temporary/az68/Time_1b/build/test
+number_of_mutation_threads=256
+number_of_testing_threads=64
+Results_output=/research/sp_temporary/az68/Time_1b/mutation/mutantResults.txt
+List_Target_Mutation_Files=/research/sp_temporary/az68/Time_1b/mutation/mujavaMutation.txt
+List_Target_Tests=/research/sp_temporary/az68/Time_1b/mutation/mujavaTest.txt
+debug_output_enabled=N

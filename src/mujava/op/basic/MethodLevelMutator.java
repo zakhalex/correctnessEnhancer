@@ -36,6 +36,17 @@ public class MethodLevelMutator  extends mujava.op.util.Mutator
       super( file_env, comp_unit, className );
    }
 
+    private String shortener(String name)
+    {
+        int length=name.length();
+        int hashCode=name.hashCode();
+        if(length>255)
+        {
+            name=name.substring(0,250)+Integer.toString(hashCode%10000);
+        }
+        return name;
+    }
+
    String getMethodSignature(MethodDeclaration p)
    {
        //remover the generics in the return type
@@ -64,7 +75,7 @@ public class MethodLevelMutator  extends mujava.op.util.Mutator
         	str += ",";
       }
       str += ")";
-      return str;
+      return shortener(str);
    }
 
    String getConstructorSignature(ConstructorDeclaration p)
@@ -91,7 +102,7 @@ public class MethodLevelMutator  extends mujava.op.util.Mutator
         	 str+=",";
       }
       str += ")";
-      return str;
+      return shortener(str);
    }
 
    /**

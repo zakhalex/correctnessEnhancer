@@ -58,13 +58,14 @@ public class TimeoutThreadPoolExecutor extends ThreadPoolExecutor
 		super.shutdown();
 		try
 		{
-			super.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+			super.awaitTermination(timeout, timeoutUnit);
 		}
 		catch (InterruptedException e)
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		super.shutdownNow();
 		System.out.println("Shutting down");
 		timeoutExecutor.shutdown();
 		System.out.println("TimeoutShutdown");

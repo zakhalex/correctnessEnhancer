@@ -20,8 +20,6 @@ import openjava.ptree.*;
 
 import java.io.*;
 
-import org.hamcrest.core.IsInstanceOf;
-
 /**
  * <p>Generate CDL (Constants DeLetion) mutants
  * </p>

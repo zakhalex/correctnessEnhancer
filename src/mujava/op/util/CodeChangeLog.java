@@ -32,10 +32,15 @@ public class CodeChangeLog {
   public static void openLogFile(String location){
     try{
       File f = new File(location,logFile_name);
+      f.getParentFile().mkdirs();
       FileWriter fout = new FileWriter(f);
       log_writer = new PrintWriter(fout);
     }catch(IOException e){
       System.err.println("[IOException] Can't make mutant log file." + e);
+    }
+    catch (Exception e)
+    {
+      e.printStackTrace();
     }
   }
 

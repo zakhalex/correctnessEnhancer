@@ -254,8 +254,8 @@ public class RunTestPanel extends JPanel implements ActionListener
 		testCB.setPreferredSize(new Dimension(320, 28));
 		testCB.setMaximumSize(new Dimension(320, 28));
 
-		Integer[] numbers = new Integer[64];
-		for (int i = 0; i < 64; i++)
+		Integer[] numbers = new Integer[256];
+		for (int i = 0; i < 256; i++)
 		{
 			numbers[i] = i + 1;
 		}

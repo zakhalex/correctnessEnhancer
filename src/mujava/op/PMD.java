@@ -43,10 +43,11 @@ public class PMD extends mujava.op.util.PolymorphicMutator
    public void visit(VariableDeclaration p) throws ParseTreeException
    {
       this.evaluateDown(p);
-      if (MutationSystem.isPrimitive(getType(p.getTypeSpecifier()))) 
+      OJClass type=getType(p.getTypeSpecifier());
+      if (MutationSystem.isPrimitive(type))
     	 return;
       
-      String original_class = p.getTypeSpecifier().getName();
+      String original_class = type.getName();
       InheritanceINFO inf = MutationSystem.getInheritanceInfo(original_class);
       if (inf == null) 
     	 return;
