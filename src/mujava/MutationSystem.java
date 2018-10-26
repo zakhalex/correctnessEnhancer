@@ -321,7 +321,7 @@ public class MutationSystem extends OJSystem
    /** List of names of traditional mutation operators */
    // Upsorn: (04/06/2009) added Statement Deletion operator (SID, SWD, SFD, SSD)
    public static String[] tm_operators = {   "AORB","AORS","AOIU","AOIS","AODU","AODS",
-                                             "ROR","COR","COD","COI","SOR","LOR","LOI","LOD","ASRS","SDL","VDL","CDL","ODL"};
+                                             "ROR","COR","COD","COI","SOR","LOR","LOI","LOD","NEQ","ASRS","SDL","VDL","CDL","ODL"};
 //                                             "IBD", "WBD", "FBD", "SBD" };
 //                                             "SID", "SWD", "SFD", "SSD" };
 //                                             "SDL"};   
