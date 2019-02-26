@@ -22,6 +22,7 @@ import java.awt.*;
 import javax.swing.*;
 import java.awt.event.*;
 import mujava.MutationSystem;
+import mujava.util.DatabaseCalls;
 import mujava.util.Debug;
 
 /**
@@ -67,6 +68,7 @@ public class RunTestMain extends JFrame
    {
       Debug.setDebugLevel(2);
       MutationSystem.setJMutationStructure();
+      DatabaseCalls.createResultTable();
       RunTestMain main = new RunTestMain();
       main.pack();
       main.setVisible(true);

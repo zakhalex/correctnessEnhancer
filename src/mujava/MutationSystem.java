@@ -112,6 +112,8 @@ public class MutationSystem extends OJSystem
    public static int numberOfTestingThreads=1;
    public static String resultsOutput=null;
    public static String listTargetMutationFiles =null;
+   public static String testJdbcURL=null;
+   public static String testOutputMode=null;
     public static String listTargetTestFiles =null;
    public static boolean debugOutputEnabled=false;
    public static String[] getTestSetNames()
@@ -846,6 +848,9 @@ public class MutationSystem extends OJSystem
           listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
           listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
           debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
+          testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");
+          testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
+
       }
 		catch (FileNotFoundException e1)
       {
@@ -886,6 +891,8 @@ public class MutationSystem extends OJSystem
             listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
             listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
             debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
+            testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");
+            testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
 
         }
         catch (FileNotFoundException e1)
@@ -917,6 +924,8 @@ public class MutationSystem extends OJSystem
             listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
             listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
             debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
+            testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");
+            testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
 
         }
         catch (Exception e)
@@ -944,8 +953,9 @@ public class MutationSystem extends OJSystem
             resultsOutput = dictionary.getProperty("Results_output", null);
             listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
             listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
-            debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
-
+            debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");//Additional console output for debugging
+            testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");//database jdbc
+            testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
         }
         catch (Exception e)
         {

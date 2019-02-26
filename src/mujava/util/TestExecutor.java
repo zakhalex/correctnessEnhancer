@@ -4,6 +4,8 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 import mujava.MutationSystem;
 import mujava.TestExecuter;
@@ -69,8 +71,27 @@ public class TestExecutor
 			// First, read (load) test suite class.
 			for (String testSetName : testSet)
 			{
-				test_engine.readTestSet(testSetName);
-				test_engine.computeOriginalTestResults();
+				boolean loadTestSet=test_engine.readTestSet(testSetName);
+				if(!loadTestSet)
+				{
+					System.out.println("Executor block - no tests have been detected.");
+					continue;
+				}
+				Map<String, Integer> originalResultsMap = test_engine.computeOriginalTestResults();
+				Integer result;
+				if (originalResultsMap.size() != 0)
+				{
+					result = 0;
+					for (Map.Entry<String, Integer> entry : originalResultsMap.entrySet())
+					{
+						result += entry.getValue();
+					}
+					result /= originalResultsMap.size();
+				}
+				else
+				{
+					result = -1;
+				}
 				try
 				{
 					switch (mode)
@@ -78,18 +99,18 @@ public class TestExecutor
 						case 0:
 						{
 							test_result.add(test_engine.runClassMutants(MutationSystem.MUTANT_HOME
-	                                + "/" + targetClassName + "/" + MutationSystem.CM_DIR_NAME));
+	                                + "/" + targetClassName + "/" + MutationSystem.CM_DIR_NAME, result));
 							test_result.add(test_engine.runTraditionalMutants(methodSignature.toString(), MutationSystem.MUTANT_HOME
-	                                + "/" + targetClassName + "/" + MutationSystem.TM_DIR_NAME));
+	                                + "/" + targetClassName + "/" + MutationSystem.TM_DIR_NAME, result));
 							break;
 						}
 						case 1:
 							test_result.add(test_engine.runClassMutants(MutationSystem.MUTANT_HOME
-	                                + "/" + targetClassName + "/" + MutationSystem.CM_DIR_NAME));
+	                                + "/" + targetClassName + "/" + MutationSystem.CM_DIR_NAME, result));
 							break;
 						case 2:
 							test_result.add(test_engine.runTraditionalMutants(methodSignature.toString(), MutationSystem.MUTANT_HOME
-	                                + "/" + targetClassName + "/" + MutationSystem.TM_DIR_NAME));
+	                                + "/" + targetClassName + "/" + MutationSystem.TM_DIR_NAME, result));
 							break;
 						default:
 							break;

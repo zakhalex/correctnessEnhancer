@@ -19,33 +19,24 @@ package mujava;
 import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
-import java.net.URL;
-import java.net.URLClassLoader;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
-import java.util.Properties;
 import java.util.Vector;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 import mujava.test.*;
 import mujava.util.*;
 
-import org.junit.*;
-import org.junit.internal.RealSystem;
 import org.junit.internal.TextListener;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
-import org.junit.runners.*;
+
+import static mujava.util.DatabaseCalls.insertResult;
 
 /**
  * <p>
@@ -160,22 +151,45 @@ public class TestExecuter
 		return true;
 	}
 
-	public TestResult runClassMutants(String mutantPath) throws NoMutantException, NoMutantDirException
+    public TestResult runClassMutants(String mutantPath) throws NoMutantException, NoMutantDirException
+    {
+        return runClassMutants(mutantPath, null);
+    }
+
+	public TestResult runClassMutants(String mutantPath, Integer originalResult) throws NoMutantException, NoMutantDirException
 	{
 		TestResult test_result = new TestResult();
-		runMutants(test_result, "", mutantPath);
+		runMutants(test_result, "", mutantPath, originalResult);
 		test_result.setMode(1);
+		if(MutationSystem.testOutputMode.equalsIgnoreCase("database"))
+		{
+			insertResult(test_result);
+		}
 		return test_result;
 	}
 
-	public TestResult runExceptionMutants(String mutantPath) throws NoMutantException, NoMutantDirException
+    public TestResult runExceptionMutants(String mutantPath) throws NoMutantException, NoMutantDirException
+    {
+        return runExceptionMutants(mutantPath, null);
+    }
+
+	public TestResult runExceptionMutants(String mutantPath, Integer originalResult) throws NoMutantException, NoMutantDirException
 	{
 		TestResult test_result = new TestResult();
-		runMutants(test_result, "", mutantPath);
+		runMutants(test_result, "", mutantPath, originalResult);
+		if(MutationSystem.testOutputMode.equalsIgnoreCase("database"))
+		{
+			insertResult(test_result);
+		}
 		return test_result;
 	}
 
-	public TestResult runTraditionalMutants(String methodSignature, String mutantPath) throws NoMutantException, NoMutantDirException
+    public TestResult runTraditionalMutants(String methodSignature, String mutantPath) throws NoMutantException, NoMutantDirException
+    {
+        return runTraditionalMutants(methodSignature,mutantPath, null);
+    }
+
+	public TestResult runTraditionalMutants(String methodSignature, String mutantPath, Integer originalResult) throws NoMutantException, NoMutantDirException
 	{
 
 		TestResult test_result = new TestResult();
@@ -194,7 +208,7 @@ public class TestExecuter
 				{
 					try
 					{
-						runMutants(test_result, readSignature, mutantPath);
+						runMutants(test_result, readSignature, mutantPath, originalResult);
 					}
 					catch (NoMutantException e)
 					{
@@ -212,9 +226,13 @@ public class TestExecuter
 		}
 		else
 		{
-			runMutants(test_result, methodSignature, mutantPath);
+			runMutants(test_result, methodSignature, mutantPath, originalResult);
 		}
 		test_result.setMode(2);
+		if(MutationSystem.testOutputMode.equalsIgnoreCase("database"))
+		{
+			insertResult(test_result);
+		}
 		return test_result;
 	}
 
@@ -294,8 +312,9 @@ public class TestExecuter
 	/**
 	 * compute the result of a test under the original program
 	 */
-	public void computeOriginalTestResults()
+	public ConcurrentHashMap<String, Integer> computeOriginalTestResults()
 	{
+	    ConcurrentHashMap<String, Integer> localOriginalResult=new ConcurrentHashMap<>();
 		Debug.println(
 				"\n\n======================================== Generating Original Test Results ========================================");
 		try
@@ -312,6 +331,7 @@ public class TestExecuter
 					{
 						// killed_mutants[k]= ""; // At first, no mutants are killed by each test case
 						originalResults.put(testCases[k].getName(), "pass");
+                        localOriginalResult.put(testCases[k].getName(), 100);
 						junitTests.add(testCases[k].getName());
 						finalTestResults.put(testCases[k].getName(), "");
 						continue;
@@ -342,7 +362,7 @@ public class TestExecuter
 						lineNumber = sb[i].substring(sb[i].indexOf(":") + 1, sb[i].indexOf(")"));
 					}
 				}
-
+                localOriginalResult.put(nameOfTest, 0);
 				// put the failure messages into the test results
 				if (failure.getMessage() == null)
 					originalResults.put(nameOfTest, nameOfTest + ": " + lineNumber + "; " + "fail");
@@ -369,7 +389,7 @@ public class TestExecuter
 			System.err.println(
 					"Could not find one of the necessary classes for running tests. Make sure that .jar files for hamcrest and junit are in your classpath.");
 			e.printStackTrace();
-			return;
+            return localOriginalResult;
 		}
 		catch (Exception e)
 		{
@@ -387,9 +407,13 @@ public class TestExecuter
 		{
 			// originalResultFileRead();
 		}
-	}
-
-	private TestResult runMutants(TestResult tr, String methodSignature, String mutantPath) throws NoMutantException, NoMutantDirException
+        return localOriginalResult;
+    }
+    private TestResult runMutants(TestResult tr, String methodSignature, String mutantPath) throws NoMutantException, NoMutantDirException
+    {
+        return runMutants(tr,methodSignature,mutantPath,null);
+    }
+	private TestResult runMutants(TestResult tr, String methodSignature, String mutantPath, Integer originalResult) throws NoMutantException, NoMutantDirException
 	{
 		try
 		{
@@ -398,6 +422,8 @@ public class TestExecuter
 
 			int mutant_num = mutantDirectories.length;
 			tr.setMutants();
+			tr.setProgramLocation(mutantPath);
+			tr.setOriginalResult(originalResult);
 			tr.setTestSetName(testSet);
 			tr.setTargetMutant(whole_class_name);
 			for (int i = 0; i < mutant_num; i++)
@@ -624,14 +650,16 @@ public class TestExecuter
 					System.out.println(mutant_name);
 				}
 				try
-				{						
+				{
 					if(entry.getValue().get().isEmpty())
 					{
-						tr.live_mutants.add(mutant_name);
+						tr.mutation_results.put(mutant_name,100);//absolutely correct
+//						tr.live_mutants.add(mutant_name);
 					}
 					else
 					{
-						tr.killed_mutants.add(mutant_name);
+						tr.mutation_results.put(mutant_name,0);//absolutely incorrect
+//						tr.killed_mutants.add(mutant_name);
 					}
 				}
 				catch(Exception e)
@@ -646,7 +674,11 @@ public class TestExecuter
 			resultMap.clear();
 			for (int i = 0; i < tr.killed_mutants.size(); i++)
 			{
-				tr.live_mutants.remove(tr.killed_mutants.get(i));
+				if(tr.live_mutants.remove(tr.killed_mutants.get(i)))
+				{
+					System.out.println("THIS IS A TEST - killed mutant detected among live: "+tr.killed_mutants.get(i));
+//					System.exit(0);
+				}
 			}
 			/*
 			 * System.out.println(" Analysis of testcases ");

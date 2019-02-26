@@ -16,7 +16,9 @@
 
 package mujava.test;
 
+import java.util.Map;
 import java.util.Vector;
+import java.util.concurrent.ConcurrentHashMap;
 
 /**
  * <p>
@@ -36,17 +38,47 @@ public class TestResult
 	public Vector<String> killed_mutants = new Vector<String>();
 	// live mutants in a class
 	public Vector<String> live_mutants = new Vector<String>();//fixes that worked
-	// mutation score
-	public int mutant_score = 0;
+
+    // mutation score
+	public final ConcurrentHashMap<String, Integer> mutation_results=new ConcurrentHashMap<>();
+//    public final ConcurrentHashMap<String, Integer> originalResults=new ConcurrentHashMap<>();
+    private Integer originalResult=-1;
+
 	private int mode = -1;// Type of results - 1-class, 2-traditional
 	private String testSetName;//Name of the testset for which these results are applicable
 	private String targetMutant;//Which mutant were they running on
-	
+	private String programLocation="DEFAULT";
 	
 	public void setMutants()
 	{
 		mutants = new Vector<String>();
 	}
+    public Integer getOriginalResult()
+    {
+        return originalResult;
+    }
+
+    public void setOriginalResult(Integer newOriginalResult)
+    {
+        if(newOriginalResult!=null)
+        {
+            originalResult=newOriginalResult;
+        }
+        else
+        {
+            originalResult=-1;
+        }
+    }
+//	public void setOriginalResults(Map<String, Integer> newOriginalResults)
+//    {
+//    	if(newOriginalResults!=null) {
+//			originalResults.putAll(newOriginalResults);
+//		}
+//		else
+//		{
+//			originalResults.clear();
+//		}
+//    }
 
 	public int getMode()
 	{
@@ -77,4 +109,15 @@ public class TestResult
 	{
 		this.targetMutant = targetMutant;
 	}
+
+	public String getProgramLocation()
+	{
+		return programLocation;
+	}
+
+	public void setProgramLocation(String programLocation)
+	{
+		this.programLocation = programLocation;
+	}
+
 }

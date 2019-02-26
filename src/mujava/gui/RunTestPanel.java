@@ -33,11 +33,7 @@ import mujava.TestExecuter;
 import mujava.util.*;
 import mujava.test.*;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Scanner;
-import java.util.Vector;
+import java.util.*;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -588,40 +584,55 @@ public class RunTestPanel extends JPanel implements ActionListener
 		// Mutation Score
 		if (tr == null)
 			System.out.println("-----------");
-		int killed_num = tr.killed_mutants.size();
-		int live_num = tr.live_mutants.size();
+//		int killed_num = tr.killed_mutants.size();
+//		int live_num = tr.live_mutants.size();
 
-		if ((killed_num + live_num) == 0)
+		if (tr.mutation_results.isEmpty())
 		{
 			showEmptyResult(table, killed_list, live_list);
 			System.out.println("[Notice] There are no mutants to apply");
 			return;
 		}
+		ArrayList<String> killed_mutants=new ArrayList<>();
+		ArrayList<String> live_mutants=new ArrayList<>();
+		int total=0;
+		for(Map.Entry<String, Integer> entry:tr.mutation_results.entrySet())
+		{
+			total+=entry.getValue();//Need to rethink if we accept negative scores as error indication
+			if(entry.getValue()>0)
+			{
+				live_mutants.add(entry.getKey());
+			}
+			else
+			{
+				killed_mutants.add(entry.getKey());
+			}
+		}
+//		String[] killed_mutants = new String[killed_num];
+//		String[] live_mutants = new String[live_num];
+//		for (i = 0; i < killed_num; i++)
+//		{
+//			killed_mutants[i] = tr.killed_mutants.get(i).toString();
+//		}
+//		for (i = 0; i < live_num; i++)
+//		{
+//			live_mutants[i] = tr.live_mutants.get(i).toString();
+//		}
 
-		Float mutant_score = new Float((killed_num * 100) / (killed_num + live_num));
+
+		Float mutant_score = new Float(total/100);
 
 		// Show the result on resultTable
 		ResultTableModel resultModel = (ResultTableModel) (table.getModel());
-		resultModel.setValueAt("  " + (new Integer(live_num)).toString(), 0, 1); // live mutant
-		resultModel.setValueAt("  " + (new Integer(killed_num)).toString(), 1, 1); // killed mutant
-		resultModel.setValueAt("  " + (new Integer(live_num + killed_num)).toString(), 2, 1); // total
+		resultModel.setValueAt("  " + (new Integer(live_mutants.size())).toString(), 0, 1); // live mutant
+		resultModel.setValueAt("  " + (new Integer(killed_mutants.size())).toString(), 1, 1); // killed mutant
+		resultModel.setValueAt("  " + (new Integer(tr.mutation_results.size())).toString(), 2, 1); // total
 		resultModel.setValueAt("  " + mutant_score.toString() + "%", 3, 1); // mutant score
 
 		// List of Killed, Live Mutants
 
-		String[] killed_mutants = new String[killed_num];
-		String[] live_mutants = new String[live_num];
-		for (i = 0; i < killed_num; i++)
-		{
-			killed_mutants[i] = tr.killed_mutants.get(i).toString();
-		}
-		for (i = 0; i < live_num; i++)
-		{
-			live_mutants[i] = tr.live_mutants.get(i).toString();
-		}
-
-		killed_list.setListData(killed_mutants);
-		live_list.setListData(live_mutants);
+		killed_list.setListData(killed_mutants.toArray());
+		live_list.setListData(live_mutants.toArray());
 		killed_list.repaint();
 		live_list.repaint();
 	}

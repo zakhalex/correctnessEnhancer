@@ -20,6 +20,7 @@ package mujava.gui;
 import javax.swing.*;
 import java.awt.event.*;
 import mujava.MutationSystem;
+import mujava.util.DatabaseCalls;
 
 /**
  * <p>GUI program (main interface) for generating mutants </p>
@@ -65,6 +66,8 @@ public class GenMutantsMain extends JFrame
       System.out.println("The main method starts");
       try {
 	  MutationSystem.setJMutationStructure();
+         DatabaseCalls.startServer();
+	  DatabaseCalls.createResultTable();
       }
       catch (NoClassDefFoundError e) {
 	  System.err.println("[ERROR] Could not find one of the classes necessary to run muJava. Make sure that the .jar file for openjava is in your classpath.");

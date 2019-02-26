@@ -28,14 +28,13 @@ package mujava.cli;
 
 import mujava.MutationControl;
 import mujava.MutationSystem;
-import mujava.test.OriginalLoader;
 import mujava.test.TestResult;
+import mujava.util.DatabaseCalls;
 import mujava.util.TestExecutor;
-import org.junit.internal.TextListener;
-import org.junit.runner.JUnitCore;
-import org.junit.runner.Result;
 
 import java.io.*;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 import java.util.*;
 
 public class ConsoleController {
@@ -111,6 +110,9 @@ public class ConsoleController {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        if (mode.equalsIgnoreCase("create")) {
+           DatabaseCalls.createResultTable();
+        }
         if (mode.equalsIgnoreCase("list")) {
             String listTargetMutationFiles = MutationSystem.listTargetMutationFiles;
             if ((listTargetMutationFiles != null) && (!listTargetMutationFiles.isEmpty())) {
@@ -165,6 +167,14 @@ public class ConsoleController {
         }
         if (mode.equalsIgnoreCase("all") || mode.equalsIgnoreCase("test"))// not optimal, should be re-done through loop with list
         {
+            if ((MutationSystem.testOutputMode.equalsIgnoreCase("database"))||(MutationSystem.testJdbcURL != null)) {
+                try {
+                    DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                DatabaseCalls.createResultTable();
+            }
             boolean filter = false;
             TestExecutor localExecutor = new TestExecutor(MutationSystem.numberOfTestingThreads);
             String filterOn = regularProperties.get("testfilter");
@@ -180,11 +190,37 @@ public class ConsoleController {
             }
             ArrayList<TestResult> result = localExecutor.executeTests(null, testSet, "All method", 3000);
             String fileName = MutationSystem.resultsOutput;
-            if (fileName == null) {
-                for (TestResult tr : result) {
-                    System.out.println("Class name: " + tr.getTargetMutant() + ". Target test: " + tr.getTestSetName() + ". The following mutants are alive: " + tr.live_mutants);
-                }
-            } else {
+            /**
+             * Console/File/Database
+             */
+            if ((MutationSystem.testOutputMode.equalsIgnoreCase("database"))||(MutationSystem.testJdbcURL != null)) {
+
+////                String sql = "INSERT INTO TESTRESULTS (PROGRAM_LOCATION,MUTANT_NAME," +
+////                        "TEST_NAME,ORIGINAL,ORIGINAL_CORRECTNESS_RANGE,MUTATED," +
+////                        "MUTATED_CORRECTNESS_RANGE,LAST_UPDATED,COMMENT) " +
+////                        "VALUES(?,?,?,?,?,?,?,?,?)";
+//                for (TestResult tr : result) {
+//                    insertResult(tr);
+////                    try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
+////                         PreparedStatement pstmt = conn.prepareStatement(sql)) {
+////                        pstmt.setString(1, tr.getProgramLocation());
+////                        pstmt.setString(1, tr.getTargetMutant());
+////                        pstmt.setString(1, tr.getTestSetName());
+////                        pstmt.setBoolean(1, false);
+////                        pstmt.setString(1, "N/A");
+////                        pstmt.setBoolean(1, false);
+////                        pstmt.setString(1, "N/A");
+////
+////                        pstmt.setDate(2, new Date(12));
+////                        pstmt.setString(1, "");//Comment to be inserted
+////
+////                        pstmt.executeUpdate();
+////                    } catch (SQLException e) {
+////                        System.out.println(e.getMessage());
+////                    }
+//                }
+            }
+            else if ((MutationSystem.testOutputMode.equalsIgnoreCase("file"))||(fileName != null)) {
                 if (filter) {
                     fileName = fileName + "_" + filterOn.replaceAll("/[^A-Za-z0-9]/", "");
                 }
@@ -199,6 +235,12 @@ public class ConsoleController {
                     for (TestResult tr : result) {
                         System.out.println("Class name: " + tr.getTargetMutant() + ". Target test: " + tr.getTestSetName() + ". The following mutants are alive: " + tr.live_mutants);
                     }
+                }
+            }
+            else
+            {
+                for (TestResult tr : result) {
+                    System.out.println("Class name: " + tr.getTargetMutant() + ". Target test: " + tr.getTestSetName() + ". The following mutants are alive: " + tr.live_mutants);
                 }
             }
         }

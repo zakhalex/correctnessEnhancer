@@ -94,7 +94,7 @@ public class OriginalLoader extends ClassLoader{
   {
     String filename = name.replace ('.', File.separatorChar) + ".class";
     Util.DebugPrint("file name: " + filename);
-System.out.println("THIS IS A TEST "+directory+"/"+filename);
+//System.out.println("THIS IS A TEST "+directory+"/"+filename);
     // Create a file object relative to directory provided
     File f = new File (directory, filename);
      // Get stream to read from
