@@ -51,7 +51,7 @@ import static mujava.util.DatabaseCalls.insertResult;
 public class TestExecuter
 {
 //	Object lockObject = new Object();
-	LinkedHashMap<String, Future<List<Failure>>> resultMap=new LinkedHashMap<>();
+	LinkedHashMap<String, Future<Result>> resultMap=new LinkedHashMap<>();
 
 	// int TIMEOUT = 3000;
 	int TIMEOUT;
@@ -457,11 +457,11 @@ public class TestExecuter
 					Debug.print("  " + mutant_name);
 					Debug.println("TestExecutor executing mutant " + mutant_name);
 					// Mutants are runned using Thread to detect infinite loop caused by mutation
-					Callable<List<Failure>> c = new Callable<List<Failure>>()
+					Callable<Result> c = new Callable<Result>()
 					{
 						public Result result;
 						@Override
-						public List<Failure> call() {
+						public Result call() {
 //							try
 //							{
 //								mutantRunning = true;
@@ -497,7 +497,7 @@ public class TestExecuter
 							}
 							t.stop();
 							if (result.getFailureCount() == 0) {
-								return new ArrayList<Failure>();
+								return result;
 							} else {
 								List<Failure> listOfFailure = result.getFailures();
 								for (Failure failure : listOfFailure) {
@@ -549,7 +549,7 @@ public class TestExecuter
 //								{
 //									lockObject.notify();
 //								}
-							return result.getFailures();
+							return result;
 //							}
 //							catch (Exception e)
 //							{
@@ -643,7 +643,7 @@ public class TestExecuter
 			// determine whether a mutant is killed or not
 			// update the test report
 
-			for(Entry<String, Future<List<Failure>>> entry:resultMap.entrySet())
+			for(Entry<String, Future<Result>> entry:resultMap.entrySet())
 			{
 				String mutant_name=entry.getKey();
 				if(MutationSystem.debugOutputEnabled) {
@@ -651,9 +651,13 @@ public class TestExecuter
 				}
 				try
 				{
-					if(entry.getValue().get().isEmpty())
+					Result r=entry.getValue().get();
+					if(r.getFailures().isEmpty())
 					{
-						tr.mutation_results.put(mutant_name,100);//absolutely correct
+						if(r.getRunCount()>0)
+							tr.mutation_results.put(mutant_name,100);//absolutely correct
+						else
+							tr.mutation_results.put(mutant_name,-1);//never ran
 //						tr.live_mutants.add(mutant_name);
 					}
 					else

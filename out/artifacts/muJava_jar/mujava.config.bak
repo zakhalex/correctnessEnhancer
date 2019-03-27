@@ -1,0 +1,15 @@
+MuJava_HOME=J:\phd\mujava
+config_mode=true
+filter_tests=Y
+MuJava_src=J:\phd\mujava\src
+MuJava_class=J:\phd\mujava\classes
+MuJava_mutants=J:\phd\mujava\result
+MuJava_tests=J:\phd\mujava\testset
+number_of_mutation_threads=256
+number_of_testing_threads=64
+Results_output=J:\phd\mujava\input\mutantResults.txt
+List_Target_Mutation_Files=J:\phd\mujava\input\mujavaMutation.txt
+List_Target_Tests=J:\phd\mujava\input\mujavaTest.txt
+debug_output_enabled=N
+test_results_jdbc=jdbc:derby://kong.njit.edu:1527/tests.db;create=true
+test_results_output_mode=database

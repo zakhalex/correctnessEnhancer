@@ -1,7 +1,7 @@
-Tue Feb 26 01:48:39 EST 2019 : Сетевой сервер Apache Derby Network Server - 10.14.2.0 - (1828579) запущен и готов принимать соединения на порту 1527 на {3} 
+Sun Mar 10 15:55:18 EDT 2019 : Сетевой сервер Apache Derby Network Server - 10.14.2.0 - (1828579) запущен и готов принимать соединения на порту 1527 на {3} 
 ----------------------------------------------------------------
-Tue Feb 26 01:48:39 EST 2019:
- Производится загрузка Derby версии The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): экземпляр a816c00e-0169-288f-fe39-00000dd0aa88
+Sun Mar 10 15:55:18 EDT 2019:
+ Производится загрузка Derby версии The Apache Software Foundation - Apache Derby - 10.14.2.0 - (1828579): экземпляр a816c00e-0169-692c-8056-00000dd08620
 в каталоге базы данных J:\phd\development\muJava\tests.db sun.misc.Launcher$AppClassLoader@18b4aac2 
 
 java.vendor=Oracle Corporation
