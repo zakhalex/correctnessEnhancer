@@ -595,13 +595,13 @@ public class RunTestPanel extends JPanel implements ActionListener
 		}
 		ArrayList<String> killed_mutants=new ArrayList<>();
 		ArrayList<String> live_mutants=new ArrayList<>();
-		int total=0;
+		float total=0;
 		for(Map.Entry<String, Integer> entry:tr.mutation_results.entrySet())
 		{
-			total+=entry.getValue();//Need to rethink if we accept negative scores as error indication
-			if(entry.getValue()>0)
+			if(entry.getValue()==100)//absolute correctness
 			{
 				live_mutants.add(entry.getKey());
+				total+=entry.getValue();//Need to rethink if we accept negative scores as error indication
 			}
 			else
 			{
@@ -620,7 +620,7 @@ public class RunTestPanel extends JPanel implements ActionListener
 //		}
 
 
-		Float mutant_score = new Float(total/100);
+		Float mutant_score = total/tr.mutation_results.size();
 
 		// Show the result on resultTable
 		ResultTableModel resultModel = (ResultTableModel) (table.getModel());

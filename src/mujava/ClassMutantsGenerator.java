@@ -153,10 +153,25 @@ public class ClassMutantsGenerator extends MutantsGenerator
 				{
 					if (ignore.contains(type))
 					{
-						DeclAnalyzer mutant_op=MutationFactory.getDeclarationMutant(type, file_env, cdecl, comp_unit, className);
-						if(mutant_op!=null)
+						try {
+							DeclAnalyzer mutant_op = MutationFactory.getDeclarationMutant(type, file_env, cdecl, comp_unit, className);
+							if (mutant_op != null) {
+								generateMutant(mutant_op);
+							}
+						}
+						catch (Exception exp)
 						{
-							generateMutant(mutant_op);
+							System.err.println("GenClassMutants2");
+							exp.printStackTrace();
+							// System.out.println("Can't generate mutants for " +file_name + " due to exception" + exp.getClass().getName());
+							// exp.printStackTrace();
+						}
+						catch (Error er)
+						{
+							er.printStackTrace();
+
+							// System.out.println("Can't generate mutants for " +file_name + " due to error" + er.getClass().getName());
+
 						}
 					}
 				}
@@ -231,18 +246,33 @@ public class ClassMutantsGenerator extends MutantsGenerator
 			if (cdecl.getName().equalsIgnoreCase(className.substring(unQualifier, className.length())))
 			{
 				String qname = file_env.toQualifiedName(cdecl.getName());
-				try
-				{
+//				try
+//				{
 					for (String type : classOp)
 					{
 						if (ignore.contains(type))
 						{
 							continue;
 						}
-						Mutator mutant_op=MutationFactory.getClassMutant(type, file_env, cdecl, comp_unit, className, qname);
-						if(mutant_op!=null)
+						try
 						{
-							comp_unit.accept(mutant_op);
+							Mutator mutant_op = MutationFactory.getClassMutant(type, file_env, cdecl, comp_unit, className, qname);
+							if (mutant_op != null) {
+								comp_unit.accept(mutant_op);
+							}
+						}
+						catch (Exception exp)
+						{
+							exp.printStackTrace();
+							// System.out.println("Can't generate mutants for " +file_name + " due to exception" + exp.getClass().getName());
+							// exp.printStackTrace();
+						}
+						catch (Error er)
+						{
+							er.printStackTrace();
+
+							// System.out.println("Can't generate mutants for " +file_name + " due to error" + er.getClass().getName());
+
 						}
 					}
 					//
@@ -446,12 +476,12 @@ public class ClassMutantsGenerator extends MutantsGenerator
 					// comp_unit.accept(mutant_op);
 					// }
 
-				}
-				catch (ParseTreeException e)
-				{
-					System.err.println("Encountered errors during generating mutants.");
-					e.printStackTrace();
-				}
+//				}
+//				catch (ParseTreeException e)
+//				{
+//					System.err.println("Encountered errors during generating mutants.");
+//					e.printStackTrace();
+//				}
 			}
 		}
 	}

@@ -22,7 +22,7 @@
  * Outputs (mutated source and class files) are in
  * the traditional-mutants folder.
  * </p>
- * 
+ *
  * <p>
  * Currently available traditional mutation operators:
  * (1) AORB: Arithmetic Operator Replacement (Binary),
@@ -42,18 +42,20 @@
  * (15) LOD: Logical Operator Deletion,
  * (16) ASRS: Assignment Operator Replacement (short-cut)
  * </p>
- * 
+ *
  * @author Yu-Seung Ma
  * @version 1.0
- * 
+ *
  *          Taking out aor_flag for not clear about the reason of using it.
  *          Lin Deng, Aug 23
- * 
+ *
  */
 package mujava;
 
 import openjava.ptree.*;
 import java.io.*;
+import java.util.ArrayList;
+
 import mujava.op.basic.*;
 import mujava.op.util.*;
 import mujava.util.Debug;
@@ -146,12 +148,12 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
 	 * Apply selected traditional mutation operators:
 	 * AORB, AORS, AODU, AODS, AOIU, AOIS, ROR, COR, COD, COI,
 	 * SOR, LOR, LOI, LOD, ASRS, SID, SWD, SFD, SSD
-	 * 
+	 *
 	 * @param cdecls
 	 */
-	void genTraditionalMutants(ClassDeclarationList cdecls, String mutantPath, String className)
+	ArrayList<String> genTraditionalMutants(ClassDeclarationList cdecls, String mutantPath, String className)
 	{
-
+		ArrayList<String> output=new ArrayList<String>();
 		for (int j = 0; j < cdecls.size(); ++j)
 		{
 			ClassDeclaration cdecl = cdecls.get(j);
@@ -163,9 +165,9 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
 			int unQualifier = className.lastIndexOf('.') + 1;
 			if (tempName.equalsIgnoreCase(className.substring(unQualifier, className.length())))
 			{
-				try
-				{
-					// mujava.op.util.Mutator mutant_op;
+//				try
+//				{
+//					// mujava.op.util.Mutator mutant_op;
 					// boolean AOR_FLAG = false;
 
 					try
@@ -186,16 +188,34 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
 					}
 					catch (Exception e)
 					{
+						output.add("[Exception] " + cdecl.getName() + " " + " Error in writing method list");
 						System.err.println("Error in writing method list");
-						return;
+						continue;
 					}
 					for (String type : traditionalOp)
 					{
-						Mutator mutant_op = MutationFactory.getTraditionalMutant(type, file_env, cdecl, comp_unit,
-								className);
-						if (mutant_op != null)
+						try
 						{
-							comp_unit.accept(mutant_op);
+                            Mutator mutant_op = MutationFactory.getTraditionalMutant(type, file_env, cdecl, comp_unit,
+                                className);
+                            if (mutant_op != null) {
+                                comp_unit.accept(mutant_op);
+                            }
+						}
+						catch (Exception exp)
+						{
+							output.add("[Exception] for the class" + className + " in " + cdecl.getName() + " " + exp.toString());
+							exp.printStackTrace();
+							// System.out.println("Can't generate mutants for " +file_name + " due to exception" + exp.getClass().getName());
+							// exp.printStackTrace();
+						}
+						catch (Error er)
+						{
+							output.add("[Error] TraditionalMutantsGenerator " + className + " in " + cdecl.getName() + " " + er.toString());
+							er.printStackTrace();
+
+							// System.out.println("Can't generate mutants for " +file_name + " due to error" + er.getClass().getName());
+
 						}
 					}
 					// if (hasOperator (traditionalOp, "AORB") )
@@ -338,7 +358,7 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
 					 * mutant_op = new SID(file_env, cdecl, comp_unit);
 					 * comp_unit.accept(mutant_op);
 					 * }
-					 * 
+					 *
 					 * if (hasOperator (traditionalOp, "SWD") )
 					 * {
 					 * Debug.println("  Applying SWD ... ... ");
@@ -346,13 +366,24 @@ public class TraditionalMutantsGenerator extends MutantsGenerator
 					 * comp_unit.accept(mutant_op);
 					 * }
 					 */
-				}
-				catch (ParseTreeException e)
-				{
-					System.err.println("Exception, during generating traditional mutants for the class " + className);
-					e.printStackTrace();
-				}
+//				}
+//				catch (ParseTreeException e)
+//				{
+//					System.err.println("Exception, during generating traditional mutants for the class " + className);
+//					e.printStackTrace();
+//				}
 			}
 		}
+//		if(!output.isEmpty())
+//		{
+//			StringBuilder issues=new StringBuilder();
+//			for(String s:output)
+//			{
+//				issues.append(s);
+//			}
+////			throw new Exception(issues.toString());
+//			System.err.println(issues);
+//		}
+		return output;
 	}
 }

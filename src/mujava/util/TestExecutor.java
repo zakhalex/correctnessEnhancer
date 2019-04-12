@@ -61,6 +61,14 @@ public class TestExecutor
 		{
 			methodSignature = "All method";
 		}
+//
+//		for (String targetClassName : targetClassSet) {
+//			for (String testSetName : Arrays.asList(MutationSystem.eraseExtension(MutationSystem.getTestSetNames(), "class"))) {
+//				TestExecuter test_engine = new TestExecuter(targetClassName);
+//				boolean loadTestSet = test_engine.readTestSet(testSetName);
+//				System.out.println(loadTestSet);
+//			}
+//		}
 		ArrayList<TestResult> test_result = new ArrayList<TestResult>();
 		for (String targetClassName : targetClassSet)
 		{
@@ -75,56 +83,115 @@ public class TestExecutor
 				if(!loadTestSet)
 				{
 					System.out.println("Executor block - no tests have been detected.");
-					continue;
+//					continue;
 				}
-				Map<String, Integer> originalResultsMap = test_engine.computeOriginalTestResults();
-				Integer result;
-				if (originalResultsMap.size() != 0)
-				{
-					result = 0;
-					for (Map.Entry<String, Integer> entry : originalResultsMap.entrySet())
-					{
-						result += entry.getValue();
-					}
-					result /= originalResultsMap.size();
-				}
-				else
-				{
-					result = -1;
-				}
-				try
-				{
-					switch (mode)
-					{
-						case 0:
-						{
-							test_result.add(test_engine.runClassMutants(MutationSystem.MUTANT_HOME
-	                                + "/" + targetClassName + "/" + MutationSystem.CM_DIR_NAME, result));
-							test_result.add(test_engine.runTraditionalMutants(methodSignature.toString(), MutationSystem.MUTANT_HOME
-	                                + "/" + targetClassName + "/" + MutationSystem.TM_DIR_NAME, result));
-							break;
-						}
-						case 1:
-							test_result.add(test_engine.runClassMutants(MutationSystem.MUTANT_HOME
-	                                + "/" + targetClassName + "/" + MutationSystem.CM_DIR_NAME, result));
-							break;
-						case 2:
-							test_result.add(test_engine.runTraditionalMutants(methodSignature.toString(), MutationSystem.MUTANT_HOME
-	                                + "/" + targetClassName + "/" + MutationSystem.TM_DIR_NAME, result));
-							break;
-						default:
-							break;
-					}
-				}
-				catch (NoMutantException e1)
-				{
-				}
-				catch (NoMutantDirException e2)
-				{
-				}
-				catch (Exception e)
-				{
+//				Map<String, Integer> originalResultsMap = test_engine.computeOriginalTestResults();
+				Integer result = test_engine.computeOriginalTestResults(testSetName);
+//				if(testSetName.contains("AbstractCategoryItemRendererTests")) {
+//					for (int i = 0; i < 100; i++) {
+//
+//						if (result < 100) {
+//							System.err.println("Current count: " + i + "|" + result);
+//							System.exit(0);
+//						}
+//						result = test_engine.computeOriginalTestResults(testSetName);
+//					}
+//					if(result<100)
+//					{
+//						System.err.println("Last one|"+result);
+//						System.exit(0);
+//					}
+//					System.err.println("Test passed");
+//					System.exit(0);
+//				}
+//				if (originalResultsMap.size() != 0)
+//				{
+//					result = 0;
+//					for (Map.Entry<String, Integer> entry : originalResultsMap.entrySet())
+//					{
+//						result += entry.getValue();
+//					}
+//					result /= originalResultsMap.size();
+//				}
+//				else
+//				{
+//					result = -1;
+//				}
 
+				switch (mode) {
+					case 0:
+						try {
+							test_result.add(test_engine.runClassMutants(MutationSystem.MUTANT_HOME
+									+ "/" + targetClassName + "/" + MutationSystem.CM_DIR_NAME, result));
+						} catch (NoMutantException e1) {
+							if (MutationSystem.debugOutputEnabled) {
+								System.err.println("No Mutant exception");
+								e1.printStackTrace();
+							}
+						} catch (NoMutantDirException e2) {
+							if (MutationSystem.debugOutputEnabled) {
+								e2.printStackTrace();
+							}
+						} catch (Exception e) {
+							if (MutationSystem.debugOutputEnabled) {
+								e.printStackTrace();
+							}
+						}
+						try {
+							test_result.add(test_engine.runTraditionalMutants(methodSignature.toString(), MutationSystem.MUTANT_HOME
+									+ "/" + targetClassName + "/" + MutationSystem.TM_DIR_NAME, result));
+						} catch (NoMutantException e1) {
+							if (MutationSystem.debugOutputEnabled) {
+								e1.printStackTrace();
+							}
+						} catch (NoMutantDirException e2) {
+							if (MutationSystem.debugOutputEnabled) {
+								e2.printStackTrace();
+							}
+						} catch (Exception e) {
+							if (MutationSystem.debugOutputEnabled) {
+								e.printStackTrace();
+							}
+						}
+						break;
+					case 1:
+						try {
+							test_result.add(test_engine.runClassMutants(MutationSystem.MUTANT_HOME
+									+ "/" + targetClassName + "/" + MutationSystem.CM_DIR_NAME, result));
+						} catch (NoMutantException e1) {
+							if (MutationSystem.debugOutputEnabled) {
+								e1.printStackTrace();
+							}
+						} catch (NoMutantDirException e2) {
+							if (MutationSystem.debugOutputEnabled) {
+								e2.printStackTrace();
+							}
+						} catch (Exception e) {
+							if (MutationSystem.debugOutputEnabled) {
+								e.printStackTrace();
+							}
+						}
+						break;
+					case 2:
+						try {
+							test_result.add(test_engine.runTraditionalMutants(methodSignature.toString(), MutationSystem.MUTANT_HOME
+									+ "/" + targetClassName + "/" + MutationSystem.TM_DIR_NAME, result));
+						} catch (NoMutantException e1) {
+							if (MutationSystem.debugOutputEnabled) {
+								e1.printStackTrace();
+							}
+						} catch (NoMutantDirException e2) {
+							if (MutationSystem.debugOutputEnabled) {
+								e2.printStackTrace();
+							}
+						} catch (Exception e) {
+							if (MutationSystem.debugOutputEnabled) {
+								e.printStackTrace();
+							}
+						}
+						break;
+					default:
+						break;
 				}
 			}
 		}

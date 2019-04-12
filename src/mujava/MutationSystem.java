@@ -114,6 +114,7 @@ public class MutationSystem extends OJSystem
    public static String listTargetMutationFiles =null;
    public static String testJdbcURL=null;
    public static String testOutputMode=null;
+    public static boolean softClassMatch=false;
     public static String listTargetTestFiles =null;
    public static boolean debugOutputEnabled=false;
    public static String[] getTestSetNames()
@@ -850,7 +851,7 @@ public class MutationSystem extends OJSystem
           debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
           testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");
           testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
-
+          softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
       }
 		catch (FileNotFoundException e1)
       {
@@ -893,7 +894,7 @@ public class MutationSystem extends OJSystem
             debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
             testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");
             testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
-
+            softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
         }
         catch (FileNotFoundException e1)
         {
@@ -926,7 +927,7 @@ public class MutationSystem extends OJSystem
             debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
             testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");
             testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
-
+            softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
         }
         catch (Exception e)
         {
@@ -956,6 +957,7 @@ public class MutationSystem extends OJSystem
             debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");//Additional console output for debugging
             testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");//database jdbc
             testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
+            softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
         }
         catch (Exception e)
         {

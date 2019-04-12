@@ -20,9 +20,13 @@ package mujava.test;
 import java.io.*;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import mujava.MutationSystem;
 import mujava.cli.Util;
+import org.apache.commons.io.FileUtils;
 
 /**
  * <p>Description: </p>
@@ -43,7 +47,7 @@ public class OriginalLoader extends ClassLoader{
     Class result;
     try{
       byte[] data = getClassData(name,MutationSystem.TESTSET_PATH);
-      System.out.println("Total file size:"+data.length);
+      System.out.println("Original Class Loader. Total file size:"+data.length);
       result = defineClass(null, data,0,data.length);
 //      System.out.println("Class defined");
       if(result==null){
@@ -92,11 +96,49 @@ public class OriginalLoader extends ClassLoader{
 
   private byte[] getClassData(String name,String directory) throws FileNotFoundException,IOException
   {
-    String filename = name.replace ('.', File.separatorChar) + ".class";
-    Util.DebugPrint("file name: " + filename);
-//System.out.println("THIS IS A TEST "+directory+"/"+filename);
+    if(MutationSystem.debugOutputEnabled) {
+      System.out.println("Original Loader: Searching for " + name + " in " + directory);
+    }
+    String fileName = name.replace ('.', File.separatorChar) + ".class";
+    File f = new File (directory, fileName);
+    Util.DebugPrint("file name: " + fileName);
     // Create a file object relative to directory provided
-    File f = new File (directory, filename);
+
+    if (MutationSystem.softClassMatch) {
+      if (!f.exists()) {//We have an imprecise match
+        if(MutationSystem.debugOutputEnabled) {
+          System.out.println("Original Soft match initiated.");
+        }
+        File root = new File(directory);
+        String absolutePath = f.getAbsolutePath();
+        System.out.println("Absolute Path is: "+absolutePath);
+        int distance = Integer.MAX_VALUE;
+        File newFile = f;
+        boolean recursive = true;
+
+        Collection<File> files = FileUtils.listFiles(root, null, recursive);
+        String unclassifiedFileName=fileName.substring(fileName.lastIndexOf(File.separatorChar)+1);
+        for (File file:files ) {
+          try {
+            if (file.getName().equalsIgnoreCase(unclassifiedFileName)) {
+              int candidateDistance = LevenshteinDistance.computeLevenshteinDistance(absolutePath, file.getAbsolutePath());
+              if (distance > Math.min(candidateDistance, distance)) {
+                distance=candidateDistance;
+                newFile = file;
+              }
+            }
+          } catch (Exception e) {
+            e.printStackTrace();
+          }
+        }
+        if (distance < Integer.MAX_VALUE) {
+          f = newFile;
+          if(MutationSystem.debugOutputEnabled) {
+            System.out.println("Approximate match for " + name + " found as " + f.getAbsolutePath());
+          }
+        }
+      }
+    }
      // Get stream to read from
     FileInputStream fis = new FileInputStream(f);
 

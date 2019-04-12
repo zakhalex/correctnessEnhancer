@@ -58,8 +58,8 @@ public class TestExecuter
 	private int NUMBER_OF_THREADS=1;
 	final int MAX_TRY = 100;
 
-	Class original_executer;
-	Object original_obj; // instancitation of the test set class
+
+
 	volatile Object mutant_result;
 
 //	Class mutant_executer; // test set class for a mutant
@@ -118,9 +118,9 @@ public class TestExecuter
 			OriginalLoader myLoader = new OriginalLoader();
 //			System.out.println(testSet);
 
-			original_executer = myLoader.loadTestClass(testSetName);
+			Class original_executer = myLoader.loadTestClass(testSetName);
 			System.out.println("Class received");
-			original_obj = original_executer.newInstance(); // initialization of the test set class
+			Object original_obj = original_executer.newInstance(); // initialization of the test set class
 			if (original_obj == null)
 			{
 				System.out.println("Can't instantiate original object");
@@ -312,8 +312,9 @@ public class TestExecuter
 	/**
 	 * compute the result of a test under the original program
 	 */
-	public ConcurrentHashMap<String, Integer> computeOriginalTestResults()
+	public Integer computeOriginalTestResults(String testSetName)
 	{
+		Integer resultingScore=-1;
 	    ConcurrentHashMap<String, Integer> localOriginalResult=new ConcurrentHashMap<>();
 		Debug.println(
 				"\n\n======================================== Generating Original Test Results ========================================");
@@ -323,7 +324,15 @@ public class TestExecuter
 			// later the results of the failed test cases will be updated
 			for (int k = 0; k < testCases.length; k++)
 			{
-				Annotation[] annotations = testCases[k].getDeclaredAnnotations();
+				Annotation[] annotations = testCases[k].getDeclaredAnnotations();//System.out.println("CONTROL: "+testCases[k].toString()+"|"+annotations.length);
+				if ((testCases[k].toString().indexOf("junit.framework.Test")!=-1)&&(testCases[k].getName().indexOf("suite")!=-1))
+				{//Junit3
+					originalResults.put(testCases[k].getName(), "pass");
+					localOriginalResult.put(testCases[k].getName(), 100);
+					junitTests.add(testCases[k].getName());
+					finalTestResults.put(testCases[k].getName(), "");
+					continue;
+				}
 				for (Annotation annotation : annotations)
 				{
 					// System.out.println("name: " + testCases[k].getName() + annotation.toString() + annotation.toString().indexOf("@org.junit.Test"));
@@ -334,19 +343,41 @@ public class TestExecuter
                         localOriginalResult.put(testCases[k].getName(), 100);
 						junitTests.add(testCases[k].getName());
 						finalTestResults.put(testCases[k].getName(), "");
-						continue;
+						break;
 					}
 				}
 			}
+			OriginalLoader myLoader = new OriginalLoader();
+//			System.out.println(testSet);
 
+			Class original_executor = myLoader.loadTestClass(testSetName);
 			JUnitCore jCore = new JUnitCore();
 			// result = jCore.runMain(new RealSystem(), "VMTEST1");
 			if(MutationSystem.debugOutputEnabled) {
 				jCore.addListener(new TextListener(System.out));
 			}
-			Result result = jCore.run(original_executer);
+			Result result = jCore.run(original_executor);
 			// get the failure report and update the original result of the test with the failures
 			List<Failure> listOfFailure = result.getFailures();
+			if(result.getRunCount() > 0)
+			{
+				resultingScore=(result.getRunCount()-result.getFailureCount())*100/result.getRunCount();//correctness percentage
+//				if(testSetName.contains("BooleanLiteralSetTest")) {
+//					if (result.wasSuccessful()) {
+//						System.out.println("DEBUGGING INFORMATION: " + result.getRunTime() + "|" + result.getRunCount() + "|" + result.getFailureCount() + "|" + result.getIgnoreCount() + "|" + result.getFailures().size());
+//					}
+//					else
+//					{
+//						System.out.println("WARNING - Got something!!!");
+//					}
+//
+//					for (Failure failure : listOfFailure)
+//					{
+//						System.out.println(failure.getMessage());
+//					}
+//					System.exit(0);
+//				}
+			}
 			for (Failure failure : listOfFailure)
 			{
 				String nameOfTest = failure.getTestHeader().substring(0, failure.getTestHeader().indexOf("("));
@@ -363,6 +394,11 @@ public class TestExecuter
 					}
 				}
                 localOriginalResult.put(nameOfTest, 0);
+				if(resultingScore==100)
+				{
+					System.err.println("WE HAVE A PROBLEM");
+					resultingScore=-2;
+				}
 				// put the failure messages into the test results
 				if (failure.getMessage() == null)
 					originalResults.put(nameOfTest, nameOfTest + ": " + lineNumber + "; " + "fail");
@@ -389,7 +425,6 @@ public class TestExecuter
 			System.err.println(
 					"Could not find one of the necessary classes for running tests. Make sure that .jar files for hamcrest and junit are in your classpath.");
 			e.printStackTrace();
-            return localOriginalResult;
 		}
 		catch (Exception e)
 		{
@@ -407,7 +442,7 @@ public class TestExecuter
 		{
 			// originalResultFileRead();
 		}
-        return localOriginalResult;
+        return resultingScore;
     }
     private TestResult runMutants(TestResult tr, String methodSignature, String mutantPath) throws NoMutantException, NoMutantDirException
     {
@@ -652,17 +687,14 @@ public class TestExecuter
 				try
 				{
 					Result r=entry.getValue().get();
-					if(r.getFailures().isEmpty())
+					if(r.getRunCount()>0)
 					{
-						if(r.getRunCount()>0)
-							tr.mutation_results.put(mutant_name,100);//absolutely correct
-						else
-							tr.mutation_results.put(mutant_name,-1);//never ran
+							tr.mutation_results.put(mutant_name,(r.getRunCount()-r.getFailureCount())*100/r.getRunCount());//correctness percentage
 //						tr.live_mutants.add(mutant_name);
 					}
 					else
 					{
-						tr.mutation_results.put(mutant_name,0);//absolutely incorrect
+						tr.mutation_results.put(mutant_name,-1);//never ran
 //						tr.killed_mutants.add(mutant_name);
 					}
 				}
