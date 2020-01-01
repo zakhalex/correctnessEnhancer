@@ -121,13 +121,18 @@ public class TestExecuter
 
 			Class original_executer = myLoader.loadTestClass(testSetName);
 			System.out.println("Class received");
-			Object original_obj = original_executer.newInstance(); // initialization of the test set class
-			if (original_obj == null)
-			{
-				System.out.println("Can't instantiate original object");
-				return false;
+			try {
+				Object original_obj = original_executer.newInstance(); // initialization of the test set class
+				if (original_obj == null) {
+					System.out.println("Can't instantiate original object");
+//				return false;
+				}
 			}
-
+			catch(Exception e)
+			{
+				e.printStackTrace();
+			}
+			System.out.println("Original object successfully instantiated");
 			// read testcases from the test set class
 			testCases = original_executer.getDeclaredMethods();
 			if (testCases == null)
@@ -135,6 +140,7 @@ public class TestExecuter
 				System.out.println(" No test case exist ");
 				return false;
 			}
+			System.out.println("Test cases retrieved.");
 		}
 		catch(Error err)
 		{
@@ -499,9 +505,15 @@ public class TestExecuter
 					// mutantLoader.loadMutant();
 					Class mutant_executer = mutantLoader.loadTestClass(testSet);
 					Debug.println("We are loading " + testSet);
-					Object mutant_obj = mutant_executer.newInstance();
-					Debug.print("  " + mutant_name);
-					Debug.println("TestExecutor executing mutant " + mutant_name);
+					try {
+						Object mutant_obj = mutant_executer.newInstance();
+						Debug.print("  " + mutant_name);
+						Debug.println("TestExecutor executing mutant " + mutant_name);
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
 					// Mutants are runned using Thread to detect infinite loop caused by mutation
 					Callable<Result> c = new Callable<Result>()
 					{

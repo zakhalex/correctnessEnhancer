@@ -1,5 +1,6 @@
 package mujava.util;
 
+import mujava.MutationControl;
 import mujava.MutationSystem;
 import mujava.test.TestResult;
 import org.apache.derby.drda.NetworkServerControl;
@@ -117,10 +118,10 @@ public class DatabaseCalls {
                 int identifier=result.getInt       ("ID");
                 System.out.println(id+","+identifier+","+fileName+","+className+","+methodName+","+testName+","+result.getTimestamp("LAST_UPDATED"));
                 HashMap<String, String> properties=new HashMap<>();
-                properties.put("file",fileName);
-                properties.put("class",className);
-                properties.put("method",methodName);
-                properties.put("test",testName);
+                properties.put(MutationControl.Inputs.FILES.getLabel(),fileName);
+                properties.put(MutationControl.Inputs.MUTANTS.getLabel(),className);
+                properties.put(MutationControl.Inputs.METHODS.getLabel(),methodName);
+                properties.put(MutationControl.Inputs.TESTS.getLabel(),testName);
                 config=new ConfigurationItem(properties);
 
                 // etc.
@@ -173,7 +174,7 @@ public class DatabaseCalls {
         try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
             PreparedStatement pstmt = conn.prepareStatement(insertControlSql)) {
             System.out.println("Preparing to record configuration information");
-            int sequence=0;
+            int sequence=1;
             //If we control identity from here
             for (ConfigurationItem config: configurations)
             {

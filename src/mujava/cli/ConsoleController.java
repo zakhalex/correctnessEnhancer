@@ -278,15 +278,22 @@ public class ConsoleController {
             TestExecutor localExecutor = new TestExecutor(MutationSystem.numberOfTestingThreads);
             String filterOn = null;
             String dbControl = regularProperties.get("dbcontrol");
+            ConfigurationItem item=null;
             if (dbControl==null) {
                 filterOn  = regularProperties.get("testfilter");
             }
             else
             {
+                System.out.println("Launch will be controlled by the database." +
+                        " Extracting id "+dbControl+" for marker "+MutationSystem.databaseMarker);
                 //we have the process fully controlled from the database table
-                filterOn = DatabaseCalls.readConfiguration(Integer.valueOf(dbControl)).getTestName();
+                if(item==null)
+                {
+                    item=DatabaseCalls.readConfiguration(Integer.valueOf(dbControl));
+                }
+                filterOn = item.getTestName();
             }
-            
+            System.out.println("FilterOn is "+filterOn);
             TreeSet<String> testSet = null;
             if (filterOn != null) {
                 testSet = new TreeSet<>();
@@ -306,7 +313,11 @@ public class ConsoleController {
             else
             {
                 //we have the process fully controlled from the database table
-                filterOnClass = DatabaseCalls.readConfiguration(Integer.valueOf(dbControl)).getClassName();
+                if(item==null)
+                {
+                    item=DatabaseCalls.readConfiguration(Integer.valueOf(dbControl));
+                }
+                filterOnClass = item.getClassName();
             }
             if (filterOnClass != null)
             {
