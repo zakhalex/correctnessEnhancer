@@ -115,7 +115,8 @@ public class TestExecuter
 			// testSet = "test/"+testSetName;
 			testSet = testSetName;
 			// Class loader for the original class
-			OriginalLoader myLoader = new OriginalLoader();
+			ClassLoader parentClassLoader = OriginalLoader.class.getClassLoader();
+			OriginalLoader myLoader = new OriginalLoader(parentClassLoader);
 //			System.out.println(testSet);
 
 			Class original_executer = myLoader.loadTestClass(testSetName);
@@ -134,6 +135,11 @@ public class TestExecuter
 				System.out.println(" No test case exist ");
 				return false;
 			}
+		}
+		catch(Error err)
+		{
+			err.printStackTrace();
+			return false;
 		}
 		catch (Exception e)
 		{
@@ -156,7 +162,7 @@ public class TestExecuter
         return runClassMutants(mutantPath, null);
     }
 
-	public TestResult runClassMutants(String mutantPath, Integer originalResult) throws NoMutantException, NoMutantDirException
+	public TestResult runClassMutants(String mutantPath, OriginalTestResult originalResult) throws NoMutantException, NoMutantDirException
 	{
 		TestResult test_result = new TestResult();
 		runMutants(test_result, "", mutantPath, originalResult);
@@ -173,7 +179,7 @@ public class TestExecuter
         return runExceptionMutants(mutantPath, null);
     }
 
-	public TestResult runExceptionMutants(String mutantPath, Integer originalResult) throws NoMutantException, NoMutantDirException
+	public TestResult runExceptionMutants(String mutantPath, OriginalTestResult originalResult) throws NoMutantException, NoMutantDirException
 	{
 		TestResult test_result = new TestResult();
 		runMutants(test_result, "", mutantPath, originalResult);
@@ -189,7 +195,7 @@ public class TestExecuter
         return runTraditionalMutants(methodSignature,mutantPath, null);
     }
 
-	public TestResult runTraditionalMutants(String methodSignature, String mutantPath, Integer originalResult) throws NoMutantException, NoMutantDirException
+	public TestResult runTraditionalMutants(String methodSignature, String mutantPath, OriginalTestResult originalResult) throws NoMutantException, NoMutantDirException
 	{
 
 		TestResult test_result = new TestResult();
@@ -312,8 +318,9 @@ public class TestExecuter
 	/**
 	 * compute the result of a test under the original program
 	 */
-	public Integer computeOriginalTestResults(String testSetName)
+	public OriginalTestResult computeOriginalTestResults(String testSetName)
 	{
+		OriginalTestResult originalTestResult=new OriginalTestResult();
 		Integer resultingScore=-1;
 	    ConcurrentHashMap<String, Integer> localOriginalResult=new ConcurrentHashMap<>();
 		Debug.println(
@@ -347,7 +354,8 @@ public class TestExecuter
 					}
 				}
 			}
-			OriginalLoader myLoader = new OriginalLoader();
+			ClassLoader parentClassLoader = OriginalLoader.class.getClassLoader();
+			OriginalLoader myLoader = new OriginalLoader(parentClassLoader);
 //			System.out.println(testSet);
 
 			Class original_executor = myLoader.loadTestClass(testSetName);
@@ -359,6 +367,8 @@ public class TestExecuter
 			Result result = jCore.run(original_executor);
 			// get the failure report and update the original result of the test with the failures
 			List<Failure> listOfFailure = result.getFailures();
+			originalTestResult.setFailure(result.getFailures());
+			originalTestResult.setRunCount(result.getRunCount());
 			if(result.getRunCount() > 0)
 			{
 				resultingScore=(result.getRunCount()-result.getFailureCount())*100/result.getRunCount();//correctness percentage
@@ -442,13 +452,14 @@ public class TestExecuter
 		{
 			// originalResultFileRead();
 		}
-        return resultingScore;
+		originalTestResult.setResultScore(resultingScore);
+        return originalTestResult;
     }
     private TestResult runMutants(TestResult tr, String methodSignature, String mutantPath) throws NoMutantException, NoMutantDirException
     {
         return runMutants(tr,methodSignature,mutantPath,null);
     }
-	private TestResult runMutants(TestResult tr, String methodSignature, String mutantPath, Integer originalResult) throws NoMutantException, NoMutantDirException
+	private TestResult runMutants(TestResult tr, String methodSignature, String mutantPath, OriginalTestResult originalResult) throws NoMutantException, NoMutantDirException
 	{
 		try
 		{
@@ -515,6 +526,10 @@ public class TestExecuter
 									}
 								}
 							}
+							Thread.UncaughtExceptionHandler h = (th, ex) -> {
+								System.err.println("Uncaught exception: " + ex);
+								//System.exit(0);
+							};
 							Runnable task = () -> {
 								JUnitCore jCore = new JUnitCore();
 								if(MutationSystem.debugOutputEnabled) {
@@ -523,6 +538,7 @@ public class TestExecuter
 								result = jCore.run(mutant_executer);
 							};
 							Thread t = new Thread(task);
+							t.setUncaughtExceptionHandler(h);
 							t.start();
 							try {
 								t.join(TIMEOUT);
@@ -531,13 +547,20 @@ public class TestExecuter
 								e.printStackTrace();
 							}
 							t.stop();
-							if (result.getFailureCount() == 0) {
+							if (result == null)
+							{
+								//Timeout occured
+								return null;
+							}
+							else if (result.getFailureCount() == 0) {
 								return result;
 							} else {
 								List<Failure> listOfFailure = result.getFailures();
 								for (Failure failure : listOfFailure) {
-									String nameOfTest = failure.getTestHeader().substring(0,
-											failure.getTestHeader().indexOf("("));
+									String header=failure.getTestHeader();
+									int endIndex=header.indexOf("(");
+									String nameOfTest = (endIndex!=-1)?header.substring(0,
+											endIndex):header;
 									String testSourceName = testSet + "." + nameOfTest;
 
 									// System.out.println(testSourceName);
@@ -680,6 +703,7 @@ public class TestExecuter
 
 			for(Entry<String, Future<Result>> entry:resultMap.entrySet())
 			{
+				OriginalTestResult originalTestResult=new OriginalTestResult();
 				String mutant_name=entry.getKey();
 				if(MutationSystem.debugOutputEnabled) {
 					System.out.println(mutant_name);
@@ -687,16 +711,28 @@ public class TestExecuter
 				try
 				{
 					Result r=entry.getValue().get();
-					if(r.getRunCount()>0)
-					{
-							tr.mutation_results.put(mutant_name,(r.getRunCount()-r.getFailureCount())*100/r.getRunCount());//correctness percentage
+					try {
+						originalTestResult.setRunCount(r.getRunCount());
+						originalTestResult.setFailure(r.getFailures());
+						if(r.getRunCount()>0)
+						{
+							originalTestResult.setResultScore((r.getRunCount()-r.getFailureCount())*100/r.getRunCount());
 //						tr.live_mutants.add(mutant_name);
-					}
-					else
-					{
-						tr.mutation_results.put(mutant_name,-1);//never ran
+						}
+						else
+						{
+							originalTestResult.setResultScore(-1);
 //						tr.killed_mutants.add(mutant_name);
+						}
 					}
+					catch (NullPointerException e)
+					{
+						originalTestResult.setResultScore(-1);
+						originalTestResult.setRunCount(-1);
+						originalTestResult.setFailure(new ArrayList<>());
+
+					}
+					tr.mutation_results.put(mutant_name,originalTestResult);//correctness percentage
 				}
 				catch(Exception e)
 				{

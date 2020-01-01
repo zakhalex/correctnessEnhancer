@@ -29,6 +29,7 @@
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/db-derby-10.14.2.0-bin/lib/derbyoptionaltools.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/db-derby-10.14.2.0-bin/lib/derbyrun.jar" path-in-jar="/" />
       <element id="extracted-dir" path="$PROJECT_DIR$/lib/db-derby-10.14.2.0-bin/lib/derbytools.jar" path-in-jar="/" />
+      <element id="file-copy" path="$PROJECT_DIR$/lib/guava-28.0-jre.jar" />
     </root>
   </artifact>
 </component>

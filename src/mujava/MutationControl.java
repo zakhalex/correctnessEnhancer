@@ -21,6 +21,25 @@ public class MutationControl
 	{
 		this.numberOfThreads=numberOfThreads;
 	}
+	public enum Inputs
+	{
+		FILES("files"),
+		MUTANTS("mutants"),
+		TESTS("tests"),
+		METHODS("methods");
+
+		public final String label;
+
+		// getter method
+		public String getLabel()
+		{
+			return this.label;
+		}
+
+		Inputs(String label) {
+			this.label=label;
+		}
+	}
 	public void performMutation(Collection<String> file_list)
 	{
 		ExecutorService executor = Executors.newFixedThreadPool(numberOfThreads);
@@ -101,6 +120,25 @@ public class MutationControl
 
 	}
 
+	public static String classNameFromFile(String file_name)
+	{
+		String temp = file_name.substring(0, file_name.length() - ".java".length());
+		String class_name = "";
+
+		for (int j = 0; j < temp.length(); j++)
+		{
+			if ((temp.charAt(j) == '\\') || (temp.charAt(j) == '/'))
+			{
+				class_name = class_name + ".";
+			}
+			else
+			{
+				class_name = class_name + temp.charAt(j);
+			}
+		}
+		return class_name;
+	}
+
 	private class MutationWorker implements Callable<ArrayList<String>>
 	{
 		private String file_name;
@@ -134,21 +172,21 @@ public class MutationControl
 				// In that case, we can't apply mutation testing.
 
 				// Generate class name from file_name
-				String temp = file_name.substring(0, file_name.length() - ".java".length());
-				String class_name = "";
-
-				for (int j = 0; j < temp.length(); j++)
-				{
-					if ((temp.charAt(j) == '\\') || (temp.charAt(j) == '/'))
-					{
-						class_name = class_name + ".";
-					}
-					else
-					{
-						class_name = class_name + temp.charAt(j);
-					}
-				}
-
+//				String temp = file_name.substring(0, file_name.length() - ".java".length());
+//				String class_name = "";
+//
+//				for (int j = 0; j < temp.length(); j++)
+//				{
+//					if ((temp.charAt(j) == '\\') || (temp.charAt(j) == '/'))
+//					{
+//						class_name = class_name + ".";
+//					}
+//					else
+//					{
+//						class_name = class_name + temp.charAt(j);
+//					}
+//				}
+				String class_name=MutationControl.classNameFromFile(file_name);
 				int class_type = MutationSystem.getClassType(class_name);
 
 				if (class_type == MutationSystem.NORMAL)

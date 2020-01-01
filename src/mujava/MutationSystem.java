@@ -114,8 +114,10 @@ public class MutationSystem extends OJSystem
    public static String listTargetMutationFiles =null;
    public static String testJdbcURL=null;
    public static String testOutputMode=null;
-    public static boolean softClassMatch=false;
-    public static String listTargetTestFiles =null;
+   public static boolean softClassMatch=false;
+   public static String databaseMarker=null;
+    public static String databaseCount=null;
+   public static String listTargetTestFiles =null;
    public static boolean debugOutputEnabled=false;
    public static String[] getTestSetNames()
 	{
@@ -324,7 +326,8 @@ public class MutationSystem extends OJSystem
    /** List of names of traditional mutation operators */
    // Upsorn: (04/06/2009) added Statement Deletion operator (SID, SWD, SFD, SSD)
    public static String[] tm_operators = {   "AORB","AORS","AOIU","AOIS","AODU","AODS",
-                                             "ROR","COR","COD","COI","SOR","LOR","LOI","LOD","NEQ","ASRS","SDL","VDL","CDL","ODL"};
+                                             "ROR","COR","COD","COI","SOR","LOR","LOI","LOD","ASRS","SDL","VDL","CDL","ODL"};
+ //,"NEQ"
 //                                             "IBD", "WBD", "FBD", "SBD" };
 //                                             "SID", "SWD", "SFD", "SSD" };
 //                                             "SDL"};   
@@ -852,6 +855,8 @@ public class MutationSystem extends OJSystem
           testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");
           testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
           softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
+          databaseMarker=dictionary.getProperty("database_marker", "");
+          databaseCount=dictionary.getProperty("database_count", null);
       }
 		catch (FileNotFoundException e1)
       {
@@ -895,6 +900,8 @@ public class MutationSystem extends OJSystem
             testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");
             testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
             softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
+            databaseMarker=dictionary.getProperty("database_marker", "");
+            databaseCount=dictionary.getProperty("database_count", null);
         }
         catch (FileNotFoundException e1)
         {
@@ -928,6 +935,8 @@ public class MutationSystem extends OJSystem
             testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");
             testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
             softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
+            databaseMarker=dictionary.getProperty("database_marker", "");
+            databaseCount=dictionary.getProperty("database_count", null);
         }
         catch (Exception e)
         {
@@ -958,6 +967,8 @@ public class MutationSystem extends OJSystem
             testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");//database jdbc
             testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
             softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
+            databaseMarker=dictionary.getProperty("database_marker", "");
+            databaseCount=dictionary.getProperty("database_count", null);
         }
         catch (Exception e)
         {

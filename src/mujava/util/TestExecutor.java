@@ -83,10 +83,10 @@ public class TestExecutor
 				if(!loadTestSet)
 				{
 					System.out.println("Executor block - no tests have been detected.");
-//					continue;
+					continue;
 				}
 //				Map<String, Integer> originalResultsMap = test_engine.computeOriginalTestResults();
-				Integer result = test_engine.computeOriginalTestResults(testSetName);
+				OriginalTestResult result = test_engine.computeOriginalTestResults(testSetName);
 //				if(testSetName.contains("AbstractCategoryItemRendererTests")) {
 //					for (int i = 0; i < 100; i++) {
 //

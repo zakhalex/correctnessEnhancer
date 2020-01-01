@@ -16,6 +16,8 @@
 
 package mujava.test;
 
+import mujava.util.OriginalTestResult;
+
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
@@ -40,9 +42,9 @@ public class TestResult
 	public Vector<String> live_mutants = new Vector<String>();//fixes that worked
 
     // mutation score
-	public final ConcurrentHashMap<String, Integer> mutation_results=new ConcurrentHashMap<>();
+	public final ConcurrentHashMap<String, OriginalTestResult> mutation_results=new ConcurrentHashMap<>();
 //    public final ConcurrentHashMap<String, Integer> originalResults=new ConcurrentHashMap<>();
-    private Integer originalResult=-1;
+    private OriginalTestResult originalResult=null;
 
 	private int mode = -1;// Type of results - 1-class, 2-traditional
 	private String testSetName;//Name of the testset for which these results are applicable
@@ -53,21 +55,14 @@ public class TestResult
 	{
 		mutants = new Vector<String>();
 	}
-    public Integer getOriginalResult()
+    public OriginalTestResult getOriginalResult()
     {
         return originalResult;
     }
 
-    public void setOriginalResult(Integer newOriginalResult)
+    public void setOriginalResult(OriginalTestResult newOriginalResult)
     {
-        if(newOriginalResult!=null)
-        {
-            originalResult=newOriginalResult;
-        }
-        else
-        {
-            originalResult=-1;
-        }
+        originalResult=newOriginalResult;
     }
 //	public void setOriginalResults(Map<String, Integer> newOriginalResults)
 //    {

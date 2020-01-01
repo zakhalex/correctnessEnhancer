@@ -26,9 +26,11 @@
 package mujava.cli;
 
 
+import com.google.common.collect.Sets;
 import mujava.MutationControl;
 import mujava.MutationSystem;
 import mujava.test.TestResult;
+import mujava.util.ConfigurationItem;
 import mujava.util.DatabaseCalls;
 import mujava.util.TestExecutor;
 
@@ -40,6 +42,28 @@ import java.util.*;
 public class ConsoleController {
     //	private static HashMap<String, ArrayList<String>> listProperties;
     private static HashMap<String, String> regularProperties = new HashMap<String, String>();
+
+    /*private static void recursiveListUnwrap(Collection<String> list)
+    {
+        Stack<String> stack = new Stack<String>();
+        for (String s:list)
+        {
+            Stack<Node> stack = new Stack<Node>();
+            Node current = root;
+            stack.push(root);
+            while(!stack.isEmpty()) {
+                current = stack.pop();
+                visit(current.value);
+
+                if(current.right != null) {
+                    stack.push(current.right);
+                }
+                if(current.left != null) {
+                    stack.push(current.left);
+                }
+            }
+        }
+    }*/
 
     public static void main(String[] args) {
         if (args.length != 0) {
@@ -59,7 +83,7 @@ public class ConsoleController {
 //            regularProperties.put("mode", "list");
             regularProperties.put("configurationmode", "file");
             regularProperties.put("configurationpath", "mujava.config");
-//            regularProperties.put("testfilter", "DistanceCorrectableCaseTest");
+//            regularProperties.put("testfilter", "org.jfree.chart.renderer.category.junit.AbstractCategoryItemRendererTests");
 //            regularProperties.put("mutationfilter", "org.jfree.chart.annotations.XYBoxAnnotation");
         }
         String mode = regularProperties.get("mode");
@@ -112,15 +136,21 @@ public class ConsoleController {
         }
         if (mode.equalsIgnoreCase("create")) {
            DatabaseCalls.createResultTable();
+           DatabaseCalls.createControlTable();
         }
         if (mode.equalsIgnoreCase("list")) {
+
+            HashMap<String,Set<String>> modeTypes=new HashMap<>();
+
             String listTargetMutationFiles = MutationSystem.listTargetMutationFiles;
             if ((listTargetMutationFiles != null) && (!listTargetMutationFiles.isEmpty())) {
                 Collection<String> file_list = MutationSystem.getNewTragetFiles();
+                modeTypes.put(MutationControl.Inputs.MUTANTS.getLabel(),new HashSet<String>(file_list));
                 File f=new File(listTargetMutationFiles);
                 f.getParentFile().mkdirs();
 
                 try (PrintWriter pw = new PrintWriter(listTargetMutationFiles)) {
+
                     for (String file : file_list) {
                         pw.println(file);
                     }
@@ -135,6 +165,7 @@ public class ConsoleController {
             String listTargetTestFiles = MutationSystem.listTargetTestFiles;
             if ((listTargetTestFiles != null) && (!listTargetTestFiles.isEmpty())) {
                 String[] file_list = MutationSystem.eraseExtension(MutationSystem.getTestSetNames(), "class");
+                modeTypes.put(MutationControl.Inputs.TESTS.getLabel(),new HashSet<String>(Arrays.asList(file_list)));
                 File f=new File(listTargetTestFiles);
                 f.getParentFile().mkdirs();
                 try (PrintWriter pw = new PrintWriter(listTargetTestFiles)) {
@@ -148,11 +179,78 @@ public class ConsoleController {
                     }
                 }
             }
+
+            try {
+                if ((MutationSystem.testOutputMode.equalsIgnoreCase("database"))||(MutationSystem.testJdbcURL != null)) {
+                    try {
+                        DriverManager.registerDriver(new org.apache.derby.jdbc.ClientDriver());
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                    DatabaseCalls.createResultTable();
+                    DatabaseCalls.createControlTable();
+                    ArrayList<ConfigurationItem> localList = new ArrayList<>();
+
+
+                    if(modeTypes.size()>0)
+                    {
+                        //We need to leave a marker on db records
+                        if(!modeTypes.containsKey(MutationControl.Inputs.FILES.getLabel())) {
+                            HashSet<String> fileSet=new HashSet<>();
+                            fileSet.add(MutationSystem.databaseMarker);
+                            modeTypes.put(MutationControl.Inputs.FILES.getLabel(), fileSet);
+                        }
+                        MutationControl.Inputs[] valuesArray = MutationControl.Inputs.values();
+                        List<Set<String>> cartesianInput=new ArrayList<>();
+                        for(MutationControl.Inputs s:valuesArray)
+                        {
+                            if(!modeTypes.containsKey(s.getLabel()))
+                            {
+                                HashSet<String> fillerList=new HashSet<String>();
+                                fillerList.add("");
+                                modeTypes.put(s.getLabel(),fillerList);
+                                cartesianInput.add(fillerList);
+                            }
+                            else
+                            {
+                                cartesianInput.add(modeTypes.get(s.getLabel()));
+                            }
+
+                        }
+                        Set<List<String>> product=Sets.cartesianProduct(cartesianInput);
+
+                        for (List<String> entry : product) {
+                            HashMap<String, String> property=new HashMap<>();
+                            for(int i=0;i<entry.size();i++) {
+                                property.put(valuesArray[i].getLabel(),entry.get(i));
+                            }
+                            localList.add(new ConfigurationItem(property));
+                        }
+                        if (!localList.isEmpty()) {
+                            DatabaseCalls.insertConfiguration(localList);
+                        }
+                    }
+
+                }
+            }
+            catch(Exception e)
+            {
+                e.printStackTrace();
+            }
         }
         if (mode.equalsIgnoreCase("all") || mode.equalsIgnoreCase("mutate")) {
             MutationControl m = new MutationControl(MutationSystem.numberOfMutationThreads);
             Collection<String> file_list = MutationSystem.getNewTragetFiles();
-            String filterOn = regularProperties.get("mutationfilter");
+            String dbControl = regularProperties.get("dbcontrol");
+            String filterOn=null;
+            if (dbControl==null) {
+                filterOn = regularProperties.get("mutationfilter");
+            }
+            else
+            {
+                //we have the process fully controlled from the database table
+                filterOn = DatabaseCalls.readConfiguration(Integer.valueOf(dbControl)).getClassName();
+            }
             if (filterOn != null) {
                 if (file_list.contains(filterOn)) {
                     file_list.clear();
@@ -176,8 +274,19 @@ public class ConsoleController {
                 DatabaseCalls.createResultTable();
             }
             boolean filter = false;
+
             TestExecutor localExecutor = new TestExecutor(MutationSystem.numberOfTestingThreads);
-            String filterOn = regularProperties.get("testfilter");
+            String filterOn = null;
+            String dbControl = regularProperties.get("dbcontrol");
+            if (dbControl==null) {
+                filterOn  = regularProperties.get("testfilter");
+            }
+            else
+            {
+                //we have the process fully controlled from the database table
+                filterOn = DatabaseCalls.readConfiguration(Integer.valueOf(dbControl)).getTestName();
+            }
+            
             TreeSet<String> testSet = null;
             if (filterOn != null) {
                 testSet = new TreeSet<>();
@@ -188,7 +297,28 @@ public class ConsoleController {
                     filter = true;
                 }
             }
-            ArrayList<TestResult> result = localExecutor.executeTests(null, testSet, "All method", 3000);
+
+            ArrayList<String> targetClassSet = null;
+            String filterOnClass = regularProperties.get("mutationfilter");
+            if (dbControl==null) {
+                filterOnClass  = regularProperties.get("mutationfilter");
+            }
+            else
+            {
+                //we have the process fully controlled from the database table
+                filterOnClass = DatabaseCalls.readConfiguration(Integer.valueOf(dbControl)).getClassName();
+            }
+            if (filterOnClass != null)
+            {
+                targetClassSet=new ArrayList<>();
+                String filteredClass=MutationControl.classNameFromFile(filterOnClass);
+                targetClassSet.add(filteredClass);
+                if(MutationSystem.debugOutputEnabled)
+                {
+                    System.out.println("Activating filter on "+filteredClass);
+                }
+            }
+            ArrayList<TestResult> result = localExecutor.executeTests(targetClassSet, testSet, "All method", 3000);
             String fileName = MutationSystem.resultsOutput;
             /**
              * Console/File/Database
@@ -243,6 +373,9 @@ public class ConsoleController {
                     System.out.println("Class name: " + tr.getTargetMutant() + ". Target test: " + tr.getTestSetName() + ". The following mutants are alive: " + tr.live_mutants);
                 }
             }
+        }
+        if (mode.equalsIgnoreCase("controlcleanup")) {
+            DatabaseCalls.clearControlConfig(regularProperties.get("dbcontrol"));
         }
         if (mode.equalsIgnoreCase("testcleanup")) {
             String fileName = MutationSystem.resultsOutput;

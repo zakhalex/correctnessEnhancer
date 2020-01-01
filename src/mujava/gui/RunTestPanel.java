@@ -26,6 +26,7 @@ import javax.swing.border.*;
 import mujava.gui.util.*;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.nio.file.Files;
 
 import mujava.MutationSystem;
@@ -596,12 +597,12 @@ public class RunTestPanel extends JPanel implements ActionListener
 		ArrayList<String> killed_mutants=new ArrayList<>();
 		ArrayList<String> live_mutants=new ArrayList<>();
 		float total=0;
-		for(Map.Entry<String, Integer> entry:tr.mutation_results.entrySet())
+		for(Map.Entry<String, OriginalTestResult> entry:tr.mutation_results.entrySet())
 		{
-			if(entry.getValue()==100)//absolute correctness
+			if(entry.getValue().getResultScore().equals(BigDecimal.valueOf(100)))//absolute correctness
 			{
 				live_mutants.add(entry.getKey());
-				total+=entry.getValue();//Need to rethink if we accept negative scores as error indication
+				total+=entry.getValue().getResultScore().intValue();//Need to rethink if we accept negative scores as error indication
 			}
 			else
 			{

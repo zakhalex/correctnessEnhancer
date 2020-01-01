@@ -42,6 +42,10 @@ public class OriginalLoader extends ClassLoader{
     super(null);
   }
 
+  public OriginalLoader(ClassLoader parentClassLoader)
+  {
+    super(parentClassLoader);
+  }
 
   public synchronized Class loadTestClass(String name) throws ClassNotFoundException{
     Class result;
