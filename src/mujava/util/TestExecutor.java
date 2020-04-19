@@ -86,7 +86,28 @@ public class TestExecutor
 					continue;
 				}
 //				Map<String, Integer> originalResultsMap = test_engine.computeOriginalTestResults();
-				OriginalTestResult result = test_engine.computeOriginalTestResults(testSetName);
+				OriginalTestResult result=null;
+				try
+				{
+					result=DatabaseCalls.readOriginalTestResult(MutationSystem.MUTANT_HOME
+							+ "/" + targetClassName, testSetName);
+				}
+				catch (Exception e)
+				{
+					e.printStackTrace();
+				}
+				if(result==null) {
+					result = test_engine.computeOriginalTestResults(MutationSystem.MUTANT_HOME
+							+ "/" + targetClassName, testSetName);
+					try
+					{
+						DatabaseCalls.insertOriginalResult(result);
+					}
+					catch(Exception e)
+					{
+						e.printStackTrace();
+					}
+				}
 //				if(testSetName.contains("AbstractCategoryItemRendererTests")) {
 //					for (int i = 0; i < 100; i++) {
 //

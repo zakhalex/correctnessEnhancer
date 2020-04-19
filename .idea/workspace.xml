@@ -9,11 +9,26 @@
   <component name="ChangeListManager">
     <list default="true" id="30455860-3dc3-4f5c-b879-14636d78323f" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/bin/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/bin/.gitignore" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/database.log" beforeDir="false" afterPath="$PROJECT_DIR$/database.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/derby.log" beforeDir="false" afterPath="$PROJECT_DIR$/derby.log" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mujava.config" beforeDir="false" afterPath="$PROJECT_DIR$/mujava.config" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/consoleCorrectionEnhancer/correctnessEnhancer.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/consoleCorrectionEnhancer/correctnessEnhancer.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/artifacts/muJava_jar/muJava.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/muJava_jar/muJava.jar" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mujava/TestExecuter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mujava/TestExecuter.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mujava/cli/ConsoleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mujava/cli/ConsoleController.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mujava/test/TestResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mujava/test/TestResult.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/mujava/util/DatabaseCalls.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mujava/util/DatabaseCalls.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mujava/util/OriginalTestResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mujava/util/OriginalTestResult.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/mujava/util/TestExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/mujava/util/TestExecutor.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.db/db.lck" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/db.lck" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.db/log/log.ctrl" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/log/log.ctrl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.db/log/log104.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.db/log/logmirror.ctrl" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/log/logmirror.ctrl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c20.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c20.dat" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c900.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c911.dat" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c921.dat" beforeDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -33,14 +48,26 @@
       <file leaf-file-name="TestExecuter.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mujava/TestExecuter.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="151">
-              <caret line="490" lean-forward="true" selection-start-line="490" selection-end-line="490" />
-              <folding>
-                <element signature="e#2837#2838#0" expanded="true" />
-                <element signature="e#2859#2860#0" expanded="true" />
-                <element signature="e#26558#26559#0" expanded="true" />
-                <element signature="e#26593#26594#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="-121">
+              <caret line="327" column="30" selection-start-line="327" selection-start-column="30" selection-end-line="327" selection-end-column="30" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TextListener.class" pinned="false" current-in-tab="false">
+        <entry file="jar://$PROJECT_DIR$/lib/junit-4.12.jar!/org/junit/internal/TextListener.class">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="220">
+              <caret line="23" column="11" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="11" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Executors.java" pinned="false" current-in-tab="false">
+        <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/src.zip!/java/util/concurrent/Executors.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="20">
+              <caret line="87" column="34" selection-start-line="87" selection-start-column="34" selection-end-line="87" selection-end-column="34" />
             </state>
           </provider>
         </entry>
@@ -48,34 +75,25 @@
       <file leaf-file-name="ConsoleController.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/mujava/cli/ConsoleController.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="435">
-              <caret line="291" column="57" lean-forward="true" selection-start-line="291" selection-start-column="57" selection-end-line="291" selection-end-column="57" />
+            <state relative-caret-position="679">
+              <caret line="310" column="64" selection-start-line="310" selection-start-column="64" selection-end-line="310" selection-end-column="64" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#1259#1275#0" expanded="true" />
-                <element signature="e#7669#7677#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MutationSystem.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mujava/MutationSystem.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="69">
-              <caret line="685" column="69" lean-forward="true" selection-start-line="685" selection-start-column="69" selection-end-line="685" selection-end-column="69" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="DatabaseCalls.java" pinned="false" current-in-tab="false">
+      <file leaf-file-name="DatabaseCalls.java" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/src/mujava/util/DatabaseCalls.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="19" column="85" selection-start-line="19" selection-start-column="85" selection-end-line="19" selection-end-column="85" />
+            <state relative-caret-position="509">
+              <caret line="407" column="13" lean-forward="true" selection-start-line="407" selection-start-column="13" selection-end-line="407" selection-end-column="13" />
               <folding>
-                <element signature="e#13843#13844#0" expanded="true" />
-                <element signature="e#13881#13882#0" expanded="true" />
+                <element signature="e#349#357#0" expanded="true" />
+                <element signature="e#4815#4823#0" expanded="true" />
+                <element signature="e#4869#4877#0" expanded="true" />
+                <element signature="e#18420#18428#0" expanded="true" />
               </folding>
             </state>
           </provider>
@@ -90,43 +108,38 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ConfigurationItem.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mujava/util/ConfigurationItem.java">
+      <file leaf-file-name="TestExecutor.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/mujava/util/TestExecutor.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="280">
-              <caret line="19" column="24" selection-start-line="19" selection-start-column="24" selection-end-line="19" selection-end-column="24" />
+            <state relative-caret-position="187">
+              <caret line="106" column="21" selection-start-line="106" selection-start-column="21" selection-end-line="106" selection-end-column="21" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="TestResult.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/mujava/test/TestResult.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="759">
+              <caret line="124" column="1" selection-start-line="124" selection-start-column="1" selection-end-line="124" selection-end-column="1" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#386#387#0" expanded="true" />
-                <element signature="e#432#433#0" expanded="true" />
+                <element signature="e#1807#1808#0" expanded="true" />
+                <element signature="e#1828#1829#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="MutationControl.java" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/src/mujava/MutationControl.java">
+      <file leaf-file-name="OriginalTestResult.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/mujava/util/OriginalTestResult.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-6867">
-              <caret line="25" column="19" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="MutationFactory.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mujava/util/MutationFactory.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6180">
-              <caret line="371" column="21" selection-start-line="371" selection-start-column="18" selection-end-line="371" selection-end-column="21" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="TestExecutor.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/mujava/util/TestExecutor.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="131">
-              <caret line="88" column="73" lean-forward="true" selection-start-line="88" selection-start-column="73" selection-end-line="88" selection-end-column="73" />
+            <state relative-caret-position="659">
+              <caret line="70" column="28" selection-start-line="70" selection-start-column="28" selection-end-line="70" selection-end-column="28" />
+              <folding>
+                <element signature="imports" expanded="true" />
+                <element signature="e#889#890#0" expanded="true" />
+                <element signature="e#935#936#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -142,17 +155,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>compute</find>
-      <find>Not considered a test:</find>
-      <find>Original cl</find>
-      <find>Abstra</find>
-      <find>computeOr</find>
-      <find>computeor</find>
-      <find>parentClassLoader</find>
-      <find>TraditioanlMutantsViewerPanel</find>
-      <find>addU</find>
-      <find>testfilter</find>
-      <find>NEQ</find>
       <find>No mutants have been generated for the method</find>
       <find>\/\/\	\	\	\	String temp \= file_name\.substring\(0\, file_name\.length\(\) \- \&quot;\.java\&quot;\.length\(\)\)\;\n\/\/\	\	\	\	String class_name \= \&quot;\&quot;\;\n\/\/\n\/\/\	\	\	\	for \(int j \= 0\; j \&lt; temp\.length\(\)\; j\+\+\)\n\/\/\	\	\	\	\{\n\/\/\	\	\	\	\	if \(\(temp\.charAt\(j\) \=\= \'\\\\\'\) \|\| \(temp\.charAt\(j\) \=\= \'\/\'\)\)\n\/\/\	\	\	\	\	\{\n\/\/\	\	\	\	\	\	class_name \= class_name \+ \&quot;\.\&quot;\;\n\/\/\	\	\	\	\	\}\n\/\/\	\	\	\	\	else\n\/\/\	\	\	\	\	\{\n\/\/\	\	\	\	\	\	class_name \= class_name \+ temp\.charAt\(j\)\;\n\/\/\	\	\	\	\	\}\n\/\/\	\	\	\	\}</find>
       <find>database</find>
@@ -172,6 +174,17 @@
       <find>.newInstance()</find>
       <find>RELATIVELY_MORE_CORRECT</find>
       <find>sequence</find>
+      <find>database_count</find>
+      <find>dbco</find>
+      <find>db</find>
+      <find>private static void parseArgs\(String\[\] args\) \{\n        boolean argsFound \= false\;\n        for \(String arg \: args\) \{\n            if \(arg\.contains\(\&quot;\=\&quot;\)\) \{\n                String\[\] localArgs \= arg\.split\(\&quot;\=\&quot;\)\;\n                if \(localArgs\.length \=\= 2\) \{\n                    argsFound \= true\;\n                    regularProperties\.put\(localArgs\[0\]\.toLowerCase\(\)\, localArgs\[1\]\)\;\n\/\/                    System\.out\.println\(localArgs\[0\]\.toLowerCase\(\)\+\&quot;\|\&quot;\+localArgs\[1\]\)\;\n                \}\n            \}\n        \}\n\/\/        System\.exit\(0\)\;\n        if \(\!argsFound\) \{\n            System\.out\.println\(\&quot;Arguments not provided\&quot;\)\;\n        \}\n    \}</find>
+      <find>mutationfilter</find>
+      <find>test</find>
+      <find>000</find>
+      <find>c</find>
+      <find>getc</find>
+      <find>original</find>
+      <find>try \(Connection conn \= DriverManager\.getConnection\(MutationSystem\.testJdbcURL\)\;\n\n             PreparedStatement pstmt \= conn\.prepareStatement\(insertOriginalResultSql\)\) \{\n            System\.out\.println\(\&quot;ORIGINALS\' RAN\/FAILED\: \&quot;\+originalResult\.getRunCount\(\)\+\&quot;\|\&quot;\+originalResult\.getFailure\(\)\.size\(\)\)\;\n                pstmt\.setString\(1\, MutationSystem\.SYSTEM_HOME\)\;\n                pstmt\.setString\(2\, originalResult\.getProgramLocation\(\)\)\;\n                pstmt\.setString\(3\, originalResult\.getTestSetName\(\)\)\;\n                pstmt\.setInt\(4\, originalScore\)\;\/\/\=\=null\?\-1\:originalResult\)\;\/\/original\n                pstmt\.setBlob\(5\,originalResult\)\;\n\n                result \= pstmt\.executeUpdate\(\)\;\n\n            pstmt\.close\(\)\;\n            conn\.close\(\)\;\n        \} catch \(SQLException e\) \{\n            System\.out\.println\(e\.getMessage\(\)\)\;\n        \}\n        return result\;\n    \}</find>
     </findStrings>
     <replaceStrings>
       <replace>List_Target_Mutation_Files</replace>
@@ -206,8 +219,6 @@
         <option value="$PROJECT_DIR$/src/mujava/test/JMutationLoader.java" />
         <option value="$PROJECT_DIR$/src/mujava/util/TestResult.java" />
         <option value="$PROJECT_DIR$/src/mujava/util/CorrectnessTestResult.java" />
-        <option value="$PROJECT_DIR$/src/mujava/util/OriginalTestResult.java" />
-        <option value="$PROJECT_DIR$/src/mujava/test/TestResult.java" />
         <option value="$PROJECT_DIR$/mujava.config" />
         <option value="$PROJECT_DIR$/src/mujava/test/OriginalLoader.java" />
         <option value="$PROJECT_DIR$/src/mujava/gui/RunTestPanel.java" />
@@ -215,17 +226,19 @@
         <option value="$PROJECT_DIR$/src/mujava/util/ConfigurationItem.java" />
         <option value="$PROJECT_DIR$/src/mujava/MutationSystem.java" />
         <option value="$PROJECT_DIR$/src/mujava/cli/ConsoleController.java" />
+        <option value="$PROJECT_DIR$/src/mujava/test/TestResult.java" />
+        <option value="$PROJECT_DIR$/src/mujava/util/OriginalTestResult.java" />
+        <option value="$PROJECT_DIR$/src/mujava/TestExecuter.java" />
         <option value="$PROJECT_DIR$/src/mujava/util/DatabaseCalls.java" />
         <option value="$PROJECT_DIR$/src/mujava/util/TestExecutor.java" />
-        <option value="$PROJECT_DIR$/src/mujava/TestExecuter.java" />
       </list>
     </option>
   </component>
   <component name="ProjectFrameBounds" extendedState="6">
-    <option name="x" value="1065" />
-    <option name="y" value="360" />
-    <option name="width" value="816" />
-    <option name="height" value="616" />
+    <option name="x" value="-8" />
+    <option name="y" value="-8" />
+    <option name="width" value="656" />
+    <option name="height" value="454" />
   </component>
   <component name="ProjectView">
     <navigator proportions="" version="1">
@@ -234,9 +247,9 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
-      <pane id="Scope" />
-      <pane id="AndroidView" />
       <pane id="PackagesPane" />
+      <pane id="AndroidView" />
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -412,6 +425,15 @@
               <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
               <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
               <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
+              <item name="java" type="462c0819:PsiDirectoryNode" />
+              <item name="util" type="462c0819:PsiDirectoryNode" />
+              <item name="concurrent" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="muJava" type="b2602c69:ProjectViewProjectNode" />
+              <item name="External Libraries" type="cb654da1:ExternalLibrariesNode" />
+              <item name="&lt; 1.8 &gt;" type="70bed36:NamedLibraryElementNode" />
+              <item name="rt.jar" type="462c0819:PsiDirectoryNode" />
               <item name="javax" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -573,22 +595,22 @@
       <window_info anchor="right" id="Palette&#9;" order="8" />
       <window_info id="Image Layers" order="2" />
       <window_info anchor="right" id="Capture Analysis" order="4" />
-      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.50208336" side_tool="true" weight="0.22362868" />
+      <window_info anchor="bottom" id="Event Log" order="8" sideWeight="0.5026042" side_tool="true" weight="0.22362868" />
       <window_info anchor="right" id="Maven Projects" order="6" />
-      <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Run" order="2" weight="0.32911393" />
+      <window_info anchor="bottom" id="Version Control" order="9" />
       <window_info anchor="bottom" id="Terminal" order="7" />
       <window_info id="Capture Tool" order="6" />
       <window_info id="Designer" order="3" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.18802084" />
-      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
-      <window_info anchor="bottom" id="Find" order="1" sideWeight="0.49791667" weight="0.22362868" />
+      <window_info active="true" anchor="bottom" id="Find" order="1" sideWeight="0.49739584" visible="true" weight="0.22362868" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="4" />
       <window_info anchor="right" id="Theme Preview" order="5" />
-      <window_info id="Favorites" order="5" side_tool="true" />
       <window_info anchor="bottom" id="Debug" order="3" weight="0.4" />
+      <window_info id="Favorites" order="5" side_tool="true" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
       <window_info anchor="right" id="Coverage" order="7" side_tool="true" weight="0.3296875" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
@@ -608,21 +630,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/mujava.config.bak.6">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mujava.config.bak.5">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mujava.config.local">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mujava.config.bak">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/mujava.config.linux.txt">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/mujava.config,bak.3">
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
@@ -700,13 +707,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="260">
           <caret line="13" column="66" selection-start-line="13" selection-start-column="18" selection-end-line="13" selection-end-column="66" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mujava/test/TestResult.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="520">
-          <caret line="44" column="67" selection-start-line="44" selection-start-column="67" selection-end-line="44" selection-end-column="67" />
         </state>
       </provider>
     </entry>
@@ -829,13 +829,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/mujava/util/OriginalTestResult.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="42" column="16" selection-start-line="42" selection-start-column="16" selection-end-line="42" selection-end-column="16" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/mujava/util/DirFileFilter.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="320">
@@ -873,20 +866,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/mujava/util/ConfigurationItem.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="280">
+        <state relative-caret-position="220">
           <caret line="19" column="24" selection-start-line="19" selection-start-column="24" selection-end-line="19" selection-end-column="24" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#386#387#0" expanded="true" />
-            <element signature="e#432#433#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/src.zip!/java/sql/ResultSet.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="20">
-          <caret line="147" column="17" selection-start-line="147" selection-start-column="17" selection-end-line="147" selection-end-column="17" />
         </state>
       </provider>
     </entry>
@@ -894,37 +875,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-360">
           <caret line="43" column="60" lean-forward="true" selection-start-line="43" selection-start-column="60" selection-end-line="43" selection-end-column="60" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1800#1801#0" expanded="true" />
-            <element signature="e#1838#1839#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mujava/cli/ConsoleController.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="435">
-          <caret line="291" column="57" lean-forward="true" selection-start-line="291" selection-start-column="57" selection-end-line="291" selection-end-column="57" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1259#1275#0" expanded="true" />
-            <element signature="e#7669#7677#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mujava/MutationSystem.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="69">
-          <caret line="685" column="69" lean-forward="true" selection-start-line="685" selection-start-column="69" selection-end-line="685" selection-end-column="69" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mujava/util/TestExecutor.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="131">
-          <caret line="88" column="73" lean-forward="true" selection-start-line="88" selection-start-column="73" selection-end-line="88" selection-end-column="73" />
         </state>
       </provider>
     </entry>
@@ -935,34 +885,119 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/src/mujava/MutationControl.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="7740">
+          <caret line="406" column="29" selection-start-line="406" selection-start-column="29" selection-end-line="406" selection-end-column="29" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mujava/MutationSystem.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1000">
+          <caret line="78" column="24" selection-start-line="78" selection-start-column="24" selection-end-line="78" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/src.zip!/java/lang/Math.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="25240">
+          <caret line="1334" column="22" selection-start-line="1334" selection-start-column="22" selection-end-line="1334" selection-end-column="22" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/src.zip!/java/sql/PreparedStatement.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1376">
+          <caret line="1181" column="61" selection-start-line="1181" selection-start-column="50" selection-end-line="1181" selection-end-column="61" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/src.zip!/java/io/ObjectInputStream.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="236">
+          <caret line="411" column="24" selection-start-line="411" selection-start-column="24" selection-end-line="411" selection-end-column="24" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mujava/util/OriginalTestResult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="659">
+          <caret line="70" column="28" selection-start-line="70" selection-start-column="28" selection-end-line="70" selection-end-column="28" />
+          <folding>
+            <element signature="imports" expanded="true" />
+            <element signature="e#889#890#0" expanded="true" />
+            <element signature="e#935#936#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/src/mujava/TestExecuter.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="151">
-          <caret line="490" lean-forward="true" selection-start-line="490" selection-end-line="490" />
+        <state relative-caret-position="-121">
+          <caret line="327" column="30" selection-start-line="327" selection-start-column="30" selection-end-line="327" selection-end-column="30" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mujava/test/TestResult.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="759">
+          <caret line="124" column="1" selection-start-line="124" selection-start-column="1" selection-end-line="124" selection-end-column="1" />
           <folding>
-            <element signature="e#2837#2838#0" expanded="true" />
-            <element signature="e#2859#2860#0" expanded="true" />
-            <element signature="e#26558#26559#0" expanded="true" />
-            <element signature="e#26593#26594#0" expanded="true" />
+            <element signature="e#1807#1808#0" expanded="true" />
+            <element signature="e#1828#1829#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/src.zip!/java/util/concurrent/Executors.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="87" column="34" selection-start-line="87" selection-start-column="34" selection-end-line="87" selection-end-column="34" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://$PROJECT_DIR$/lib/junit-4.12.jar!/org/junit/internal/TextListener.class">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="23" column="11" selection-start-line="23" selection-start-column="11" selection-end-line="23" selection-end-column="11" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mujava/util/TestExecutor.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="187">
+          <caret line="106" column="21" selection-start-line="106" selection-start-column="21" selection-end-line="106" selection-end-column="21" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="jar://C:/Program Files/Java/jdk1.8.0_144/src.zip!/java/sql/ResultSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="20">
+          <caret line="147" column="17" selection-start-line="147" selection-start-column="17" selection-end-line="147" selection-end-column="17" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/mujava/cli/ConsoleController.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="679">
+          <caret line="310" column="64" selection-start-line="310" selection-start-column="64" selection-end-line="310" selection-end-column="64" />
+          <folding>
+            <element signature="imports" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/mujava/util/DatabaseCalls.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="19" column="85" selection-start-line="19" selection-start-column="85" selection-end-line="19" selection-end-column="85" />
+        <state relative-caret-position="509">
+          <caret line="407" column="13" lean-forward="true" selection-start-line="407" selection-start-column="13" selection-end-line="407" selection-end-column="13" />
           <folding>
-            <element signature="e#13843#13844#0" expanded="true" />
-            <element signature="e#13881#13882#0" expanded="true" />
+            <element signature="e#349#357#0" expanded="true" />
+            <element signature="e#4815#4823#0" expanded="true" />
+            <element signature="e#4869#4877#0" expanded="true" />
+            <element signature="e#18420#18428#0" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/mujava/MutationControl.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-6867">
-          <caret line="25" column="19" selection-start-line="25" selection-start-column="19" selection-end-line="25" selection-end-column="19" />
         </state>
       </provider>
     </entry>

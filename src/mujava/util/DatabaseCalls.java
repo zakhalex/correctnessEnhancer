@@ -6,7 +6,7 @@ import mujava.test.TestResult;
 import org.apache.derby.drda.NetworkServerControl;
 import org.junit.runner.notification.Failure;
 
-import java.io.PrintWriter;
+import java.io.*;
 import java.sql.*;
 import java.util.*;
 
@@ -16,10 +16,16 @@ public class DatabaseCalls {
 
     public final static String selectConfig = "SELECT * FROM CONFIGURATIONS WHERE ID=? AND FILE_NAME=?";
 
-    public final static String insertResultSql = "INSERT INTO TESTRESULTS (PROGRAM_LOCATION,MUTATED_CLASS," +
+    public final static String selectOriginalResults = "SELECT * FROM ORIGINALTESTRESULTS WHERE PROGRAM_LOCATION=? AND TEST_NAME=?";
+
+    public final static String insertResultSql = "INSERT INTO TESTRESULTS (BASE_DIR,PROGRAM_LOCATION,MUTATED_CLASS," +
             "TEST_NAME,MUTATION_TYPE,ORIGINAL_CORRECTNESS_INDEX,CORRECTNESS_ENHANCED,RELATIVELY_MORE_CORRECT," +
-            "MUTATED_CORRECTNESS_INDEX,LAST_UPDATED,COMMENT) " +
-            "VALUES(?,?,?,?,?,?,?,?,?,?)";
+            "MUTATED_CORRECTNESS_INDEX,ORIGINAL_RUN,MUTATED_CASES_RUN,NO_DROP_IN_TESTCASES,LAST_UPDATED,COMMENT) " +
+            "VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)";
+
+    public final static String insertOriginalResultSql = "INSERT INTO ORIGINALTESTRESULTS (BASE_DIR,PROGRAM_LOCATION," +
+            "TEST_NAME,ORIGINAL_CORRECTNESS_INDEX,SERIALIZED_DATA) " +
+            "VALUES(?,?,?,?,?)";
 
     public final static String insertControlSql = "INSERT INTO CONFIGURATIONS (" +
             "ID, " +
@@ -35,17 +41,30 @@ public class DatabaseCalls {
             "MUTATED_CORRECTNESS_INDEX = ?,LAST_UPDATED = ?,COMMENT = ? WHERE PROGRAM_LOCATION = ? AND MUTATED_CLASS = ? AND TEST_NAME = ? AND MUTATION_TYPE = ?";
 
     public final static String createResultTableSql = "CREATE TABLE TESTRESULTS ("
+            + "	BASE_DIR VARCHAR(1024),"
             + "	PROGRAM_LOCATION VARCHAR(1024),"
             + "	MUTATED_CLASS VARCHAR(1024),"
             + "	TEST_NAME VARCHAR(1024) NOT NULL,"
-            + "	MUTATION_TYPE VARCHAR(1024),"
+            + "	MUTATION_TYPE VARCHAR(64),"
             + "	ORIGINAL_CORRECTNESS_INDEX INTEGER,"
             + "	CORRECTNESS_ENHANCED BOOLEAN,"
             + "	RELATIVELY_MORE_CORRECT BOOLEAN,"
             + "	MUTATED_CORRECTNESS_INDEX INTEGER,"
+            + "	ORIGINAL_RUN INTEGER,"
+            + "	MUTATED_CASES_RUN INTEGER,"
+            + "	NO_DROP_IN_TESTCASES BOOLEAN,"
             + "	LAST_UPDATED TIMESTAMP,"
             + "	COMMENT VARCHAR(1024),"
             + " PRIMARY KEY (PROGRAM_LOCATION, MUTATED_CLASS, TEST_NAME, MUTATION_TYPE)"
+            + ")";
+
+    public final static String createOriginalResultTableSql = "CREATE TABLE ORIGINALTESTRESULTS ("
+            + "	BASE_DIR VARCHAR(1024),"
+            + "	PROGRAM_LOCATION VARCHAR(1024),"
+            + "	TEST_NAME VARCHAR(1024) NOT NULL,"
+            + "	ORIGINAL_CORRECTNESS_INDEX INTEGER,"
+            + "	SERIALIZED_DATA BLOB,"
+            + " PRIMARY KEY (PROGRAM_LOCATION, TEST_NAME)"
             + ")";
 
     public final static String createControlTableSql = "CREATE TABLE CONFIGURATIONS ("
@@ -59,9 +78,12 @@ public class DatabaseCalls {
             + ")";
 
     public final static String truncateResultTableSql = "TRUNCATE TABLE TESTRESULTS";
+    public final static String truncateOriginalResultTableSql = "TRUNCATE TABLE ORIGINALTESTRESULTS";
     public final static String truncateControlTableSql = "TRUNCATE TABLE CONFIGURATIONS";
     public final static String deleteControlSql = "DELETE FROM CONFIGURATIONS WHERE FILE_NAME=?";
     public final static String dropControlTableSql = "DROP TABLE CONFIGURATIONS";
+
+    public final static String analyzeGroupingSql = "SELECT * FROM TESTRESULTS WHERE CORRECTNESS_ENHANCED=true AND RELATIVELY_MORE_CORRECT=true AND PROGRAM_LOCATION LIKE '%?%'";
 
     public static List<Integer> insertResult(List<TestResult> list)
     {
@@ -132,6 +154,59 @@ public class DatabaseCalls {
             System.out.println(e.getMessage());
         }
         return config;
+    }
+
+    public static OriginalTestResult readOriginalTestResult(String programLocation, String testName)
+    {
+        OriginalTestResult origResult=null;
+        try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
+             PreparedStatement pstmt = conn.prepareStatement(selectOriginalResults)) {
+            System.out.println("Preparing to read configuration information");
+            pstmt.setString(1, programLocation);
+            pstmt.setString(2, testName);
+            ResultSet result = pstmt.executeQuery();
+
+            while(result.next()) {
+
+
+                Blob fileName=result.getBlob    ("SERIALIZED_DATA");
+
+                try {
+                    ObjectInputStream ois = new ObjectInputStream(fileName.getBinaryStream());
+                    origResult = (OriginalTestResult) ois.readObject();
+                    ois.close();
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return origResult;
+    }
+
+    public static void getData(String programLocation)
+    {
+        ConfigurationItem config=null;
+        try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
+             PreparedStatement pstmt = conn.prepareStatement(selectConfig)) {
+            System.out.println("Preparing to read data");
+            pstmt.setString(1, programLocation);
+            ResultSet result = pstmt.executeQuery();
+
+            while(result.next()) {
+
+                System.out.println(result);
+            }
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 
     public static void clearControlConfig(String dbControl)
@@ -216,6 +291,40 @@ public class DatabaseCalls {
         return result;
     }
 
+    public static int insertOriginalResult(OriginalTestResult originalResult)
+    {
+        int result=-1;
+
+
+
+        try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
+
+             PreparedStatement pstmt = conn.prepareStatement(insertOriginalResultSql)) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(originalResult);
+            oos.flush();
+            oos.close();
+            int originalScore = originalResult.getResultScore().intValue();
+            System.out.println("ORIGINALS' RAN/FAILED: " + originalResult.getRunCount() + "|" + originalResult.getFailure().size());
+            pstmt.setString(1, MutationSystem.SYSTEM_HOME);
+            pstmt.setString(2, originalResult.getProgramLocation());
+            pstmt.setString(3, originalResult.getTestSetName());
+            pstmt.setInt(4, originalScore);//==null?-1:originalResult);//original
+            pstmt.setBlob(5, new ByteArrayInputStream(baos.toByteArray()));
+
+            result = pstmt.executeUpdate();
+
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }catch (Exception e) {
+            System.out.println(e.getMessage());
+        }
+        return result;
+    }
+
     public static int insertResult(TestResult tr)
     {
         int result=-1;
@@ -245,17 +354,22 @@ public class DatabaseCalls {
 //                    }
 //                    System.exit(0);
 //                }
-                pstmt.setString(1, tr.getProgramLocation());
-                pstmt.setString(2, tr.getTargetMutant());
-                pstmt.setString(3, tr.getTestSetName());
-                pstmt.setString(4, entry.getKey());
-                pstmt.setInt(5, originalScore);//==null?-1:originalResult);//original
-                pstmt.setBoolean(6, isCorrectnessEnhanced);
-                pstmt.setBoolean(7, isRelativelyCorrect);
-                pstmt.setInt(8, mutantScore);
+                pstmt.setString(1, MutationSystem.SYSTEM_HOME);
+                pstmt.setString(2, tr.getProgramLocation());
+                pstmt.setString(3, tr.getTargetMutant());
+                pstmt.setString(4, tr.getTestSetName());
+                pstmt.setString(5, entry.getKey());
+                pstmt.setInt(6, originalScore);//==null?-1:originalResult);//original
+                pstmt.setBoolean(7, isCorrectnessEnhanced);
+                pstmt.setBoolean(8, isRelativelyCorrect);
+                pstmt.setInt(9, mutantScore);
 
-                pstmt.setTimestamp(9, new Timestamp(System.currentTimeMillis()));
-                pstmt.setString(10, "");//Comment to be inserted
+                pstmt.setInt(10, originalResult.getRunCount());
+                pstmt.setInt(11, entry.getValue().getRunCount());
+                pstmt.setBoolean(12, entry.getValue().getRunCount()>=originalResult.getRunCount());
+
+                pstmt.setTimestamp(13, new Timestamp(System.currentTimeMillis()));
+                pstmt.setString(14, tr.getComment().get(entry.getKey()));//Comment to be inserted
 
                 result = pstmt.executeUpdate();
             }
@@ -286,7 +400,7 @@ public class DatabaseCalls {
             // create a new table
             resetSchemaCache(conn);
             if(!tables.contains("TESTRESULTS".toLowerCase())) {
-                result = stmt.execute(createResultTableSql);
+                result = stmt.execute(createResultTableSql)&&stmt.execute(createOriginalResultTableSql);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

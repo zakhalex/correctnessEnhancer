@@ -19,6 +19,7 @@ package mujava;
 import java.io.*;
 import java.lang.annotation.Annotation;
 import java.lang.reflect.*;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -51,10 +52,10 @@ import static mujava.util.DatabaseCalls.insertResult;
 public class TestExecuter
 {
 //	Object lockObject = new Object();
-	LinkedHashMap<String, Future<Result>> resultMap=new LinkedHashMap<>();
+	private LinkedHashMap<String, Future<Result>> resultMap=new LinkedHashMap<>();
 
 	// int TIMEOUT = 3000;
-	int TIMEOUT;
+	private int TIMEOUT;
 	private int NUMBER_OF_THREADS=1;
 	final int MAX_TRY = 100;
 
@@ -324,9 +325,11 @@ public class TestExecuter
 	/**
 	 * compute the result of a test under the original program
 	 */
-	public OriginalTestResult computeOriginalTestResults(String testSetName)
+	public OriginalTestResult computeOriginalTestResults(String classPath, String testSetName)
 	{
 		OriginalTestResult originalTestResult=new OriginalTestResult();
+		originalTestResult.setProgramLocation(classPath);
+		originalTestResult.setTestSetName(testSetName);
 		Integer resultingScore=-1;
 	    ConcurrentHashMap<String, Integer> localOriginalResult=new ConcurrentHashMap<>();
 		Debug.println(
@@ -492,7 +495,7 @@ public class TestExecuter
 			Debug.println(
 					"\n\n======================================== Executing Mutants ========================================");
 			
-			ExecutorService executor = Executors.newFixedThreadPool(NUMBER_OF_THREADS);//new TimeoutThreadPoolExecutor(NUMBER_OF_THREADS, TIMEOUT, TimeUnit.MILLISECONDS);//Executors.newFixedThreadPool(32);
+			ExecutorService executor = Executors.newFixedThreadPool(Math.min(NUMBER_OF_THREADS,tr.mutants.size()));//new TimeoutThreadPoolExecutor(NUMBER_OF_THREADS, TIMEOUT, TimeUnit.MILLISECONDS);//Executors.newFixedThreadPool(32);
 			for (int i = 0; i < tr.mutants.size(); i++)
 			{
 				try
@@ -542,23 +545,41 @@ public class TestExecuter
 								System.err.println("Uncaught exception: " + ex);
 								//System.exit(0);
 							};
-							Runnable task = () -> {
-								JUnitCore jCore = new JUnitCore();
-								if(MutationSystem.debugOutputEnabled) {
-									jCore.addListener(new TextListener(System.out));
+							final ByteArrayOutputStream baos = new ByteArrayOutputStream();
+							final String utf8 = StandardCharsets.UTF_8.name();
+							StringBuilder comment=new StringBuilder();
+							try (PrintStream ps = new PrintStream(baos, true, utf8)) {
+								Runnable task = () -> {
+									JUnitCore jCore = new JUnitCore();
+									//if(MutationSystem.debugOutputEnabled) {
+										jCore.addListener(new TextListener(ps));
+									//}
+									result = jCore.run(mutant_executer);
+								};
+								Thread t = new Thread(task);
+								t.setUncaughtExceptionHandler(h);
+								t.start();
+								try {
+									t.join(TIMEOUT);
+								} catch (InterruptedException e) {
+									// TODO Auto-generated catch block
+									e.printStackTrace();
 								}
-								result = jCore.run(mutant_executer);
-							};
-							Thread t = new Thread(task);
-							t.setUncaughtExceptionHandler(h);
-							t.start();
-							try {
-								t.join(TIMEOUT);
-							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
+								if(t.isAlive()) {
+									comment.append("ABNORMAL PROGRAM TERMINATION ");
+									t.stop();
+								}
+							}
+							catch(Exception e)
+							{
 								e.printStackTrace();
 							}
-							t.stop();
+							String bufComment=baos.toString();
+							comment.append(bufComment.length());
+							comment.append("|");
+							comment.append(bufComment.substring(0,1023-comment.length()));
+							tr.getComment().put(mutant_name,comment.toString());
+
 							if (result == null)
 							{
 								//Timeout occured
@@ -755,7 +776,6 @@ public class TestExecuter
 			if(MutationSystem.debugOutputEnabled) {
 				System.out.println("DONE");
 			}
-			resultMap.clear();
 			for (int i = 0; i < tr.killed_mutants.size(); i++)
 			{
 				if(tr.live_mutants.remove(tr.killed_mutants.get(i)))
@@ -788,6 +808,10 @@ public class TestExecuter
 		{
 			e.printStackTrace();
 			return null;
+		}
+		finally
+		{
+			resultMap.clear();
 		}
 		if(MutationSystem.debugOutputEnabled) {
 			System.out.println("test report: " + finalTestResults);

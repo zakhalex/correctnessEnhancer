@@ -18,6 +18,7 @@ package mujava.test;
 
 import mujava.util.OriginalTestResult;
 
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
 import java.util.concurrent.ConcurrentHashMap;
@@ -50,6 +51,12 @@ public class TestResult
 	private String testSetName;//Name of the testset for which these results are applicable
 	private String targetMutant;//Which mutant were they running on
 	private String programLocation="DEFAULT";
+
+	public HashMap<String, String> getComment() {
+		return comment;
+	}
+
+	final private HashMap<String,String> comment = new HashMap<String, String>();
 	
 	public void setMutants()
 	{

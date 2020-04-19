@@ -2,15 +2,18 @@ package mujava.util;
 
 import org.junit.runner.notification.Failure;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
-public class OriginalTestResult {
+public class OriginalTestResult implements Serializable {
     private BigDecimal resultScore;
     private int runCount=-1;
-    private List<Failure> failure=new ArrayList<>();
+    private ArrayList<Failure> failure=new ArrayList<>();
+    private String testSetName;//Name of the testset for which these results are applicable
+    private String programLocation="DEFAULT";
 
     public BigDecimal getResultScore() {
         return resultScore;
@@ -36,12 +39,12 @@ public class OriginalTestResult {
         this.runCount = runCount;
     }
 
-    public List<Failure> getFailure() {
+    public ArrayList<Failure> getFailure() {
         return failure;
     }
 
     public void setFailure(List<Failure> failure) {
-        this.failure = failure;
+        this.failure=new ArrayList<Failure>(failure);
     }
 
     @Override
@@ -58,5 +61,25 @@ public class OriginalTestResult {
     public int hashCode() {
 
         return Objects.hash(resultScore, runCount, failure);
+    }
+
+    public String getTestSetName()
+    {
+        return testSetName;
+    }
+
+    public void setTestSetName(String testSetName)
+    {
+        this.testSetName = testSetName;
+    }
+
+    public String getProgramLocation()
+    {
+        return programLocation;
+    }
+
+    public void setProgramLocation(String programLocation)
+    {
+        this.programLocation = programLocation;
     }
 }

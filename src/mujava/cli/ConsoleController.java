@@ -43,28 +43,6 @@ public class ConsoleController {
     //	private static HashMap<String, ArrayList<String>> listProperties;
     private static HashMap<String, String> regularProperties = new HashMap<String, String>();
 
-    /*private static void recursiveListUnwrap(Collection<String> list)
-    {
-        Stack<String> stack = new Stack<String>();
-        for (String s:list)
-        {
-            Stack<Node> stack = new Stack<Node>();
-            Node current = root;
-            stack.push(root);
-            while(!stack.isEmpty()) {
-                current = stack.pop();
-                visit(current.value);
-
-                if(current.right != null) {
-                    stack.push(current.right);
-                }
-                if(current.left != null) {
-                    stack.push(current.left);
-                }
-            }
-        }
-    }*/
-
     public static void main(String[] args) {
         if (args.length != 0) {
             parseArgs(args);
@@ -75,16 +53,17 @@ public class ConsoleController {
              * traditionalOps: list of traditional operators
              */
         } else {
-            regularProperties.put("mode", "all");
+//            regularProperties.put("mode", "all");
 //            regularProperties.put("mode", "mutate");
-
 //			regularProperties.put("mode", "test");
 //            regularProperties.put("mode", "testcleanup");
 //            regularProperties.put("mode", "list");
+            regularProperties.put("mode", "analyze");
             regularProperties.put("configurationmode", "file");
             regularProperties.put("configurationpath", "mujava.config");
 //            regularProperties.put("testfilter", "org.jfree.chart.renderer.category.junit.AbstractCategoryItemRendererTests");
 //            regularProperties.put("mutationfilter", "org.jfree.chart.annotations.XYBoxAnnotation");
+            regularProperties.put("datafilter", "Chart_1b");
         }
         String mode = regularProperties.get("mode");
         if (mode == null) {
@@ -329,7 +308,7 @@ public class ConsoleController {
                     System.out.println("Activating filter on "+filteredClass);
                 }
             }
-            ArrayList<TestResult> result = localExecutor.executeTests(targetClassSet, testSet, "All method", 3000);
+            ArrayList<TestResult> result = localExecutor.executeTests(targetClassSet, testSet, "All method", 10000);
             String fileName = MutationSystem.resultsOutput;
             /**
              * Console/File/Database
@@ -388,6 +367,9 @@ public class ConsoleController {
         if (mode.equalsIgnoreCase("controlcleanup")) {
             DatabaseCalls.clearControlConfig(regularProperties.get("dbcontrol"));
         }
+        if (mode.equalsIgnoreCase("analyze")) {
+            DatabaseCalls.getData(regularProperties.get("datafilter"));
+        }
         if (mode.equalsIgnoreCase("testcleanup")) {
             String fileName = MutationSystem.resultsOutput;
             File f = new File(fileName);
@@ -437,9 +419,11 @@ public class ConsoleController {
                 if (localArgs.length == 2) {
                     argsFound = true;
                     regularProperties.put(localArgs[0].toLowerCase(), localArgs[1]);
+//                    System.out.println(localArgs[0].toLowerCase()+"|"+localArgs[1]);
                 }
             }
         }
+//        System.exit(0);
         if (!argsFound) {
             System.out.println("Arguments not provided");
         }
