@@ -10,74 +10,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30455860-3dc3-4f5c-b879-14636d78323f" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/.idea/jarRepositories.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_code_findbugs_jsr305_3_0_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_errorprone_error_prone_annotations_2_3_4.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_guava_failureaccess_1_0_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_guava_guava_29_0_jre.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_guava_listenablefuture_9999_0_empty_to_avoid_conflict_with_guava.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__com_google_j2objc_j2objc_annotations_1_3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__commons_io_commons_io_2_6.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__junit_junit_4_13.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_derby_derby_10_14_2_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_derby_derbyclient_10_14_2_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_derby_derbynet_10_14_2_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_apache_derby_derbytools_10_14_2_0.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_checkerframework_checker_qual_2_11_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_2_2.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_hamcrest_hamcrest_core_1_3.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_jacoco_org_jacoco_core_0_8_6.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_ow2_asm_asm_8_0_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_ow2_asm_asm_analysis_8_0_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_ow2_asm_asm_commons_8_0_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/.idea/libraries/Maven__org_ow2_asm_asm_tree_8_0_1.xml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/mujava/test/InstrumentedClassLoader.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/mujava/util/Coverage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/mujava/util/FullyQualifiedName.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/mujava/util/JacocoTestResult.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/mujava/util/RawCoverage.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/mujava/util/TargetFullyQualifiedName.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/main/java/mujava/util/TestFullyQualifiedName.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/libraries/muJava.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/libraries/muJava.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/.gitignore" beforeDir="false" afterPath="$PROJECT_DIR$/bin/.gitignore" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/bin/console/META-INF/MANIFEST.MF" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/database.log" beforeDir="false" afterPath="$PROJECT_DIR$/database.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/derby.log" beforeDir="false" afterPath="$PROJECT_DIR$/derby.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/muJava.iml" beforeDir="false" afterPath="$PROJECT_DIR$/muJava.iml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/consoleCorrectionEnhancer/correctnessEnhancer.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/consoleCorrectionEnhancer/correctnessEnhancer.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/artifacts/muJava_jar/muJava.jar" beforeDir="false" afterPath="$PROJECT_DIR$/out/artifacts/muJava_jar/muJava.jar" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pom.xml" beforeDir="false" afterPath="$PROJECT_DIR$/pom.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/MutationSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/MutationSystem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/TestExecuter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/TestExecuter.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/test/JMutationLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/test/JMutationLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/test/OriginalLoader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/test/OriginalLoader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/test/TestResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/test/TestResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/util/OriginalTestResult.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/util/OriginalTestResult.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/db.lck" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/db.lck" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/log/log.ctrl" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/log/log.ctrl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/log/log106.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/log/log106.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/log/logmirror.ctrl" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/log/logmirror.ctrl" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c101.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c101.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c111.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c111.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c121.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c121.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c130.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c130.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c141.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c141.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c20.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c20.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c31.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c31.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c41.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c41.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c51.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c51.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c60.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c60.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c71.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c71.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c81.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c81.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/c90.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/c90.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/ca1.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/ca1.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/cb1.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/cb1.dat" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests.db/seg0/cf0.dat" beforeDir="false" afterPath="$PROJECT_DIR$/tests.db/seg0/cf0.dat" afterDir="false" />
-    </list>
+    <list default="true" id="30455860-3dc3-4f5c-b879-14636d78323f" name="Default" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -138,6 +71,14 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
