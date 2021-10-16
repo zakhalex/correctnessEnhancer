@@ -21,6 +21,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 
 import mujava.MutationSystem;
 import mujava.cli.Util;
@@ -38,9 +39,10 @@ import org.apache.commons.io.FileUtils;
  * @version 1.0
  */
 
-public class JMutationLoader extends ClassLoader
+public class JMutationLoader extends ClassLoader implements InstrumentedClassLoader
 {
 
+	private ConcurrentHashMap<String, byte[]> instrumentedClass;
 	private String mutant_name;
 	private String mutantPath;
 	boolean tt = false;
@@ -134,6 +136,18 @@ public class JMutationLoader extends ClassLoader
 					Debug.println("File not found");
 					data = getClassData(name, MutationSystem.CLASS_PATH);
 				}
+				finally
+				{
+					if (data!=null)
+					{
+						try {
+							data = instrumentBytecode(data);
+						}
+						catch(Exception ignored) {
+
+						}//We don't want to impact classloading due to instrumentation failure
+					}
+				}
 			}
 			catch (FileNotFoundException e)
 			{
@@ -165,6 +179,10 @@ public class JMutationLoader extends ClassLoader
 			throw new ClassNotFoundException(name);
 		}
 		return result;
+	}
+
+	private byte[] instrumentBytecode(final byte[] bytecode) throws IOException {
+		return MutationSystem.jacocoInstrumenter.instrument(bytecode, "");
 	}
 
 	private byte[] getClassData(String name, String directory) throws FileNotFoundException, IOException
@@ -255,5 +273,10 @@ public class JMutationLoader extends ClassLoader
 			}
 		}
 		return url;
+	}
+
+	@Override
+	public byte[] getInstrumentedClass(String name) {
+		return instrumentedClass.get(name);
 	}
 }

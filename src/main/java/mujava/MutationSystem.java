@@ -31,6 +31,9 @@ import java.nio.file.Files;
 import java.util.*;
 
 import com.sun.tools.javac.util.Pair;
+import org.jacoco.core.instr.Instrumenter;
+import org.jacoco.core.runtime.IRuntime;
+import org.jacoco.core.runtime.LoggerRuntime;
 
 /**
  * <p>Description: Control an entire MuJava system -- 
@@ -57,8 +60,9 @@ import com.sun.tools.javac.util.Pair;
 public class MutationSystem extends OJSystem
 {
 	private static final PropertiesDictionary dictionary=new PropertiesDictionary();
+    private static final IRuntime jacocoRuntime= new LoggerRuntime();
 	
-	
+	public static final Instrumenter jacocoInstrumenter = new Instrumenter(jacocoRuntime);
    public static final int INTERFACE = 0;
    public static final int ABSTRACT = 1;
    public static final int GUI = 2;

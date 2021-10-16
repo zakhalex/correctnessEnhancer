@@ -1,2 +1,3 @@
-Sun Apr 26 19:34:13 EDT 2020 : Could not listen on port 1527 on host localhost:
- java.net.BindException: Address already in use: JVM_Bind
+Mon Oct 04 07:21:30 EDT 2021 : Сетевой сервер Apache Derby Network Server - 10.14.2.0 - (1828579) запущен и готов принимать соединения на порту 1527 на {3} 
+Mon Oct 04 16:48:39 EDT 2021 : хост 10.192.229.44 не является локальным для сервера, работающего на 0.0.0.0, поэтому он не может использоваться для команд NetworkServerControl  
+Mon Oct 04 16:48:39 EDT 2021 : DRDA_NeedLocalHost.S:хост 10.192.229.44 не является локальным для сервера, работающего на 0.0.0.0, поэтому он не может использоваться для команд NetworkServerControl  

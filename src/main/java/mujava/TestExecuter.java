@@ -28,14 +28,24 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Vector;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
+import com.google.common.base.Functions;
 import mujava.test.*;
 import mujava.util.*;
 
+import org.jacoco.core.analysis.Analyzer;
+import org.jacoco.core.analysis.CoverageBuilder;
+import org.jacoco.core.data.ExecutionData;
+import org.jacoco.core.data.ExecutionDataStore;
+import org.jacoco.core.data.SessionInfoStore;
+import org.jacoco.core.runtime.RuntimeData;
 import org.junit.internal.TextListener;
+import org.junit.runner.Description;
 import org.junit.runner.JUnitCore;
 import org.junit.runner.Result;
 import org.junit.runner.notification.Failure;
+import org.junit.runner.notification.RunListener;
 
 import static mujava.util.DatabaseCalls.insertResult;
 
@@ -53,7 +63,6 @@ public class TestExecuter
 {
 //	Object lockObject = new Object();
 	private LinkedHashMap<String, Future<Result>> resultMap=new LinkedHashMap<>();
-
 	// int TIMEOUT = 3000;
 	private int TIMEOUT;
 	private int NUMBER_OF_THREADS=1;
@@ -317,6 +326,123 @@ public class TestExecuter
 	}
 
 	/**
+	 * JUnit実行のイベントリスナー．内部クラス． JUnit実行前のJaCoCoの初期化，およびJUnit実行後のJaCoCoの結果回収を行う．
+	 *
+	 * メモ：JUnitには「テスト成功時」のイベントリスナーがないので，テスト成否をDescriptionに強引に追記して管理
+	 *
+	 * @author shinsuke
+	 */
+	class CoverageMeasurementListener extends RunListener {
+
+		private final RuntimeData jacocoRuntimeData = new RuntimeData();
+		private final List<JacocoTestResult> testResultList;
+		private boolean wasFailed;
+		private String failedReason;
+		private InstrumentedClassLoader instrumentedClassLoader;
+
+		/**
+		 * constructor
+		 *
+		 * @throws Exception
+		 */
+		public CoverageMeasurementListener(InstrumentedClassLoader classLoader, final List<JacocoTestResult> testResultList) {
+			this.instrumentedClassLoader=classLoader;
+			this.testResultList = testResultList;
+		}
+
+		@Override
+		public void testStarted(Description description) {
+			jacocoRuntimeData.reset();
+			wasFailed = false;
+			failedReason = null;
+		}
+
+		@Override
+		public void testFailure(Failure failure) {
+			wasFailed = true;
+			failedReason = failure.getException().getMessage();
+		}
+
+		@Override
+		public void testFinished(Description description) throws IOException {
+			collectRuntimeData(description);
+		}
+
+		/**
+		 * Descriptionから実行したテストメソッドのFQNを取り出す．
+		 *
+		 * @param description
+		 * @return
+		 */
+		private FullyQualifiedName getTestMethodName(Description description) {
+			return new TestFullyQualifiedName(description.getTestClass()
+					.getName() + "." + description.getMethodName());
+		}
+
+		/**
+		 * jacocoにより計測した行ごとのCoverageを回収し，TestResultsに格納する．
+		 *
+		 * @throws IOException
+		 */
+		private void collectRuntimeData(final Description description) throws IOException {
+			final CoverageBuilder coverageBuilder = new CoverageBuilder();
+			analyzeJacocoRuntimeData(coverageBuilder);
+			addJacocoCoverageToTestResults(coverageBuilder, description);
+		}
+
+		/**
+		 * jacocoにより計測した行ごとのCoverageを回収する．
+		 *
+		 * @param coverageBuilder 計測したCoverageを格納する保存先
+		 * @throws IOException
+		 */
+		private void analyzeJacocoRuntimeData(final CoverageBuilder coverageBuilder)
+				throws IOException {
+			final ExecutionDataStore executionData = new ExecutionDataStore();
+			final SessionInfoStore sessionInfo = new SessionInfoStore();
+			jacocoRuntimeData.collect(executionData, sessionInfo, false);
+			// jacocoRuntime.shutdown(); // Don't shutdown (This statement is a cause for bug #290)
+
+			final Analyzer analyzer = new Analyzer(executionData, coverageBuilder);
+
+			// 一度でもカバレッジ計測されたクラスのみに対してカバレッジ情報を探索
+			for (final ExecutionData data : executionData.getContents()) {
+
+				// 当該テスト実行でprobeが反応しない＝実行されていない場合はskip
+				if (!data.hasHits()) {
+					continue;
+				}
+
+				final String strFqn = data.getName()
+						.replace("/", ".");
+				final byte[] bytecode = instrumentedClassLoader.getInstrumentedClass(strFqn);
+				analyzer.analyzeClass(bytecode, "");
+			}
+		}
+
+		/**
+		 * 回収したCoverageを型変換しTestResultsに格納する．
+		 *
+		 * @param coverageBuilder Coverageが格納されたビルダー
+		 * @param description     テストの実行情報
+		 */
+		private void addJacocoCoverageToTestResults(final CoverageBuilder coverageBuilder,
+													final Description description) {
+			final FullyQualifiedName testMethodFQN = getTestMethodName(description);
+
+			final Map<FullyQualifiedName, Coverage> coverages = coverageBuilder.getClasses()
+					.stream()
+					.map(RawCoverage::new)
+					.collect(Collectors.toMap(Coverage::getExecutedTargetFQN, Functions.identity()));
+
+			JacocoTestResult testResult=new JacocoTestResult(testMethodFQN, wasFailed, failedReason,coverages);
+			testResultList.add(testResult);
+		}
+		//--------------------------------------------------------------
+
+	}
+
+	/**
 	 * compute the result of a test under the original program
 	 */
 	public OriginalTestResult computeOriginalTestResults(String classPath, String testSetName)
@@ -359,9 +485,13 @@ public class TestExecuter
 			ClassLoader parentClassLoader = OriginalLoader.class.getClassLoader();
 			OriginalLoader myLoader = new OriginalLoader(parentClassLoader);
 //			System.out.println(testSet);
-
+			final List<JacocoTestResult> testResultList = new ArrayList<>();
 			Class original_executor = myLoader.loadTestClass(testSetName);
+
 			JUnitCore jCore = new JUnitCore();
+			final RunListener listener = new CoverageMeasurementListener(myLoader,testResultList);
+			jCore.addListener(listener);
+			//junitCore.setTimeout(timeout, timeUnit);
 			// result = jCore.runMain(new RealSystem(), "VMTEST1");
 			if(MutationSystem.debugOutputEnabled) {
 				jCore.addListener(new TextListener(System.out));
@@ -517,6 +647,8 @@ public class TestExecuter
 						public Result result;
 						@Override
 						public Result call() {
+
+							final List<JacocoTestResult> testResultList = new ArrayList<>();
 //							try
 //							{
 //								mutantRunning = true;
@@ -545,8 +677,13 @@ public class TestExecuter
 							try (PrintStream ps = new PrintStream(baos, true, utf8)) {
 								Runnable task = () -> {
 									JUnitCore jCore = new JUnitCore();
-									//if(MutationSystem.debugOutputEnabled) {
+									final RunListener listener = new CoverageMeasurementListener(mutantLoader,testResultList);
+									jCore.addListener(listener);
+//									if(MutationSystem.debugOutputEnabled) {
 										jCore.addListener(new TextListener(ps));
+//									}
+									//if(MutationSystem.debugOutputEnabled) {
+//										jCore.addListener(new TextListener(ps));
 									//}
 									result = jCore.run(mutant_executer);
 								};

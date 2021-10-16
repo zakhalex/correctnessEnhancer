@@ -7,12 +7,14 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class OriginalTestResult implements Serializable {
     private BigDecimal resultScore;
     private int runCount=-1;
     private ArrayList<Failure> failure=new ArrayList<>();
     private String testSetName;//Name of the testset for which these results are applicable
+    private JacocoTestResult instrumentedResult=new JacocoTestResult();
 
     public BigDecimal getResultScore() {
         return resultScore;
@@ -44,6 +46,14 @@ public class OriginalTestResult implements Serializable {
 
     public void setFailure(List<Failure> failure) {
         this.failure=new ArrayList<Failure>(failure);
+    }
+
+    public JacocoTestResult getInstrumentedResult() {
+        return instrumentedResult;
+    }
+
+    public void setInstrumentedResult(JacocoTestResult instrumentedResult) {
+        this.instrumentedResult = instrumentedResult;
     }
 
     @Override

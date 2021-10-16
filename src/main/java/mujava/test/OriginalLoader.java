@@ -23,23 +23,20 @@ import java.net.URL;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.concurrent.ConcurrentHashMap;
 
 import mujava.MutationSystem;
 import mujava.cli.Util;
 import org.apache.commons.io.FileUtils;
 
-/**
- * <p>Description: </p>
- * @author Yu-Seung Ma
- * @author Nan Li modified on 06/30/2013 for adding getResource(String)
- * @version 1.0
-  */
+public class OriginalLoader extends ClassLoader implements InstrumentedClassLoader{
 
-public class OriginalLoader extends ClassLoader{
+  private ConcurrentHashMap<String, byte[]> instrumentedClass;
 
   public OriginalLoader()
   {
     super(null);
+    instrumentedClass=new ConcurrentHashMap<>();
   }
 
   public OriginalLoader(ClassLoader parentClassLoader)
@@ -85,6 +82,13 @@ public class OriginalLoader extends ClassLoader{
       try{
       // Try to load it
         data = getClassData(name,MutationSystem.CLASS_PATH);
+        try {
+          data = instrumentBytecode(data);
+          instrumentedClass.put(name,data);
+        }
+        catch(Exception ignored) {
+
+        }//We don't want to impact classloading due to instrumentation failure
       }catch(FileNotFoundException e){
         data = getClassData(name,MutationSystem.TESTSET_PATH);
       }
@@ -96,9 +100,15 @@ public class OriginalLoader extends ClassLoader{
     }
   }
 
+  private byte[] instrumentBytecode(final byte[] bytecode) throws IOException {
+    return MutationSystem.jacocoInstrumenter.instrument(bytecode, "");
+  }
 
+  public byte[] getInstrumentedClass(String name) {
+    return instrumentedClass.get(name);
+  }
 
-  private byte[] getClassData(String name,String directory) throws FileNotFoundException,IOException
+  private byte[] getClassData(String name, String directory) throws FileNotFoundException,IOException
   {
     if(MutationSystem.debugOutputEnabled) {
       System.out.println("Original Loader: Searching for " + name + " in " + directory);

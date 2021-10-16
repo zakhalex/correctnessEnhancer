@@ -16,8 +16,10 @@
 
 package mujava.test;
 
+import mujava.util.JacocoTestResult;
 import mujava.util.OriginalTestResult;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Vector;
@@ -44,6 +46,7 @@ public class TestResult
 
     // mutation score
 	public final ConcurrentHashMap<String, OriginalTestResult> mutation_results=new ConcurrentHashMap<>();
+	private final ConcurrentHashMap<String,JacocoTestResult> instrumentedTestResultsMap = new ConcurrentHashMap<>();
 //    public final ConcurrentHashMap<String, Integer> originalResults=new ConcurrentHashMap<>();
     private OriginalTestResult originalResult=null;
 
@@ -122,4 +125,13 @@ public class TestResult
 		this.programLocation = programLocation;
 	}
 
+	public JacocoTestResult getInstrumentedTestResult(String mutantName)
+	{
+		return instrumentedTestResultsMap.get(mutantName);
+	}
+
+	public void putInstrumentedTestResult(String mutantName, JacocoTestResult jacocoTestResult)
+	{
+		instrumentedTestResultsMap.put(mutantName, jacocoTestResult);
+	}
 }
