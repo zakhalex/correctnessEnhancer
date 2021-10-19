@@ -1,0 +1,12 @@
+./launch.sh short /home/a/az68/mutation/configCreator.txt "java -jar /home/a/az68/mutation/correctnessEnhancer.jar mode=\"list\"" /home/a/az68/mutation/configs/Chart/Chart_26b.config
+
+./launch.sh medium /research/sp_temporary/az68/input/Chart_3b_mutant_filter.txt "java -jar /home/a/az68/mutation/correctnessEnhancer.jar mode=\"mutate\"" /home/a/az68/mutation/configs/Chart/Chart_3b.config
+
+./launch.sh medium /research/sp_temporary/az68/input/Chart_1b_test_filter.txt "java -jar /home/a/az68/mutation/correctnessEnhancer.jar mode=\"test\"" /home/a/az68/mutation/configs/Chart1/Chart_1b.config
+
+qdel `grep -Eo '^[^ ]+' cleaner.txt`
+
+./loopwrapper.sh /research/sp_temporary/az68/input/Math_ b_mutant_filter.txt "java -jar /home/a/az68/mutation/correctnessEnhancer.jar" "mutate" /home/a/az68/mutation/configs/Math/Math_ b.config 1 106
+
+
+qstat -u az68 | grep 22 | cut -d"." -f1 | cut -d" " -f1 | xargs qdel

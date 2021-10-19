@@ -1,0 +1,5 @@
+/afs/cad/research/ccs/mili/3/Files/Files
+./launch.sh long /research/sp_temporary/az68/input/Chart_26b_test_filter.txt "java -jar /home/a/az68/mutation/correctnessEnhancer.jar mode=\"test\"" /home/a/az68/mutation/configs/Chart1/Chart_26b.config
+qsummary -a
+qstat -u az68
+

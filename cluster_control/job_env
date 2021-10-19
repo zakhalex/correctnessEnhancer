@@ -1,0 +1,286 @@
+MANPATH=/opt/gridengine/man:/afs/cad/linux/anaconda3/anaconda/man:/opt/userstat/man:/usr/share/man:/afs/cad/linux/compilers/man
+TOMCAT_HOME=/afs/cad/linux/tomcat
+HOSTNAME=kong.njit.edu
+TERM=xterm
+SHELL=/bin/bash
+HISTSIZE=50
+IGNOREEOF=1
+SSH_CLIENT=128.235.211.21 49488 22
+MORE=-c
+QTDIR=/usr/lib64/qt-3.3
+QTINC=/usr/lib64/qt-3.3/include
+SSH_TTY=/dev/pts/1
+HISTFILESIZE=40
+USER=az68
+LD_LIBRARY_PATH=/opt/gridengine/lib/linux-x64:/afs/cad.njit.edu/sw.common/matlab-2016a/sys/opengl/lib/glnxa64
+LS_COLORS=rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;05;37;41:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lz=01;31:*.xz=01;31:*.bz2=01;31:*.tbz=01;31:*.tbz2=01;31:*.bz=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.axv=01;35:*.anx=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=01;36:*.au=01;36:*.flac=01;36:*.mid=01;36:*.midi=01;36:*.mka=01;36:*.mp3=01;36:*.mpc=01;36:*.ogg=01;36:*.ra=01;36:*.wav=01;36:*.axa=01;36:*.oga=01;36:*.spx=01;36:*.xspf=01;36:
+MAILER=/bin/mail
+PAGER=/usr/local/bin/less
+MAIL=/var/spool/mail/az68
+PATH=/opt/gridengine/bin/linux-x64:/afs/cad/hpc/site/bin:/afs/cad.njit.edu/sw.common/matlab-2016a/bin:/afs/cad/linux/java8/bin:/afs/cad/linux/anaconda3/anaconda/bin:/afs/cad/sw.common/bin:/usr/site/bin:/usr/ucs/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/userstat/bin:/afs/cad/linux/compilers/bin
+PWD=/home/a/az68/AFS_HOME/mutation
+_LMFILES_=/afs/cad.njit.edu/ucs/modulefiles/python3:/afs/cad.njit.edu/ucs/modulefiles/java8/1.8.151:/afs/cad.njit.edu/ucs/modulefiles/matlab/2016a:/opt/Modules/modulefiles/sge
+JAVA_HOME=/afs/cad/linux/java8
+EDITOR=/bin/vi
+KDE_IS_PRELINKED=1
+LANG=en_US.UTF-8
+MODULEPATH=/opt/Modules/modulefiles:/afs/cad.njit.edu/ucs/modulefiles
+SGE_ROOT=/opt/gridengine
+LOADEDMODULES=python3:java8/1.8.151:matlab/2016a:sge
+KDEDIRS=/usr
+SSH_ASKPASS=/usr/libexec/openssh/gnome-ssh-askpass
+HISTCONTROL=ignoredups
+KRB5CCNAME=FILE:/tmp/krb5cc_85006_MQlTH20912
+SHLVL=1
+HOME=/home/a/az68
+LESS=-sCM
+LOGNAME=az68
+QTLIB=/usr/lib64/qt-3.3/lib
+CVS_RSH=ssh
+CLASSPATH=.:/home/a/az68/classes:/afs/cad/linux/tomcat/common/lib/servlet-api.jar:/afs/cad/linux/tomcat/common/lib/jsp-api.jar:/afs/cad/linux/oraclient10.2/jdbc/lib/classes12.zip:/afs/cad/solaris/mysql/jdbc/mysql-connector-java-5.0.4-bin.jar
+SSH_CONNECTION=128.235.211.21 49488 128.235.209.138 22
+MODULESHOME=/usr/share/Modules
+LESSOPEN=||/usr/bin/lesspipe.sh %s
+G_BROKEN_FILENAMES=1
+BASH_FUNC_module()=() {  eval `/usr/bin/modulecmd bash $*`
+}
+_=/bin/env
+OLDPWD=/home/a/az68/AFS_HOME
+BASH=/bin/bash
+BASHOPTS=checkwinsize:cmdhist:expand_aliases:extquote:force_fignore:hostcomplete:interactive_comments:login_shell:progcomp:promptvars:sourcepath
+BASH_ALIASES=()
+BASH_ARGC=()
+BASH_ARGV=()
+BASH_CMDS=()
+BASH_LINENO=()
+BASH_SOURCE=()
+BASH_VERSINFO=([0]="4" [1]="1" [2]="2" [3]="2" [4]="release" [5]="x86_64-redhat-linux-gnu")
+BASH_VERSION='4.1.2(2)-release'
+CLASSPATH=.:/home/a/az68/classes:/afs/cad/linux/tomcat/common/lib/servlet-api.jar:/afs/cad/linux/tomcat/common/lib/jsp-api.jar:/afs/cad/linux/oraclient10.2/jdbc/lib/classes12.zip:/afs/cad/solaris/mysql/jdbc/mysql-connector-java-5.0.4-bin.jar
+COLORS=/etc/DIR_COLORS
+COLUMNS=80
+CVS_RSH=ssh
+DIRSTACK=()
+EDITOR=/bin/vi
+EUID=85006
+FIGNORE=([0]=".o" [1]="~")
+GROUPS=()
+G_BROKEN_FILENAMES=1
+HISTCONTROL=ignoredups
+HISTFILE=/home/a/az68/.bash_history
+HISTFILESIZE=40
+HISTSIZE=50
+HOME=/home/a/az68
+HOST=kong.njit.edu
+HOSTNAME=kong.njit.edu
+HOSTTYPE=x86_64
+ID=85006
+IFS=$' \t\n'
+IGNOREEOF=1
+JAVA_HOME=/afs/cad/linux/java8
+KDEDIRS=/usr
+KDE_IS_PRELINKED=1
+KRB5CCNAME=FILE:/tmp/krb5cc_85006_MQlTH20912
+LANG=en_US.UTF-8
+LD_LIBRARY_PATH=/opt/gridengine/lib/linux-x64:/afs/cad.njit.edu/sw.common/matlab-2016a/sys/opengl/lib/glnxa64
+LESS=-sCM
+LESSOPEN='||/usr/bin/lesspipe.sh %s'
+LINES=24
+LOADEDMODULES=python3:java8/1.8.151:matlab/2016a:sge
+LOGNAME=az68
+LS_COLORS='rs=0:di=01;34:ln=01;36:mh=00:pi=40;33:so=01;35:do=01;35:bd=40;33;01:cd=40;33;01:or=40;31;01:mi=01;05;37;41:su=37;41:sg=30;43:ca=30;41:tw=30;42:ow=34;42:st=37;44:ex=01;32:*.tar=01;31:*.tgz=01;31:*.arj=01;31:*.taz=01;31:*.lzh=01;31:*.lzma=01;31:*.tlz=01;31:*.txz=01;31:*.zip=01;31:*.z=01;31:*.Z=01;31:*.dz=01;31:*.gz=01;31:*.lz=01;31:*.xz=01;31:*.bz2=01;31:*.tbz=01;31:*.tbz2=01;31:*.bz=01;31:*.tz=01;31:*.deb=01;31:*.rpm=01;31:*.jar=01;31:*.rar=01;31:*.ace=01;31:*.zoo=01;31:*.cpio=01;31:*.7z=01;31:*.rz=01;31:*.jpg=01;35:*.jpeg=01;35:*.gif=01;35:*.bmp=01;35:*.pbm=01;35:*.pgm=01;35:*.ppm=01;35:*.tga=01;35:*.xbm=01;35:*.xpm=01;35:*.tif=01;35:*.tiff=01;35:*.png=01;35:*.svg=01;35:*.svgz=01;35:*.mng=01;35:*.pcx=01;35:*.mov=01;35:*.mpg=01;35:*.mpeg=01;35:*.m2v=01;35:*.mkv=01;35:*.ogm=01;35:*.mp4=01;35:*.m4v=01;35:*.mp4v=01;35:*.vob=01;35:*.qt=01;35:*.nuv=01;35:*.wmv=01;35:*.asf=01;35:*.rm=01;35:*.rmvb=01;35:*.flc=01;35:*.avi=01;35:*.fli=01;35:*.flv=01;35:*.gl=01;35:*.dl=01;35:*.xcf=01;35:*.xwd=01;35:*.yuv=01;35:*.cgm=01;35:*.emf=01;35:*.axv=01;35:*.anx=01;35:*.ogv=01;35:*.ogx=01;35:*.aac=01;36:*.au=01;36:*.flac=01;36:*.mid=01;36:*.midi=01;36:*.mka=01;36:*.mp3=01;36:*.mpc=01;36:*.ogg=01;36:*.ra=01;36:*.wav=01;36:*.axa=01;36:*.oga=01;36:*.spx=01;36:*.xspf=01;36:'
+M='python3 java8 matlab/2016a'
+MACHINE=Linux
+MACHTYPE=x86_64-redhat-linux-gnu
+MAIL=/var/spool/mail/az68
+MAILCHECK=60
+MAILER=/bin/mail
+MANPATH=/opt/gridengine/man:/afs/cad/linux/anaconda3/anaconda/man:/opt/userstat/man:/usr/share/man:/afs/cad/linux/compilers/man
+MODULEPATH=/opt/Modules/modulefiles:/afs/cad.njit.edu/ucs/modulefiles
+MODULESHOME=/usr/share/Modules
+MODULES_TO_LOAD='python3 java8 matlab/2016a'
+MORE=-c
+OLDPWD=/home/a/az68/AFS_HOME
+OPTERR=1
+OPTIND=1
+OSTYPE=linux-gnu
+PAGER=/usr/local/bin/less
+PATH=/opt/gridengine/bin/linux-x64:/afs/cad/hpc/site/bin:/afs/cad.njit.edu/sw.common/matlab-2016a/bin:/afs/cad/linux/java8/bin:/afs/cad/linux/anaconda3/anaconda/bin:/afs/cad/sw.common/bin:/usr/site/bin:/usr/ucs/bin:/usr/lib64/qt-3.3/bin:/usr/local/bin:/bin:/usr/bin:/usr/local/sbin:/usr/sbin:/sbin:/opt/userstat/bin:/afs/cad/linux/compilers/bin
+PIPESTATUS=([0]="0")
+PLATFORM=x86_64
+PPID=20915
+PROMPT_COMMAND='printf "\033]0;%s@%s:%s\007" "${USER}" "${HOSTNAME%%.*}" "${PWD/#$HOME/~}"'
+PS1='\h-\! \W >: '
+PS2='> '
+PS4='+ '
+PWD=/home/a/az68/AFS_HOME/mutation
+QTDIR=/usr/lib64/qt-3.3
+QTINC=/usr/lib64/qt-3.3/include
+QTLIB=/usr/lib64/qt-3.3/lib
+SGE_ROOT=/opt/gridengine
+SHELL=/bin/bash
+SHELLOPTS=braceexpand:emacs:hashall:histexpand:history:ignoreeof:interactive-comments:monitor:noclobber:notify
+SHLVL=1
+SSH_ASKPASS=/usr/libexec/openssh/gnome-ssh-askpass
+SSH_CLIENT='128.235.211.21 49488 22'
+SSH_CONNECTION='128.235.211.21 49488 128.235.209.138 22'
+SSH_TTY=/dev/pts/1
+TERM=xterm
+TOMCAT_HOME=/afs/cad/linux/tomcat
+UID=85006
+USER=az68
+_=env
+_LMFILES_=/afs/cad.njit.edu/ucs/modulefiles/python3:/afs/cad.njit.edu/ucs/modulefiles/java8/1.8.151:/afs/cad.njit.edu/ucs/modulefiles/matlab/2016a:/opt/Modules/modulefiles/sge
+colors=/etc/DIR_COLORS
+host=kong
+isguisession=1
+loginshell=0
+shell=bash
+DIS () 
+{ 
+    export DISPLAY=$1:0
+}
+__udisks () 
+{ 
+    local IFS='
+';
+    local cur="${COMP_WORDS[COMP_CWORD]}";
+    if [ "${COMP_WORDS[$(($COMP_CWORD - 1))]}" = "--show-info" ]; then
+        COMPREPLY=($(compgen -W "$(udisks --enumerate-device-files)" -- $cur));
+    else
+        if [ "${COMP_WORDS[$(($COMP_CWORD - 1))]}" = "--inhibit-polling" ]; then
+            COMPREPLY=($(compgen -W "$(udisks --enumerate-device-files)" -- $cur));
+        else
+            if [ "${COMP_WORDS[$(($COMP_CWORD - 1))]}" = "--mount" ]; then
+                COMPREPLY=($(compgen -W "$(udisks --enumerate-device-files)" -- $cur));
+            else
+                if [ "${COMP_WORDS[$(($COMP_CWORD - 1))]}" = "--unmount" ]; then
+                    COMPREPLY=($(compgen -W "$(udisks --enumerate-device-files)" -- $cur));
+                else
+                    if [ "${COMP_WORDS[$(($COMP_CWORD - 1))]}" = "--detach" ]; then
+                        COMPREPLY=($(compgen -W "$(udisks --enumerate-device-files)" -- $cur));
+                    else
+                        if [ "${COMP_WORDS[$(($COMP_CWORD - 1))]}" = "--ata-smart-refresh" ]; then
+                            COMPREPLY=($(compgen -W "$(udisks --enumerate-device-files)" -- $cur));
+                        else
+                            if [ "${COMP_WORDS[$(($COMP_CWORD - 1))]}" = "--ata-smart-simulate" ]; then
+                                _filedir || return 0;
+                            else
+                                if [ "${COMP_WORDS[$(($COMP_CWORD - 1))]}" = "--set-spindown" ]; then
+                                    COMPREPLY=($(compgen -W "$(udisks --enumerate-device-files)" -- $cur));
+                                else
+                                    if [ "${COMP_WORDS[$(($COMP_CWORD - 1))]}" = "--poll-for-media" ]; then
+                                        COMPREPLY=($(compgen -W "$(udisks --enumerate-device-files)" -- $cur));
+                                    else
+                                        COMPREPLY=($(IFS=: compgen -W "--dump:--inhibit-polling:--inhibit-all-polling:--enumerate:--enumerate-device-files:--monitor:--monitor-detail:--show-info:--help:--mount:--mount-fstype:--mount-options:--unmount:--unmount-options:--detach:--detach-options:--ata-smart-refresh:--ata-smart-wakeup:--ata-smart-simulate:--set-spindown:--set-spindown-all:--spindown-timeout:--poll-for-media" -- $cur));
+                                    fi;
+                                fi;
+                            fi;
+                        fi;
+                    fi;
+                fi;
+            fi;
+        fi;
+    fi
+}
+_module () 
+{ 
+    local cur="$2" prev="$3" cmds opts;
+    COMPREPLY=();
+    cmds="add apropos avail clear display help	      initadd initclear initlist initprepend initrm initswitch	      keyword list load purge refresh rm show swap switch	      unload unuse update use whatis";
+    opts="-c -f -h -i -l -s -t -u -v -H -V	      --create --force  --help  --human   --icase	      --long   --silent --terse --userlvl --verbose --version";
+    case "$prev" in 
+        add | load)
+            COMPREPLY=($(compgen -W "$(_module_not_yet_loaded)" -- "$cur"))
+        ;;
+        rm | remove | unload | switch | swap)
+            COMPREPLY=($(IFS=: compgen -W "${LOADEDMODULES}" -- "$cur"))
+        ;;
+        unuse)
+            COMPREPLY=($(IFS=: compgen -W "${MODULEPATH}" -- "$cur"))
+        ;;
+        use | *-a*)
+
+        ;;
+        -u | --userlvl)
+            COMPREPLY=($(compgen -W "novice expert advanced" -- "$cur"))
+        ;;
+        display | help | show | whatis)
+            COMPREPLY=($(compgen -W "$(_module_avail)" -- "$cur"))
+        ;;
+        *)
+            if test $COMP_CWORD -gt 2; then
+                _module_long_arg_list "$cur";
+            else
+                case "$cur" in 
+                    ls)
+                        COMPREPLY="list"
+                    ;;
+                    r*)
+                        COMPREPLY="rm"
+                    ;;
+                    sw*)
+                        COMPREPLY="switch"
+                    ;;
+                    -*)
+                        COMPREPLY=($(compgen -W "$opts" -- "$cur"))
+                    ;;
+                    *)
+                        COMPREPLY=($(compgen -W "$cmds" -- "$cur"))
+                    ;;
+                esac;
+            fi
+        ;;
+    esac
+}
+_module_avail () 
+{ 
+    /usr/bin/modulecmd bash -t avail 2>&1 | sed '
+		/:$/d;
+		/:ERROR:/d;
+		s#^\(.*\)/\(.\+\)(default)#\1\n\1\/\2#;
+		s#/(default)##g;
+		s#/*$##g;'
+}
+_module_long_arg_list () 
+{ 
+    local cur="$1" i;
+    if [[ ${COMP_WORDS[COMP_CWORD-2]} == sw* ]]; then
+        COMPREPLY=($(compgen -W "$(_module_not_yet_loaded)" -- "$cur"));
+        return;
+    fi;
+    for ((i = COMP_CWORD - 1; i > 0; i--))
+    do
+        case ${COMP_WORDS[$i]} in 
+            add | load)
+                COMPREPLY=($(compgen -W "$(_module_not_yet_loaded)" -- "$cur"));
+                break
+            ;;
+            rm | remove | unload | switch | swap)
+                COMPREPLY=($(IFS=: compgen -W "${LOADEDMODULES}" -- "$cur"));
+                break
+            ;;
+        esac;
+    done
+}
+_module_not_yet_loaded () 
+{ 
+    comm -23 <(_module_avail|sort) <(tr : '\n' <<<${LOADEDMODULES}|sort)
+}
+cd () 
+{ 
+    builtin cd $1
+}
+h () 
+{ 
+    history $1 | head -39
+}
+module () 
+{ 
+    eval `/usr/bin/modulecmd bash $*`
+}
+xcd () 
+{ 
+    cd $1;
+    echo -n "^[]2; $PWD^G"
+}
