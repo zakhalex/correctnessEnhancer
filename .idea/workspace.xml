@@ -10,20 +10,7 @@
     <option name="autoReloadType" value="ALL" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="30455860-3dc3-4f5c-b879-14636d78323f" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/database.log" beforeDir="false" afterPath="$PROJECT_DIR$/database.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/derby.log" beforeDir="false" afterPath="$PROJECT_DIR$/derby.log" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/MutationSystem.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/MutationSystem.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/TestExecuter.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/TestEngineWrapper.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/cli/ConsoleController.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/cli/ConsoleController.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/gui/RunTestPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/gui/RunTestPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/op/basic/VDL.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/op/basic/VDL.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/util/DatabaseCalls.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/util/DatabaseCalls.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/util/DecisionEngine.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/util/DecisionEngine.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/util/ProgramCandidate.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/util/ProgramCandidate.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/java/mujava/util/TestExecutor.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/java/mujava/util/TestExecutor.java" afterDir="false" />
-    </list>
+    <list default="true" id="30455860-3dc3-4f5c-b879-14636d78323f" name="Default" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
