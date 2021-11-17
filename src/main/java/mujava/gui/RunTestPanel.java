@@ -26,16 +26,12 @@ import javax.swing.border.*;
 import mujava.gui.util.*;
 
 import java.io.*;
-import java.math.BigDecimal;
-import java.nio.file.Files;
 
 import mujava.MutationSystem;
-import mujava.TestExecuter;
 import mujava.util.*;
 import mujava.test.*;
 
 import java.util.*;
-import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
  * <p>
@@ -599,10 +595,16 @@ public class RunTestPanel extends JPanel implements ActionListener
 		float total=0;
 		for(Map.Entry<String, OriginalTestResult> entry:tr.mutation_results.entrySet())
 		{
-			if(entry.getValue().getResultScore().equals(BigDecimal.valueOf(100)))//absolute correctness
+			OriginalTestResult originalResult=tr.getOriginalResult();
+
+			int originalScore=originalResult.getResultScore().intValue();
+			int mutantScore=entry.getValue().getResultScore().intValue();
+			boolean isRelativelyCorrect=DatabaseCalls.containsSet(originalResult.getFailure(),entry.getValue().getFailure());
+			boolean isCorrectnessEnhanced=originalScore<mutantScore;
+			if((mutantScore ==100)||(isRelativelyCorrect&&isCorrectnessEnhanced))//absolute correctness
 			{
 				live_mutants.add(entry.getKey());
-				total+=entry.getValue().getResultScore().intValue();//Need to rethink if we accept negative scores as error indication
+				total+=mutantScore;//Need to rethink if we accept negative scores as error indication
 			}
 			else
 			{

@@ -16,6 +16,19 @@ public class DatabaseCalls {
 
     public final static String selectConfig = "SELECT * FROM CONFIGURATIONS WHERE ID=? AND FILE_NAME=?";
 
+    public final static String selectNext = "SELECT cc.BASE_DIR, cc.MUTATION_CHAIN, cc.SERIALIZED_MUTATION_CHAIN, " +
+            "cc.OVERALL_INDEX FROM APP.CHAINCONTROL cc " +
+            "WHERE cc.LAST_UPDATED IS NULL AND cc.BASE_DIR=? " +
+            "ORDER BY OVERALL_INDEX DESC FETCH FIRST ROW ONLY";
+
+    public final static String selectFirstN = "SELECT cc.BASE_DIR, cc.MUTATION_CHAIN, cc.SERIALIZED_MUTATION_CHAIN, " +
+            "cc.OVERALL_INDEX FROM APP.CHAINCONTROL cc " +
+            "WHERE cc.LAST_UPDATED IS NULL AND cc.BASE_DIR=? " +
+            "ORDER BY OVERALL_INDEX DESC FETCH FIRST ? ROWS ONLY";
+
+    public final static String countCandidates = "SELECT COUNT(*) AS OVERALL FROM APP.CHAINCONTROL " +
+            "WHERE cc.LAST_UPDATED IS NULL AND cc.BASE_DIR=?";
+
     public final static String selectOriginalResults = "SELECT * FROM ORIGINALTESTRESULTS WHERE BASE_DIR=? AND TEST_NAME=?";
 
     public final static String insertResultSql = "INSERT INTO TESTRESULTS (BASE_DIR,PROGRAM_LOCATION,MUTATED_CLASS," +
@@ -36,6 +49,12 @@ public class DatabaseCalls {
             "LAST_UPDATED) " +
             "VALUES(?,?,?,?,?,?)";
             //"VALUES(?,?,?,?,?)";
+
+    public final static String insertChainInfoSql = "INSERT INTO CHAINCONTROL (" +
+            "BASE_DIR,MUTATION_CHAIN,OVERALL_INDEX,SERIALIZED_MUTATION_CHAIN) " +
+            "VALUES(?,?,?,?)";
+
+    public final static String updateChainControl = "UPDATE CHAINCONTROL SET LAST_UPDATED = ? WHERE BASE_DIR=? AND MUTATION_CHAIN=? AND LAST_UPDATED IS NULL";
 
     public final static String updateResultSql = "UPDATE TESTRESULTS SET ORIGINAL_CORRECTNESS_INDEX = ?,CORRECTNESS_ENHANCED = ?,RELATIVELY_MORE_CORRECT = ?," +
             "MUTATED_CORRECTNESS_INDEX = ?,LAST_UPDATED = ?,COMMENT = ? WHERE PROGRAM_LOCATION = ? AND MUTATED_CLASS = ? AND TEST_NAME = ? AND MUTATION_TYPE = ?";
@@ -76,14 +95,44 @@ public class DatabaseCalls {
             + " PRIMARY KEY (FILE_NAME, CLASS_NAME, METHOD_NAME, TEST_NAME)"
             + ")";
 
+    public final static String createChainControlTableSql = "CREATE TABLE CHAINCONTROL (" +
+            "BASE_DIR VARCHAR(1024) NOT NULL," +
+            "MUTATION_CHAIN VARCHAR(2048) NOT NULL," +
+            "SERIALIZED_MUTATION_CHAIN BLOB," +
+            "OVERALL_INDEX INTEGER DEFAULT 0," +
+            "LAST_UPDATED TIMESTAMP," +
+            "PRIMARY KEY (BASE_DIR, MUTATION_CHAIN)" +
+            ")";
+
     public final static String truncateResultTableSql = "TRUNCATE TABLE TESTRESULTS";
     public final static String truncateOriginalResultTableSql = "TRUNCATE TABLE ORIGINALTESTRESULTS";
     public final static String truncateControlTableSql = "TRUNCATE TABLE CONFIGURATIONS";
+    public final static String truncateChainControlTableSql = "TRUNCATE TABLE CHAINCONTROL";
     public final static String deleteControlSql = "DELETE FROM CONFIGURATIONS WHERE FILE_NAME=?";
     public final static String dropControlTableSql = "DROP TABLE CONFIGURATIONS";
+    public final static String dropChainControlTableSql = "DROP TABLE CHAINCONTROL";
 
     public final static String analyzeGroupingSql = "SELECT * FROM TESTRESULTS WHERE CORRECTNESS_ENHANCED=true AND RELATIVELY_MORE_CORRECT=true AND PROGRAM_LOCATION LIKE '%?%'";
-
+    public final static String analytics = "SELECT" +
+            " BASE_DIR," +
+            " MUTATION_TYPE," +
+            " SUM(CASE WHEN RELATIVELY_MORE_CORRECT THEN 1 ELSE 0 END) AS RELATIVELY_MORE_CORRECT_NUM," +
+            " SUM(CASE WHEN CORRECTNESS_ENHANCED THEN 1 ELSE 0 END) AS CORRECTNESS_ENHANCED_NUM," +
+            " SUM(CASE WHEN NO_DROP_IN_TESTCASES THEN 1 ELSE 0 END) AS NO_DROP_IN_TESTCASES_NUM," +
+            " COUNT(*) AS OVERALL," +
+            " SUM(CASE WHEN CORRECTNESS_ENHANCED THEN CASE WHEN RELATIVELY_MORE_CORRECT THEN CASE WHEN NO_DROP_IN_TESTCASES THEN 1 ELSE 0 END ELSE 0 END ELSE 0 END)," +
+            " SUM(CASE WHEN MUTATED_CORRECTNESS_INDEX=100 THEN 1 ELSE CASE WHEN CORRECTNESS_ENHANCED THEN CASE WHEN RELATIVELY_MORE_CORRECT THEN CASE WHEN NO_DROP_IN_TESTCASES THEN 1 ELSE 0 END ELSE 0 END ELSE 0 END END)" +
+            "FROM TESTRESULTS " +
+            "GROUP BY BASE_DIR, MUTATION_TYPE";
+    //Chain#3
+    public final static String selectOverallIndex = "SELECT" +
+            " MUTATION_TYPE," +
+            " SUM(CASE WHEN RELATIVELY_MORE_CORRECT THEN 1000000 ELSE 0 END) AS RELATIVELY_MORE_CORRECT_NUM," +
+            " SUM(CASE WHEN MUTATED_CORRECTNESS_INDEX=100 THEN 1000 ELSE CASE WHEN CORRECTNESS_ENHANCED THEN 1000 ELSE 0 END END) AS CORRECTNESS_ENHANCED_NUM," +
+            " SUM(CASE WHEN NO_DROP_IN_TESTCASES THEN 1 ELSE 0 END) AS NO_DROP_IN_TESTCASES_NUM," +
+            " COUNT(*) AS OVERALL " +
+            "FROM TESTRESULTS WHERE BASE_DIR = ?" +
+            "GROUP BY MUTATION_TYPE";
     public static List<Integer> insertResult(List<TestResult> list)
     {
         ArrayList<Integer> result=new ArrayList<>();
@@ -94,7 +143,7 @@ public class DatabaseCalls {
         return result;
     }
 
-    private static boolean containsSet(List<Failure> list, List<Failure> sublist) {
+    public static boolean containsSet(List<Failure> list, List<Failure> sublist) {
         if(sublist.size()>list.size())
         {
             return false;
@@ -153,6 +202,122 @@ public class DatabaseCalls {
             System.out.println(e.getMessage());
         }
         return config;
+    }
+
+    public static int countCandidates(String baseDir)
+    {
+        int count=0;
+        try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
+             PreparedStatement pstmt = conn.prepareStatement(countCandidates)) {
+            System.out.println("Preparing to retrieve the count");
+
+            pstmt.setString(1, baseDir);
+            ResultSet result = pstmt.executeQuery();
+
+            while(result.next()) {
+                count=result.getInt("OVERALL");
+            }
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return count;
+    }
+
+    public static Map<String,Integer> retrieveOverallIndex(String baseDir)
+    {
+        HashMap<String,Integer> resultMap=new HashMap<>();
+        try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
+             PreparedStatement pstmt = conn.prepareStatement(selectOverallIndex)) {
+            System.out.println("Preparing to retrieve the next candidate");
+
+            pstmt.setString(1, baseDir);
+            ResultSet result = pstmt.executeQuery();
+
+            while(result.next()) {
+
+                if(result.isLast()) {
+                    Integer count=result.getInt("OVERALL");
+                    Integer overallIndex = (100*result.getInt("RELATIVELY_MORE_CORRECT_NUM"))/count
+                            +(100*result.getInt("CORRECTNESS_ENHANCED_NUM"))/count
+                            +(100*result.getInt("NO_DROP_IN_TESTCASES_NUM"))/count;
+                    String mutantName=result.getString("MUTATION_TYPE");
+                    resultMap.put(mutantName,overallIndex);
+                }
+            }
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return resultMap;
+    }
+
+    public static ProgramCandidate retrieveNthProgramCandidate(String baseDir,int n)
+    {
+        ProgramCandidate pp=null;
+        try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
+             PreparedStatement pstmt = conn.prepareStatement(selectFirstN)) {
+            System.out.println("Preparing to retrieve the next candidate");
+
+            pstmt.setString(1, baseDir);
+            pstmt.setInt(2, n);
+            ResultSet result = pstmt.executeQuery();
+
+            while(result.next()) {
+
+                if(result.isLast()) {
+                    Blob fileName = result.getBlob("SERIALIZED_MUTATION_CHAIN");
+
+                    try {
+                        ObjectInputStream ois = new ObjectInputStream(fileName.getBinaryStream());
+                        pp = (ProgramCandidate) ois.readObject();
+                        ois.close();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return pp;
+    }
+
+    public static ProgramCandidate retrieveProgramCandidate(String baseDir)
+    {
+        ProgramCandidate pp=null;
+        try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
+             PreparedStatement pstmt = conn.prepareStatement(selectNext)) {
+            System.out.println("Preparing to retrieve the next candidate");
+
+            pstmt.setString(1, baseDir);
+            ResultSet result = pstmt.executeQuery();
+
+            while(result.next()) {
+
+
+                Blob fileName=result.getBlob    ("SERIALIZED_MUTATION_CHAIN");
+
+                try {
+                    ObjectInputStream ois = new ObjectInputStream(fileName.getBinaryStream());
+                    pp = (ProgramCandidate) ois.readObject();
+                    ois.close();
+                }
+                catch(Exception e)
+                {
+                    e.printStackTrace();
+                }
+            }
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return pp;
     }
 
     public static OriginalTestResult readOriginalTestResult(String baseDir, String testName)
@@ -215,16 +380,96 @@ public class DatabaseCalls {
         Statement stmt = conn.createStatement();) {
             if(dbControl!=null && dbControl.equalsIgnoreCase("hard")) {
                 stmt.execute(dropControlTableSql);
+                stmt.execute(dropChainControlTableSql);
             }
             else
             {
                 stmt.execute(truncateControlTableSql);
+                stmt.execute(truncateChainControlTableSql);
             }
         }
         catch(Exception e)
         {
             e.printStackTrace();
         }
+    }
+
+    public static int insertChainInfo(String baseDir, int overallIndex, List<String> previousChain) throws Exception {
+        int result = -1;
+        ProgramCandidate pp = new ProgramCandidate(previousChain, overallIndex, baseDir);
+
+        try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
+             PreparedStatement pstmt = conn.prepareStatement(insertChainInfoSql)) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(pp);
+            oos.flush();
+            oos.close();
+            System.out.println("Recording layer information");
+            pstmt.setString(1, baseDir);
+            pstmt.setString(2, pp.getMutationChain());
+            pstmt.setInt(3, overallIndex);
+            pstmt.setBlob(4, new ByteArrayInputStream(baos.toByteArray()));
+
+            result = pstmt.executeUpdate();
+
+            pstmt.close();
+            conn.close();
+        }
+        return result;
+    }
+
+    public static int updateChainInfo(String baseDir, ProgramCandidate pp) throws Exception {
+        int result = -1;
+
+        try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
+             PreparedStatement pstmt = conn.prepareStatement(updateChainControl)) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(pp);
+            oos.flush();
+            oos.close();
+            System.out.println("Recording layer information");
+            pstmt.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+            pstmt.setString(2, baseDir);
+            pstmt.setString(3, pp.getMutationChain());
+            result = pstmt.executeUpdate();
+
+            pstmt.close();
+            conn.close();
+        }
+        if(result<=0)
+        {
+            throw new SQLException("Database state changed. Execute again");
+        }
+        return result;
+    }
+
+    public static int updateChainInfo(String baseDir, int overallIndex, List<String> previousChain) throws Exception {
+        int result = -1;
+        ProgramCandidate pp = new ProgramCandidate(previousChain, overallIndex, baseDir);
+
+        try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
+             PreparedStatement pstmt = conn.prepareStatement(updateChainControl)) {
+            ByteArrayOutputStream baos = new ByteArrayOutputStream();
+            ObjectOutputStream oos = new ObjectOutputStream(baos);
+            oos.writeObject(pp);
+            oos.flush();
+            oos.close();
+            System.out.println("Recording layer information");
+            pstmt.setTimestamp(1, new Timestamp(System.currentTimeMillis()));
+            pstmt.setString(2, baseDir);
+            pstmt.setString(3, pp.getMutationChain());
+            result = pstmt.executeUpdate();
+
+            pstmt.close();
+            conn.close();
+        }
+        if(result<=0)
+        {
+            throw new SQLException("Database state changed. Execute again");
+        }
+        return result;
     }
 
     /**
@@ -427,6 +672,9 @@ public class DatabaseCalls {
             resetSchemaCache(conn);
             if(!tables.contains("CONFIGURATIONS".toLowerCase())) {
                 result = stmt.execute(createControlTableSql);
+            }
+            if(!tables.contains("CHAINCONTROL".toLowerCase())) {
+                result = stmt.execute(createChainControlTableSql);
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());

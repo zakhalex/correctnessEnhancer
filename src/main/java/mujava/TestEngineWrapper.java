@@ -49,7 +49,7 @@ import static mujava.util.DatabaseCalls.insertResult;
  * @version 1.0
  */
 
-public class TestExecuter
+public class TestEngineWrapper
 {
 //	Object lockObject = new Object();
 	private LinkedHashMap<String, Future<Result>> resultMap=new LinkedHashMap<>();
@@ -86,7 +86,7 @@ public class TestExecuter
 	// results as to how many tests can kill each single mutant
 	Map<String, String> finalMutantResults = new HashMap<String, String>();
 
-	public TestExecuter(String targetClassName)
+	public TestEngineWrapper(String targetClassName)
 	{
 		int index = targetClassName.lastIndexOf(".");
 		if (index < 0)
@@ -374,21 +374,6 @@ public class TestExecuter
 			if(result.getRunCount() > 0)
 			{
 				resultingScore=(result.getRunCount()-result.getFailureCount())*100/result.getRunCount();//correctness percentage
-//				if(testSetName.contains("BooleanLiteralSetTest")) {
-//					if (result.wasSuccessful()) {
-//						System.out.println("DEBUGGING INFORMATION: " + result.getRunTime() + "|" + result.getRunCount() + "|" + result.getFailureCount() + "|" + result.getIgnoreCount() + "|" + result.getFailures().size());
-//					}
-//					else
-//					{
-//						System.out.println("WARNING - Got something!!!");
-//					}
-//
-//					for (Failure failure : listOfFailure)
-//					{
-//						System.out.println(failure.getMessage());
-//					}
-//					System.exit(0);
-//				}
 			}
 			for (Failure failure : listOfFailure)
 			{
