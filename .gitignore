@@ -10,3 +10,8 @@ README.md
 LICENSE
 
 *.class
+database.log
+derby.log
+
+#IDE metadata
+**.idea/**

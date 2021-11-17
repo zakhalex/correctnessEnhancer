@@ -347,6 +347,7 @@ public class ConsoleController {
                 e.printStackTrace();
             }
             DatabaseCalls.createResultTable();
+            DatabaseCalls.createControlTable();
         }
         boolean filter = false;
 
