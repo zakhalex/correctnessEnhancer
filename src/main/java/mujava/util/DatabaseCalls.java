@@ -103,7 +103,7 @@ public class DatabaseCalls {
             "LAST_UPDATED TIMESTAMP," +
             "PRIMARY KEY (BASE_DIR, MUTATION_CHAIN)" +
             ")";
-
+    public final static String createChainControlIndex="CREATE INDEX APP.chainPriorityIndex ON CHAINCONTROL (OVERALL_INDEX)";
     public final static String truncateResultTableSql = "TRUNCATE TABLE TESTRESULTS";
     public final static String truncateOriginalResultTableSql = "TRUNCATE TABLE ORIGINALTESTRESULTS";
     public final static String truncateControlTableSql = "TRUNCATE TABLE CONFIGURATIONS";

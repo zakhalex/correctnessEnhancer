@@ -68,6 +68,7 @@ public class GenMutantsMain extends JFrame
 	  MutationSystem.setJMutationStructure();
          DatabaseCalls.startServer();
 	  DatabaseCalls.createResultTable();
+	  DatabaseCalls.createControlTable();
       }
       catch (NoClassDefFoundError e) {
 	  System.err.println("[ERROR] Could not find one of the classes necessary to run muJava. Make sure that the .jar file for openjava is in your classpath.");

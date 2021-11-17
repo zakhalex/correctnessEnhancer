@@ -12,4 +12,6 @@ LICENSE
 *.class
 database.log
 derby.log
-*.idea
+
+#IDE metadata
+**.idea/**

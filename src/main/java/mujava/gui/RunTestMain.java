@@ -69,6 +69,7 @@ public class RunTestMain extends JFrame
       Debug.setDebugLevel(2);
       MutationSystem.setJMutationStructure();
       DatabaseCalls.createResultTable();
+      DatabaseCalls.createControlTable();
       RunTestMain main = new RunTestMain();
       main.pack();
       main.setVisible(true);
