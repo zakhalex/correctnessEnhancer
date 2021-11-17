@@ -115,7 +115,6 @@ public class ConsoleController {
                 }
             }
         }
-//        System.exit(0);
         if (!argsFound) {
             System.out.println("Arguments not provided");
         }

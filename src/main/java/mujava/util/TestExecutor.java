@@ -4,11 +4,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 
 import mujava.MutationSystem;
-import mujava.TestExecuter;
+import mujava.TestEngineWrapper;
 import mujava.test.NoMutantDirException;
 import mujava.test.NoMutantException;
 import mujava.test.TestResult;
@@ -72,7 +70,7 @@ public class TestExecutor
 		ArrayList<TestResult> test_result = new ArrayList<TestResult>();
 		for (String targetClassName : targetClassSet)
 		{
-			TestExecuter test_engine = new TestExecuter(targetClassName);
+			TestEngineWrapper test_engine = new TestEngineWrapper(targetClassName);
 			test_engine.setTimeOut(timeout);
 			test_engine.setNumberOfThreads(numberOfThreads);
 

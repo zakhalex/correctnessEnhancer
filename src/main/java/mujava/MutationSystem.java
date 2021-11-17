@@ -835,48 +835,7 @@ public class MutationSystem extends OJSystem
    *  <p> ** CAUTION : this function or `setJMutationStructure(String home_path)' should be called before generating and running mutants. */
    public static void setJMutationStructure()
    {
-      try 
-      {
-    	  //Starting from properties
-//    	  HashMap<String,String> properties=readPropertiesFromFile(MutationSystem.SYSTEM_HOME + "/mujava.config");
-
-//    	  dictionary.readPropertiesFromFile(MutationSystem.SYSTEM_HOME + "/mujava.config");
-    	  dictionary.readPropertiesFromFile("mujava.config");
-//         File f = new File (MutationSystem.SYSTEM_HOME + "/mujava.config");
-//         FileReader r = new FileReader(f);
-//         BufferedReader reader = new BufferedReader(r);
-//         String str = reader.readLine();
-//         String home_path = str.substring("MuJava_HOME=".length(), str.length());
-//         SYSTEM_HOME = home_path;
-			SYSTEM_HOME = dictionary.getProperty("MuJava_Home");
-			SRC_PATH = dictionary.getProperty("MuJava_src", SYSTEM_HOME + File.separator + "src");
-			CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
-			MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
-			TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
-			CHAIN_PATH=dictionary.getProperty("MuJava_chain", SYSTEM_HOME + File.separator + "mutationchain");
-			numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
-			numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
-			resultsOutput = dictionary.getProperty("Results_output",null);
-          listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
-          listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
-          debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
-          testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");
-          testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
-          softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
-          databaseMarker=dictionary.getProperty("database_marker", "");
-          databaseCount=dictionary.getProperty("database_count", null);
-          annealing=Integer.parseInt(dictionary.getProperty("annealing","0"));
-          maxChainLength=Integer.parseInt(dictionary.getProperty("chain_length","1"));
-          stopOnAbsolutelyCorrect=Boolean.parseBoolean(dictionary.getProperty("stop_on_correct","false"));
-      }
-		catch (FileNotFoundException e1)
-      {
-         System.err.println("[ERROR] Can't find mujava.config file");
-         e1.printStackTrace();
-      } catch (Exception e)
-      {
-         e.printStackTrace();
-      }
+       setJMutationStructure("mujava.config");
    }
 
     /**
@@ -886,41 +845,13 @@ public class MutationSystem extends OJSystem
     {
         try
         {
-            //Starting from properties
-//    	  HashMap<String,String> properties=readPropertiesFromFile(MutationSystem.SYSTEM_HOME + "/mujava.config");
-
+            //Starting from properties in a config file
             dictionary.readPropertiesFromFile(configFileLocation);
-//           dictionary.readPropertiesFromFile("mujava.config");
-//         File f = new File (MutationSystem.SYSTEM_HOME + "/mujava.config");
-//         FileReader r = new FileReader(f);
-//         BufferedReader reader = new BufferedReader(r);
-//         String str = reader.readLine();
-//         String home_path = str.substring("MuJava_HOME=".length(), str.length());
-//         SYSTEM_HOME = home_path;
-            SYSTEM_HOME = dictionary.getProperty("MuJava_Home");
-            SRC_PATH = dictionary.getProperty("MuJava_src", SYSTEM_HOME + File.separator + "src");
-            CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
-            MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
-            TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
-            CHAIN_PATH=dictionary.getProperty("MuJava_chain", SYSTEM_HOME + File.separator + "mutationchain");
-            numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
-            numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
-            resultsOutput = dictionary.getProperty("Results_output", null);
-            listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
-            listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
-            debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
-            testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");
-            testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
-            softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
-            databaseMarker=dictionary.getProperty("database_marker", "");
-            databaseCount=dictionary.getProperty("database_count", null);
-            annealing=Integer.parseInt(dictionary.getProperty("annealing","0"));
-            maxChainLength=Integer.parseInt(dictionary.getProperty("chain_length","1"));
-            stopOnAbsolutelyCorrect=Boolean.parseBoolean(dictionary.getProperty("stop_on_correct","false"));
+            systemRefresh();
         }
         catch (FileNotFoundException e1)
         {
-            System.err.println("[ERROR] Can't find mujava.config file");
+            System.err.println("[ERROR] Can't find "+configFileLocation+" file");
             e1.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -936,26 +867,7 @@ public class MutationSystem extends OJSystem
         try
         {
             dictionary.parseProperties(properties);
-            SYSTEM_HOME = dictionary.getProperty("MuJava_Home");
-            SRC_PATH = dictionary.getProperty("MuJava_src", SYSTEM_HOME + File.separator + "src");
-            CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
-            MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
-            TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
-            CHAIN_PATH=dictionary.getProperty("MuJava_chain", SYSTEM_HOME + File.separator + "mutationchain");
-            numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
-            numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
-            resultsOutput = dictionary.getProperty("Results_output", null);
-            listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
-            listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
-            debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");
-            testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");
-            testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
-            softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
-            databaseMarker=dictionary.getProperty("database_marker", "");
-            databaseCount=dictionary.getProperty("database_count", null);
-            annealing=Integer.parseInt(dictionary.getProperty("annealing","0"));
-            maxChainLength=Integer.parseInt(dictionary.getProperty("chain_length","1"));
-            stopOnAbsolutelyCorrect=Boolean.parseBoolean(dictionary.getProperty("stop_on_correct","false"));
+            systemRefresh();
         }
         catch (Exception e)
         {
@@ -972,31 +884,39 @@ public class MutationSystem extends OJSystem
         try
         {
             dictionary.parseProperties(properties);
-            SYSTEM_HOME = dictionary.getProperty("MuJava_Home");
-            SRC_PATH = dictionary.getProperty("MuJava_src", SYSTEM_HOME + File.separator + "src");
-            CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
-            MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
-            TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
-            CHAIN_PATH=dictionary.getProperty("MuJava_chain", SYSTEM_HOME + File.separator + "mutationchain");
-            numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
-            numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
-            resultsOutput = dictionary.getProperty("Results_output", null);
-            listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
-            listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
-            debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");//Additional console output for debugging
-            testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");//database jdbc
-            testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
-            softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
-            databaseMarker=dictionary.getProperty("database_marker", "");
-            databaseCount=dictionary.getProperty("database_count", null);
-            annealing=Integer.parseInt(dictionary.getProperty("annealing","0"));
-            maxChainLength=Integer.parseInt(dictionary.getProperty("chain_length","1"));
-            stopOnAbsolutelyCorrect=Boolean.parseBoolean(dictionary.getProperty("stop_on_correct","false"));
+            systemRefresh();
         }
         catch (Exception e)
         {
             e.printStackTrace();
         }
+    }
+
+    /**
+     * Reload key system variables from central properties dictionary
+     */
+    public static void systemRefresh()
+    {
+        SYSTEM_HOME = dictionary.getProperty("MuJava_Home");
+        SRC_PATH = dictionary.getProperty("MuJava_src", SYSTEM_HOME + File.separator + "src");
+        CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
+        MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
+        TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
+        CHAIN_PATH=dictionary.getProperty("MuJava_chain", SYSTEM_HOME + File.separator + "mutationchain");
+        numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
+        numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
+        resultsOutput = dictionary.getProperty("Results_output", null);
+        listTargetMutationFiles = dictionary.getProperty("List_Target_Mutation_Files",null);
+        listTargetTestFiles = dictionary.getProperty("List_Target_Tests",null);
+        debugOutputEnabled = dictionary.getProperty("debug_output_enabled", "N").equalsIgnoreCase("Y");//Additional console output for debugging
+        testJdbcURL=dictionary.getProperty("test_results_jdbc", "jdbc:sqlite:tests.db");//database jdbc
+        testOutputMode=dictionary.getProperty("test_results_output_mode", "console");//Can be console, file or database
+        softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
+        databaseMarker=dictionary.getProperty("database_marker", "");
+        databaseCount=dictionary.getProperty("database_count", null);
+        annealing=Integer.parseInt(dictionary.getProperty("annealing","0"));
+        maxChainLength=Integer.parseInt(dictionary.getProperty("chain_length","1"));
+        stopOnAbsolutelyCorrect=Boolean.parseBoolean(dictionary.getProperty("stop_on_correct","false"));
     }
 }
 

@@ -205,7 +205,6 @@ private void aor_outputToFile(UnaryExpression original, Expression mutant) {
 	       String f_name;
 	       num++;
 	       f_name = getSourceName("VDL", className, getMutantType("VDL")); System.out.println("MARKER: "+f_name);
-//	System.exit(0);
 	       String mutant_dir = getMuantID("VDL");
 
 	       try 

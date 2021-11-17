@@ -113,7 +113,7 @@ public class DatabaseCalls {
     public final static String dropChainControlTableSql = "DROP TABLE CHAINCONTROL";
 
     public final static String analyzeGroupingSql = "SELECT * FROM TESTRESULTS WHERE CORRECTNESS_ENHANCED=true AND RELATIVELY_MORE_CORRECT=true AND PROGRAM_LOCATION LIKE '%?%'";
-    public final static String guideSelection = "SELECT" +
+    public final static String analytics = "SELECT" +
             " BASE_DIR," +
             " MUTATION_TYPE," +
             " SUM(CASE WHEN RELATIVELY_MORE_CORRECT THEN 1 ELSE 0 END) AS RELATIVELY_MORE_CORRECT_NUM," +
@@ -125,6 +125,14 @@ public class DatabaseCalls {
             "FROM TESTRESULTS " +
             "GROUP BY BASE_DIR, MUTATION_TYPE";
     //Chain#3
+    public final static String selectOverallIndex = "SELECT" +
+            " MUTATION_TYPE," +
+            " SUM(CASE WHEN RELATIVELY_MORE_CORRECT THEN 1000000 ELSE 0 END) AS RELATIVELY_MORE_CORRECT_NUM," +
+            " SUM(CASE WHEN MUTATED_CORRECTNESS_INDEX=100 THEN 1000 ELSE CASE WHEN CORRECTNESS_ENHANCED THEN 1000 ELSE 0 END END) AS CORRECTNESS_ENHANCED_NUM," +
+            " SUM(CASE WHEN NO_DROP_IN_TESTCASES THEN 1 ELSE 0 END) AS NO_DROP_IN_TESTCASES_NUM," +
+            " COUNT(*) AS OVERALL " +
+            "FROM TESTRESULTS WHERE BASE_DIR = ?" +
+            "GROUP BY MUTATION_TYPE";
     public static List<Integer> insertResult(List<TestResult> list)
     {
         ArrayList<Integer> result=new ArrayList<>();
@@ -215,6 +223,35 @@ public class DatabaseCalls {
             System.out.println(e.getMessage());
         }
         return count;
+    }
+
+    public static Map<String,Integer> retrieveOverallIndex(String baseDir)
+    {
+        HashMap<String,Integer> resultMap=new HashMap<>();
+        try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
+             PreparedStatement pstmt = conn.prepareStatement(selectOverallIndex)) {
+            System.out.println("Preparing to retrieve the next candidate");
+
+            pstmt.setString(1, baseDir);
+            ResultSet result = pstmt.executeQuery();
+
+            while(result.next()) {
+
+                if(result.isLast()) {
+                    Integer count=result.getInt("OVERALL");
+                    Integer overallIndex = (100*result.getInt("RELATIVELY_MORE_CORRECT_NUM"))/count
+                            +(100*result.getInt("CORRECTNESS_ENHANCED_NUM"))/count
+                            +(100*result.getInt("NO_DROP_IN_TESTCASES_NUM"))/count;
+                    String mutantName=result.getString("MUTATION_TYPE");
+                    resultMap.put(mutantName,overallIndex);
+                }
+            }
+            pstmt.close();
+            conn.close();
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+        return resultMap;
     }
 
     public static ProgramCandidate retrieveNthProgramCandidate(String baseDir,int n)
@@ -343,10 +380,12 @@ public class DatabaseCalls {
         Statement stmt = conn.createStatement();) {
             if(dbControl!=null && dbControl.equalsIgnoreCase("hard")) {
                 stmt.execute(dropControlTableSql);
+                stmt.execute(dropChainControlTableSql);
             }
             else
             {
                 stmt.execute(truncateControlTableSql);
+                stmt.execute(truncateChainControlTableSql);
             }
         }
         catch(Exception e)
@@ -355,7 +394,7 @@ public class DatabaseCalls {
         }
     }
 
-    public static int insertChainInfo(String baseDir, int overallIndex, Map<String,String> previousChain) throws Exception {
+    public static int insertChainInfo(String baseDir, int overallIndex, List<String> previousChain) throws Exception {
         int result = -1;
         ProgramCandidate pp = new ProgramCandidate(previousChain, overallIndex, baseDir);
 
@@ -406,7 +445,7 @@ public class DatabaseCalls {
         return result;
     }
 
-    public static int updateChainInfo(String baseDir, int overallIndex, Map<String,String> previousChain) throws Exception {
+    public static int updateChainInfo(String baseDir, int overallIndex, List<String> previousChain) throws Exception {
         int result = -1;
         ProgramCandidate pp = new ProgramCandidate(previousChain, overallIndex, baseDir);
 
