@@ -56,70 +56,77 @@ import com.sun.tools.javac.util.Pair;
 
 public class MutationSystem extends OJSystem
 {
-	private static final PropertiesDictionary dictionary=new PropertiesDictionary();
+    private static final PropertiesDictionary dictionary=new PropertiesDictionary();
 	
 	
-   public static final int INTERFACE = 0;
-   public static final int ABSTRACT = 1;
-   public static final int GUI = 2;
-   public static final int MAIN = 3;
-   public static final int MAIN_ONLY = 4;
-   public static final int NORMAL = 5;
-   public static final int APPLET = 6;
+    public static final int INTERFACE = 0;
+    public static final int ABSTRACT = 1;
+    public static final int GUI = 2;
+    public static final int MAIN = 3;
+    public static final int MAIN_ONLY = 4;
+    public static final int NORMAL = 5;
+    public static final int APPLET = 6;
 
-   public static final int CM = 0; // Class Mutation Operator
-   public static final int TM = 1; // Traditional Mutation Operator
-   public static final int EM = 2; // Exceptional Mutation Operator
+    public static final int CM = 0; // Class Mutation Operator
+    public static final int TM = 1; // Traditional Mutation Operator
+    public static final int EM = 2; // Exceptional Mutation Operator
 
 
-   /** home path where inputs and output of mujava system are located*/
-   //public static String SYSTEM_HOME = "C:/jmutation";
-   //public static String SYSTEM_HOME = "/Users/dmark/mujava";
-//   public static String SYSTEM_HOME = "";
-   public static String SYSTEM_HOME = System.getProperty("user.dir");
+    /** home path where inputs and output of mujava system are located*/
+    //public static String SYSTEM_HOME = "C:/jmutation";
+    //public static String SYSTEM_HOME = "/Users/dmark/mujava";
+//    public static String SYSTEM_HOME = "";
+    public static String SYSTEM_HOME = System.getProperty("user.dir");
 
-   /** path of Java source files which mutation is applied to  */
-   public static String SRC_PATH = SYSTEM_HOME + File.separatorChar + "src";
+    /** path of Java source files which mutation is applied to  */
+    public static String SRC_PATH = SYSTEM_HOME + File.separatorChar + "src";
 
-   /** path of classes of Java source files at SRC_PATH directory */
-   public static String CLASS_PATH = SYSTEM_HOME + File.separatorChar + "classes";
+    /** path of classes of Java source files at SRC_PATH directory */
+    public static String CLASS_PATH = SYSTEM_HOME + File.separatorChar + "classes";
 
-   /** home path which mutants are put into */
-   public static String MUTANT_HOME = SYSTEM_HOME + File.separatorChar + "result";
+    /** home path which mutants are put into */
+    public static String MUTANT_HOME = SYSTEM_HOME + File.separatorChar + "result";
 
-   /** path which class mutants are put into */
-   private static String CLASS_MUTANT_PATH = "";
+    /** path which class mutants are put into */
+    private static String CLASS_MUTANT_PATH = "";
 
-   /** path which traditional mutants are put into */
-   private static String TRADITIONAL_MUTANT_PATH = "";
+    /** path which traditional mutants are put into */
+    private static String TRADITIONAL_MUTANT_PATH = "";
 
-   /** path which exception-related mutants are put into */
-   private static String EXCEPTION_MUTANT_PATH = "";
+    /** path which exception-related mutants are put into */
+    private static String EXCEPTION_MUTANT_PATH = "";
 
-   /** ??? absolute path for ???*/
-   private static String MUTANT_PATH = "";
+    /** ??? absolute path for ???*/
+    private static String MUTANT_PATH = "";
 
-   /** ??? absolute path for the original Java source*/
-   private static String ORIGINAL_PATH = "";
+    /** ??? absolute path for the original Java source*/
+    private static String ORIGINAL_PATH = "";
 
-   /** absolute path where test cases are located */
-   public static String TESTSET_PATH = SYSTEM_HOME + File.separatorChar + "testset";
+    /** absolute path where test cases are located */
+    public static String TESTSET_PATH = SYSTEM_HOME + File.separatorChar + "testset";
 
-   /** class name without package name that mutation is applied into */
-   private static String CLASS_NAME;
-   
-   public static int numberOfMutationThreads=1;
-   public static int numberOfTestingThreads=1;
-   public static String resultsOutput=null;
-   public static String listTargetMutationFiles =null;
-   public static String testJdbcURL=null;
-   public static String testOutputMode=null;
-   public static boolean softClassMatch=false;
-   public static String databaseMarker=null;
+    /** absolute path for mutants on autoguide */
+    public static String CHAIN_PATH = SYSTEM_HOME + File.separatorChar + "mutationchain";
+
+    /** class name without package name that mutation is applied into */
+    private static String CLASS_NAME;
+
+    public static int numberOfMutationThreads=1;
+    public static int numberOfTestingThreads=1;
+    public static String resultsOutput=null;
+    public static String listTargetMutationFiles =null;
+    public static String testJdbcURL=null;
+    public static String testOutputMode=null;
+    public static boolean softClassMatch=false;
+    public static String databaseMarker=null;
     public static String databaseCount=null;
-   public static String listTargetTestFiles =null;
-   public static boolean debugOutputEnabled=false;
-   public static String[] getTestSetNames()
+    public static int annealing=0;//Turned off by default
+    public static int maxChainLength=1;//Single layer by default
+    public static String listTargetTestFiles =null;
+    public static boolean debugOutputEnabled=false;
+    public static boolean stopOnAbsolutelyCorrect;
+
+    public static String[] getTestSetNames()
 	{
 		ArrayList<String> v = new ArrayList<String>();
 		getTestSetNames(new File(MutationSystem.TESTSET_PATH), v);
@@ -138,7 +145,7 @@ public class MutationSystem extends OJSystem
 		return result.toArray(new String[result.size()]);
 	}
    
-   public static void getTestSetNames(File testDir, ArrayList<String> v)
+    public static void getTestSetNames(File testDir, ArrayList<String> v)
 	{
 
 		String[] t_list;
@@ -846,6 +853,7 @@ public class MutationSystem extends OJSystem
 			CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
 			MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
 			TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
+			CHAIN_PATH=dictionary.getProperty("MuJava_chain", SYSTEM_HOME + File.separator + "mutationchain");
 			numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
 			numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
 			resultsOutput = dictionary.getProperty("Results_output",null);
@@ -857,6 +865,9 @@ public class MutationSystem extends OJSystem
           softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
           databaseMarker=dictionary.getProperty("database_marker", "");
           databaseCount=dictionary.getProperty("database_count", null);
+          annealing=Integer.parseInt(dictionary.getProperty("annealing","0"));
+          maxChainLength=Integer.parseInt(dictionary.getProperty("chain_length","1"));
+          stopOnAbsolutelyCorrect=Boolean.parseBoolean(dictionary.getProperty("stop_on_correct","false"));
       }
 		catch (FileNotFoundException e1)
       {
@@ -891,6 +902,7 @@ public class MutationSystem extends OJSystem
             CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
             MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
             TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
+            CHAIN_PATH=dictionary.getProperty("MuJava_chain", SYSTEM_HOME + File.separator + "mutationchain");
             numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
             numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
             resultsOutput = dictionary.getProperty("Results_output", null);
@@ -902,6 +914,9 @@ public class MutationSystem extends OJSystem
             softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
             databaseMarker=dictionary.getProperty("database_marker", "");
             databaseCount=dictionary.getProperty("database_count", null);
+            annealing=Integer.parseInt(dictionary.getProperty("annealing","0"));
+            maxChainLength=Integer.parseInt(dictionary.getProperty("chain_length","1"));
+            stopOnAbsolutelyCorrect=Boolean.parseBoolean(dictionary.getProperty("stop_on_correct","false"));
         }
         catch (FileNotFoundException e1)
         {
@@ -926,6 +941,7 @@ public class MutationSystem extends OJSystem
             CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
             MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
             TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
+            CHAIN_PATH=dictionary.getProperty("MuJava_chain", SYSTEM_HOME + File.separator + "mutationchain");
             numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
             numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
             resultsOutput = dictionary.getProperty("Results_output", null);
@@ -937,6 +953,9 @@ public class MutationSystem extends OJSystem
             softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
             databaseMarker=dictionary.getProperty("database_marker", "");
             databaseCount=dictionary.getProperty("database_count", null);
+            annealing=Integer.parseInt(dictionary.getProperty("annealing","0"));
+            maxChainLength=Integer.parseInt(dictionary.getProperty("chain_length","1"));
+            stopOnAbsolutelyCorrect=Boolean.parseBoolean(dictionary.getProperty("stop_on_correct","false"));
         }
         catch (Exception e)
         {
@@ -958,6 +977,7 @@ public class MutationSystem extends OJSystem
             CLASS_PATH = dictionary.getProperty("MuJava_class", SYSTEM_HOME + File.separator + "classes");
             MUTANT_HOME = dictionary.getProperty("MuJava_mutants", SYSTEM_HOME + File.separator + "result");
             TESTSET_PATH = dictionary.getProperty("MuJava_tests", SYSTEM_HOME + File.separator + "testset");
+            CHAIN_PATH=dictionary.getProperty("MuJava_chain", SYSTEM_HOME + File.separator + "mutationchain");
             numberOfMutationThreads = Integer.parseInt(dictionary.getProperty("number_of_mutation_threads", "1"));
             numberOfTestingThreads = Integer.parseInt(dictionary.getProperty("number_of_testing_threads", "1"));
             resultsOutput = dictionary.getProperty("Results_output", null);
@@ -969,6 +989,9 @@ public class MutationSystem extends OJSystem
             softClassMatch=dictionary.getProperty("soft_class_match_allowed", "N").equalsIgnoreCase("Y");//Determines, whether the configuration has to be precise as to class location
             databaseMarker=dictionary.getProperty("database_marker", "");
             databaseCount=dictionary.getProperty("database_count", null);
+            annealing=Integer.parseInt(dictionary.getProperty("annealing","0"));
+            maxChainLength=Integer.parseInt(dictionary.getProperty("chain_length","1"));
+            stopOnAbsolutelyCorrect=Boolean.parseBoolean(dictionary.getProperty("stop_on_correct","false"));
         }
         catch (Exception e)
         {
