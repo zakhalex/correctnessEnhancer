@@ -27,6 +27,7 @@ public class DecisionEngine {
             {
                 //time to reload
                 System.out.println("INFO Rebasing from "+baseDir+" to "+localEntry.getKey());
+                MutationSystem.getDictionary().clearDictionary();
                 MutationSystem.setJMutationStructure(localEntry.getValue().getPropertiesMap());
             }
             baseDir = localEntry.getKey();
