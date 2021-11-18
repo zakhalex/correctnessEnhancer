@@ -8,31 +8,31 @@ import java.util.*;
  * It stores the location of the mutated file as the key and the name of the mutant (e.g. SDL_4) as the value.
  */
 public class ProgramCandidate implements Serializable {
-    private final LinkedList<String> chain;//The chain of mutations that had to be applied to get to the current point
+    private final LinkedHashMap<String, String> chain;//The chain of mutations that had to be applied to get to the current point
     private final String mutationChain;//The names of mutators
     private final String baseDir;
     private final int overallIndex;
 
-    public ProgramCandidate(List<String> previousChain, int overallIndex, String baseDir) {
-        chain = new LinkedList<>();
+    public ProgramCandidate(Map<String,String> previousChain, int overallIndex, String baseDir) {
+        chain = new LinkedHashMap<>();
         StringBuilder sb = new StringBuilder();
-        for (String mutant : previousChain) {
-            chain.add(mutant);
-            sb.append(mutant);
+        for (Map.Entry<String, String> entry : previousChain.entrySet()) {
+            chain.put(entry.getKey(), entry.getValue());
+            sb.append(entry.getValue());
         }
         this.mutationChain = sb.toString();
         this.overallIndex=overallIndex;
         this.baseDir=baseDir;
     }
 
-    public ProgramCandidate(List<String> previousChain, String mutationChain, int overallIndex, String baseDir) {
-        chain = new LinkedList<>(previousChain);
+    public ProgramCandidate(Map<String, String> previousChain, String mutationChain, int overallIndex, String baseDir) {
+        chain = new LinkedHashMap<>(previousChain);
         this.mutationChain = mutationChain;
         this.overallIndex=overallIndex;
         this.baseDir=baseDir;
     }
 
-    public LinkedList<String> getChain() {
+    public LinkedHashMap<String, String> getChain() {
         return chain;
     }
 

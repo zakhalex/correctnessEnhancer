@@ -27,6 +27,7 @@ package mujava.cli;
 
 
 import com.google.common.collect.Sets;
+import mujava.MakeMuJavaStructure;
 import mujava.MutationControl;
 import mujava.MutationSystem;
 import mujava.test.TestResult;
@@ -59,7 +60,8 @@ public class ConsoleController {
 //			regularProperties.put("mode", "test");
 //            regularProperties.put("mode", "testcleanup");
 //            regularProperties.put("mode", "list");
-            regularProperties.put("mode", "analyze");
+//            regularProperties.put("mode", "analyze");
+            regularProperties.put("mode", "controlcleanup");
             regularProperties.put("configurationmode", "file");
             regularProperties.put("configurationpath", "mujava.config");
 //            regularProperties.put("testfilter", "org.jfree.chart.renderer.category.junit.AbstractCategoryItemRendererTests");
@@ -194,7 +196,12 @@ public class ConsoleController {
         }
         if(mode.equalsIgnoreCase("autoguide"))
         {
-            autoGuideModeTriggered(regularProperties);
+            autoGuideModeTriggered(regularProperties,false);
+        }
+
+        if(mode.equalsIgnoreCase("fullautoguide"))
+        {
+            autoGuideModeTriggered(regularProperties,true);
         }
     }
 
@@ -451,8 +458,21 @@ public class ConsoleController {
      * Automatically go through mutations and validations
      * @param regularProperties - list of input parameters
      */
-    public static void autoGuideModeTriggered(Map<String, String> regularProperties)
+    public static void autoGuideModeTriggered(Map<String, String> regularProperties,boolean primeEngine)
     {
-        DecisionEngine.annealingControl(MutationSystem.SYSTEM_HOME,regularProperties);
+        if(primeEngine) {
+            //Prime the system.
+            ConsoleController.listModeTriggered();
+            ConsoleController.modeSelector("all", regularProperties);
+        }
+        Map<String,Integer> localMap=DatabaseCalls.retrieveOverallIndex(MutationSystem.SYSTEM_HOME);
+        try {
+            DecisionEngine.recordMutants(MutationSystem.SYSTEM_HOME, MutationSystem.MUTANT_HOME, localMap, null);
+            DecisionEngine.annealingControl(MutationSystem.SYSTEM_HOME, MutationSystem.getDictionary(), regularProperties);
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
     }
 }

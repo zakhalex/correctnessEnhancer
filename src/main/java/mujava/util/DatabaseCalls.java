@@ -17,16 +17,16 @@ public class DatabaseCalls {
     public final static String selectConfig = "SELECT * FROM CONFIGURATIONS WHERE ID=? AND FILE_NAME=?";
 
     public final static String selectNext = "SELECT cc.BASE_DIR, cc.MUTATION_CHAIN, cc.SERIALIZED_MUTATION_CHAIN, " +
-            "cc.OVERALL_INDEX FROM APP.CHAINCONTROL cc " +
+            "cc.OVERALL_INDEX FROM CHAINCONTROL cc " +
             "WHERE cc.LAST_UPDATED IS NULL AND cc.BASE_DIR=? " +
             "ORDER BY OVERALL_INDEX DESC FETCH FIRST ROW ONLY";
 
     public final static String selectFirstN = "SELECT cc.BASE_DIR, cc.MUTATION_CHAIN, cc.SERIALIZED_MUTATION_CHAIN, " +
-            "cc.OVERALL_INDEX FROM APP.CHAINCONTROL cc " +
+            "cc.OVERALL_INDEX FROM CHAINCONTROL cc " +
             "WHERE cc.LAST_UPDATED IS NULL AND cc.BASE_DIR=? " +
             "ORDER BY OVERALL_INDEX DESC FETCH FIRST ? ROWS ONLY";
 
-    public final static String countCandidates = "SELECT COUNT(*) AS OVERALL FROM APP.CHAINCONTROL " +
+    public final static String countCandidates = "SELECT COUNT(*) AS OVERALL FROM CHAINCONTROL cc " +
             "WHERE cc.LAST_UPDATED IS NULL AND cc.BASE_DIR=?";
 
     public final static String selectOriginalResults = "SELECT * FROM ORIGINALTESTRESULTS WHERE BASE_DIR=? AND TEST_NAME=?";
@@ -103,7 +103,7 @@ public class DatabaseCalls {
             "LAST_UPDATED TIMESTAMP," +
             "PRIMARY KEY (BASE_DIR, MUTATION_CHAIN)" +
             ")";
-    public final static String createChainControlIndex="CREATE INDEX APP.chainPriorityIndex ON CHAINCONTROL (OVERALL_INDEX)";
+    public final static String createChainControlIndex="CREATE INDEX chainPriorityIndex ON CHAINCONTROL (OVERALL_INDEX)";
     public final static String truncateResultTableSql = "TRUNCATE TABLE TESTRESULTS";
     public final static String truncateOriginalResultTableSql = "TRUNCATE TABLE ORIGINALTESTRESULTS";
     public final static String truncateControlTableSql = "TRUNCATE TABLE CONFIGURATIONS";
@@ -236,15 +236,12 @@ public class DatabaseCalls {
             ResultSet result = pstmt.executeQuery();
 
             while(result.next()) {
-
-                if(result.isLast()) {
                     Integer count=result.getInt("OVERALL");
                     Integer overallIndex = (100*result.getInt("RELATIVELY_MORE_CORRECT_NUM"))/count
                             +(100*result.getInt("CORRECTNESS_ENHANCED_NUM"))/count
                             +(100*result.getInt("NO_DROP_IN_TESTCASES_NUM"))/count;
                     String mutantName=result.getString("MUTATION_TYPE");
                     resultMap.put(mutantName,overallIndex);
-                }
             }
             pstmt.close();
             conn.close();
@@ -266,8 +263,6 @@ public class DatabaseCalls {
             ResultSet result = pstmt.executeQuery();
 
             while(result.next()) {
-
-                if(result.isLast()) {
                     Blob fileName = result.getBlob("SERIALIZED_MUTATION_CHAIN");
 
                     try {
@@ -277,7 +272,6 @@ public class DatabaseCalls {
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
-                }
             }
             pstmt.close();
             conn.close();
@@ -394,7 +388,7 @@ public class DatabaseCalls {
         }
     }
 
-    public static int insertChainInfo(String baseDir, int overallIndex, List<String> previousChain) throws Exception {
+    public static int insertChainInfo(String baseDir, int overallIndex, Map<String,String> previousChain) throws Exception {
         int result = -1;
         ProgramCandidate pp = new ProgramCandidate(previousChain, overallIndex, baseDir);
 
@@ -445,7 +439,7 @@ public class DatabaseCalls {
         return result;
     }
 
-    public static int updateChainInfo(String baseDir, int overallIndex, List<String> previousChain) throws Exception {
+    public static int updateChainInfo(String baseDir, int overallIndex, Map<String,String> previousChain) throws Exception {
         int result = -1;
         ProgramCandidate pp = new ProgramCandidate(previousChain, overallIndex, baseDir);
 
@@ -582,22 +576,6 @@ public class DatabaseCalls {
                 int mutantScore=entry.getValue().getResultScore().intValue();
                 boolean isRelativelyCorrect=containsSet(originalResult.getFailure(),entry.getValue().getFailure());
                 boolean isCorrectnessEnhanced=originalScore<mutantScore;
-
-//                if((!isRelativelyCorrect)&&(mutantScore>0)&&(mutantScore>=originalScore))
-//                {
-//                    System.err.println("We have a candidate to analyze.");
-//                    System.err.println("Original score is: "+originalScore);
-//                    System.err.println("Mutant score is: "+mutantScore);
-//                    System.err.println("Original Failures: ");
-//                    for (Failure failure : originalResult.getFailure()) {
-//                        System.err.println(failure.getTestHeader().substring(0, failure.getTestHeader().indexOf("(")));
-//                    }
-//                    System.err.println("Mutant Failures: ");
-//                    for (Failure failure : entry.getValue().getFailure()) {
-//                        System.err.println(failure.getTestHeader().substring(0, failure.getTestHeader().indexOf("(")));
-//                    }
-//                    System.exit(0);
-//                }
                 pstmt.setString(1, MutationSystem.SYSTEM_HOME);
                 pstmt.setString(2, tr.getProgramLocation());
                 pstmt.setString(3, tr.getTargetMutant());
