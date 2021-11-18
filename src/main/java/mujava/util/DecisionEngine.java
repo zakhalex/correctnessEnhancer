@@ -75,7 +75,7 @@ public class DecisionEngine {
                         baseDirs.put(MutationSystem.SYSTEM_HOME,newPd);//System is reset for next layer - adding it to the list
                         ConsoleController.listModeTriggered();
                         ConsoleController.modeSelector("all", regularProperties);
-                        Map<String, Integer> indexMap = DatabaseCalls.retrieveOverallIndex(pp.getBaseDir());
+                        Map<String, Integer> indexMap = DatabaseCalls.retrieveOverallIndex(MutationSystem.SYSTEM_HOME);
                         recordMutants(MutationSystem.SYSTEM_HOME, MutationSystem.MUTANT_HOME, indexMap, pp.getChain());
 
                     } catch (Exception e) {
