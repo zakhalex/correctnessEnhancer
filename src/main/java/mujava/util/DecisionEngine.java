@@ -141,9 +141,16 @@ public class DecisionEngine {
             //This is a critical exception for this mode of operation
             throw new Exception("CRITICAL Unable to create file structure");
         }
-        for(Map.Entry<String,String> entry:pp.getChain().entrySet())
+        //While the entire history of mutants is maintained, only the last one is needed
+        Iterator<Map.Entry<String, String>> it=pp.getChain().entrySet().iterator();
+        Map.Entry<String, String> localEntry=null;
+        while (it.hasNext()) {
+            localEntry = it.next();
+        }
+        if(localEntry!=null)
         {
-            File f=new File(entry.getKey());
+            File f=new File(localEntry.getKey());
+            System.out.println("INFO Scanning "+f.getAbsolutePath());
             File[] sourceCodeToCopy=f.listFiles((dir, name) -> name.toLowerCase().endsWith(".java"));
             for(File f1:sourceCodeToCopy)
             {
