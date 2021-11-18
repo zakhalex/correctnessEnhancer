@@ -483,13 +483,13 @@ public class DatabaseCalls {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.out.println("We have removed "+deleteResult+" lines.");
+        System.out.println("INFO "+deleteResult+" lines have been removed.");
 
         try (Connection conn = DriverManager.getConnection(MutationSystem.testJdbcURL);
             PreparedStatement pstmt = conn.prepareStatement(insertControlSql)) {
             System.out.println("Preparing to record configuration information");
             int sequence=1;
-            //If we control identity from here
+            //If identity is controlled from here
             for (ConfigurationItem config: configurations)
             {
                 pstmt.setInt(1, sequence);//==null?-1:originalResult);//original

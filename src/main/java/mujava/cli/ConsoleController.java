@@ -264,7 +264,7 @@ public class ConsoleController {
 
                 if(modeTypes.size()>0)
                 {
-                    //We need to leave a marker on db records
+                    //Leaving a marker on db records
                     if(!modeTypes.containsKey(MutationControl.Inputs.FILES.getLabel())) {
                         HashSet<String> fileSet=new HashSet<>();
                         fileSet.add(MutationSystem.databaseMarker);
@@ -324,7 +324,7 @@ public class ConsoleController {
         }
         else
         {
-            //we have the process fully controlled from the database table
+            //The process is fully controlled from the database table
             filterOn = DatabaseCalls.readConfiguration(Integer.valueOf(dbControl)).getClassName();
         }
         if (filterOn != null) {
@@ -369,7 +369,7 @@ public class ConsoleController {
         {
             System.out.println("Launch will be controlled by the database." +
                     " Extracting id "+dbControl+" for marker "+MutationSystem.databaseMarker);
-            //we have the process fully controlled from the database table
+            //The process is fully controlled from the database table
             if(item==null)
             {
                 item=DatabaseCalls.readConfiguration(Integer.valueOf(dbControl));
@@ -395,7 +395,7 @@ public class ConsoleController {
         }
         else
         {
-            //we have the process fully controlled from the database table
+            //The process is fully controlled from the database table
             if(item==null)
             {
                 item=DatabaseCalls.readConfiguration(Integer.valueOf(dbControl));

@@ -35,7 +35,7 @@ import openjava.ptree.*;
 
 public class IHD_IHI_EqAnalyzer extends mujava.op.util.Mutator
 {
-   /** name of a filed that we are to insert or delete for a mutant */
+   /** name of a filed that is about to be inserted or deleted for a mutant */
    String field_name = "";
 
    boolean eqFlag=true;

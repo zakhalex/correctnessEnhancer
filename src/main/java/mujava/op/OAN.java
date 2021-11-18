@@ -201,7 +201,7 @@ public class OAN extends mujava.op.util.Mutator
 					 Expression one_parameter = args.get(j);
 				 	 type = getType(one_parameter);
 
-                     // We did not consider polymorphism,
+                     // Polymorphism was not considered,
                      // Only consider exact type.
 					 if ( !(type.equals(pList[j])) )
 					 {
